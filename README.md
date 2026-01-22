@@ -9,7 +9,3 @@ Como usar:
 
 1. Na raiz, execute `npm install` para instalar dependências das workspaces
 2. `npm start` para rodar `backend` e `frontend` em paralelo (usa `concurrently`)
-
----
-
-> Observação: os arquivos originais em `src/` foram replicados em `backend/src/`. Você pode remover a pasta `src/` raiz depois de confirmar que tudo está funcionando.
