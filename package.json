@@ -1,9 +1,15 @@
 {
   "name": "petshop",
   "version": "1.0.0",
-  "description": "PetShot | Projeto Relampago",
+  "private": true,
+  "description": "PetShop",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "main": "index.js",
   "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,7 +25,6 @@
   },
   "homepage": "https://github.com/gabriellpequeno/PetShop---PR#readme",
   "devDependencies": {
-    "express": "^5.2.1",
-    "typescript": "^5.9.3"
+    "concurrently": "^8.2.2"
   }
 }

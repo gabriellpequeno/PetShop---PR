@@ -1,0 +1,10 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend - vazio por enquanto",
+  "scripts": {
+    "dev": "echo \"Empty frontend\" && exit 0",
+    "build": "echo \"No build\" && exit 0"
+  }
+}
