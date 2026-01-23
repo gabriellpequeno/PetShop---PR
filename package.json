@@ -25,6 +25,12 @@
   },
   "homepage": "https://github.com/gabriellpequeno/PetShop---PR#readme",
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "jsonwebtoken": "^9.0.3",
+    "sqlite3": "^5.1.7"
   }
 }
