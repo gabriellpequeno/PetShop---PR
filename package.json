@@ -26,11 +26,14 @@
   "homepage": "https://github.com/gabriellpequeno/PetShop---PR#readme",
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/uuid": "^10.0.0",
     "concurrently": "^8.2.2"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
     "jsonwebtoken": "^9.0.3",
-    "sqlite3": "^5.1.7"
+    "nanoid": "^5.1.6",
+    "sqlite3": "^5.1.7",
+    "uuid": "^13.0.0"
   }
 }
