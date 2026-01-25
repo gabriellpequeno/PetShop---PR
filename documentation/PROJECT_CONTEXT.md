@@ -10,7 +10,7 @@ Desenvolver uma API REST em Node.js para gerenciar um sistema de PetShop. O sist
 - **Validação:** Implementada manualmente (sem Zod/Joi)
 - **Testes:** Unitários com Mocha/Chai (ou similar)
 - **Config:** Variáveis em `.env`
-- **Front-end:** JS/TS puro, funcional e minimamente estilizado
+- **Front-end:** JS/TS puro, funcional e minimamente estilizado 
 
 ## 3. Perfis de usuário & permissões
 | Perfil | Permissões principais |
