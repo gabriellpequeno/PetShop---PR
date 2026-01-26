@@ -43,9 +43,9 @@ class ServiceRepository {
             }
             newService.serviceId = uuid();
 
-            const sql = "INSERT INTO services (name_service, price_p, price_m, price_g) VALUES (?, ?, ?, ?)";
+            const sql = "INSERT INTO services (service_id, name_service, price_p, price_m, price_g) VALUES (?, ?, ?, ?, ?)";
 
-            db.run(sql, [newService.nameService, newService.priceP, newService.priceM, newService.priceG], (err: Error | null) => {
+            db.run(sql, [newService.serviceId, newService.nameService, newService.priceP, newService.priceM, newService.priceG], (err: Error | null) => {
                 if (err) return reject(err);
                 resolve();
             });

@@ -1,5 +1,6 @@
 import appointmentRepository from "../repositories/appointmentRepository.js";
 import type { Iappointment } from "../types/appoitment.js";
+import { validateAppointment } from "../utils/validators.js";
 
 class appointmentService {
     public async findAll(): Promise<Iappointment[]> {
