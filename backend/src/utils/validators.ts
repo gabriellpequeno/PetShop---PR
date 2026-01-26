@@ -1,4 +1,5 @@
 import { Service } from "../types/Services.js";
+import { Iappointment } from "../types/appoitment.js";
 
 export const validateEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -11,4 +12,10 @@ export const validatePassword = (password: string): boolean => {
 
 export const validateService = (service: Service): boolean => {
   return service.nameService.length >= 2 && service.priceP >= 0 && service.priceM >= 0 && service.priceG >= 0;
+};
+
+export const validateAppointment = (appointment: Iappointment): boolean => {
+  // criar validacao das datas
+  // criar validacao do status
+  return true;
 };

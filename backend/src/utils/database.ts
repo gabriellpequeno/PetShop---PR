@@ -28,6 +28,21 @@ db.serialize(() => {
       price_g DECIMAL NOT NULL
     )
   `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS appointments (
+      appointment_id TEXT PRIMARY KEY,
+      user_id INTEGER NOT NULL,
+      service_id TEXT NOT NULL,
+      pet_id TEXT NOT NULL,
+      price DECIMAL NOT NULL,
+      date TEXT NOT NULL,
+      time TEXT NOT NULL,
+      status TEXT NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (service_id) REFERENCES services(service_id),
+      FOREIGN KEY (pet_id) REFERENCES pets(pet_id))
+  `);
 });
 
 export default db;
