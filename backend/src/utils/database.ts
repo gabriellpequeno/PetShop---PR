@@ -18,6 +18,16 @@ db.serialize(() => {
       role TEXT NOT NULL CHECK(role IN ('admin', 'comum'))
     )
   `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS services (
+      service_id TEXT PRIMARY KEY,
+      name_service TEXT NOT NULL,
+      price_p DECIMAL NOT NULL,
+      price_m DECIMAL NOT NULL,
+      price_g DECIMAL NOT NULL
+    )
+  `);
 });
 
 export default db;
