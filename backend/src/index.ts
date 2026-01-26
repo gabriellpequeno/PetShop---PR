@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
+import appointmentRoutes from './routes/appointmentRoutes.js';
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.use('/auth', authRoutes);
 app.use('/service', serviceRoutes);
+app.use('/appointment', appointmentRoutes);
 
 const PORT = process.env.PORT || 3000;
 

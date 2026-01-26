@@ -24,3 +24,5 @@ class appointmentService {
         await appointmentRepository.delete(appointmentId);
     }
 }
+
+export default new appointmentService();
