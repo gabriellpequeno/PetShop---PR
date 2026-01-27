@@ -51,7 +51,7 @@ export const petService = {
         const { id, name, species, breed, age } = petData;
 
         // Validar ID
-        if (!id || id <= 0) {
+        if (!id || Number(id) <= 0) {
             throw new Error("ID do pet inválido.");
         }
 
