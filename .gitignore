@@ -58,3 +58,5 @@ Thumbs.db
 # Explicit per-workspace output folders (if any)
 frontend/dist/
 backend/dist/
+
+prompt.md
