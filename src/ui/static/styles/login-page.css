@@ -1,0 +1,99 @@
+/* Page specific layout */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container {
+  display: flex;
+  background: var(--surface-color);
+  width: 100%;
+  max-width: 1100px;
+  min-height: 650px;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin: 20px;
+}
+
+/* Left Side - Login Form */
+.login-card {
+  flex: 1;
+  padding: 3rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 550px;
+}
+
+.brand-header {
+  margin-bottom: 2.5rem;
+}
+
+.logo-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.brand-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Input groups specific spacing if needed, but generic label/input styles are in global */
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+}
+
+/* Right Side - Hero Image */
+.hero-image-section {
+  flex: 1;
+  background: linear-gradient(rgba(99, 102, 241, 0.9), rgba(139, 92, 246, 0.8)), url('https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 4rem;
+  color: white;
+  position: relative;
+}
+
+.hero-content h2 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: white;
+  /* Override global h2 color */
+}
+
+.hero-content p {
+  color: rgba(255, 255, 255, 0.9);
+  /* Override global p color */
+  font-size: 1.1rem;
+}
+
+@media (max-width: 900px) {
+  .hero-image-section {
+    display: none;
+  }
+
+  .login-card {
+    max-width: 100%;
+    padding: 2rem;
+  }
+}
