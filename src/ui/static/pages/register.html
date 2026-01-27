@@ -4,25 +4,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PetShop - Login</title>
+  <title>PetShop - Cadastro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles/global.css">
-  <link rel="stylesheet" href="../styles/login-page.css">
-  <script src="/scripts/pages/login-page.js" type="module"></script>
+  <link rel="stylesheet" href="../styles/register-page.css">
+  <script src="/scripts/pages/register-page.js" type="module"></script>
 </head>
 
 <body>
-  <div class="login-container">
-    <div class="login-card">
+  <div class="register-container">
+    <div class="register-card">
       <div class="brand-header">
         <div class="logo-icon">🐾</div>
-        <h1>Bem-vindo de volta!</h1>
-        <p>Acesse sua conta para cuidar do seu melhor amigo.</p>
+        <h1>Crie sua conta</h1>
+        <p>Junte-se à nossa comunidade e cuide bem do seu pet.</p>
       </div>
 
-      <form id="loginForm" class="login-form">
+      <form id="registerForm" class="register-form">
+        <div class="input-group">
+          <label for="name">Nome Completo</label>
+          <input type="text" id="name" name="name" placeholder="Seu nome" required>
+        </div>
+
         <div class="input-group">
           <label for="email">E-mail</label>
           <input type="email" id="email" name="email" placeholder="exemplo@email.com" required>
@@ -33,17 +38,8 @@
           <input type="password" id="password" name="password" placeholder="••••••••" required>
         </div>
 
-        <div class="form-actions">
-          <label class="checkbox-container">
-            <input type="checkbox" name="remember">
-            <span class="checkmark"></span>
-            Lembrar de mim
-          </label>
-          <a href="#" class="forgot-password">Esqueceu a senha?</a>
-        </div>
-
         <button type="submit" class="btn-primary">
-          <span>Entrar</span>
+          <span>Cadastrar</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
             <path d="M5 12h14M12 5l7 7-7 7" />
@@ -51,20 +47,18 @@
         </button>
       </form>
 
-      <div class="login-footer">
-        <p>Não tem uma conta? <a href="/register">Cadastre-se agora</a></p>
+      <div class="register-footer">
+        <p>Já tem uma conta? <a href="/login">Entre aqui</a></p>
       </div>
     </div>
 
     <div class="hero-image-section">
       <div class="hero-content">
-        <h2>Cuidado e carinho<br>que eles merecem.</h2>
-        <p>Os melhores produtos e serviços para o seu pet em um só lugar.</p>
+        <h2>Seu pet em boas mãos.</h2>
+        <p>Facilitamos o agendamento e a compra de produtos para o seu companheiro.</p>
       </div>
     </div>
   </div>
-
-
 </body>
 
 </html>
