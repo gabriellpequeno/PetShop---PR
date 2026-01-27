@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
+import petRoutes from './routes/petRoutes.js';
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/service', serviceRoutes);
 app.use('/appointment', appointmentRoutes);
+app.use('/pets', petRoutes);
 
 const PORT = process.env.PORT || 3000;
 

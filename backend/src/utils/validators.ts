@@ -19,3 +19,20 @@ export const validateAppointment = (appointment: Iappointment): boolean => {
   // criar validacao do status
   return true;
 };
+
+// Valida se o nome do pet tem pelo menos 2 letras e não contém números
+export const validatePetName = (name: string): boolean => {
+  const petNameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]{2,}$/;
+  return petNameRegex.test(name);
+};
+
+// Valida se a espécie ou raça não estão vazias (mínimo 2 caracteres)
+export const validatePetType = (text: string): boolean => {
+  const textRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]{2,}$/;
+  return textRegex.test(text);
+};
+
+// Valida se a idade é um número positivo entre 0 e 30 (limite razoável para pets)
+export const validatePetAge = (age: number): boolean => {
+  return age >= 0;
+};

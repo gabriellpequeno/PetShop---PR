@@ -43,6 +43,17 @@ db.serialize(() => {
       FOREIGN KEY (service_id) REFERENCES services(service_id),
       FOREIGN KEY (pet_id) REFERENCES pets(pet_id))
   `);
+  db.run(`
+    CREATE TABLE IF NOT EXISTS pets (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      species TEXT NOT NULL,
+      breed TEXT NOT NULL,
+      age INTEGER,
+      userId INTEGER NOT NULL,
+      FOREIGN KEY (userId) REFERENCES users (id)
+    )
+  `);
 });
 
 export default db;
