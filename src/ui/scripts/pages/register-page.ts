@@ -1,16 +1,16 @@
 import { AuthApiConsumer } from "../consumers/auth-api-consumer"
 
-
-
-class LoginPage {
+class RegisterPage {
   private authConsumer: AuthApiConsumer
-  private loginForm: HTMLFormElement | null
+  private registerForm: HTMLFormElement | null
+  private nameInput: HTMLInputElement | null
   private emailInput: HTMLInputElement | null
   private passwordInput: HTMLInputElement | null
 
   constructor() {
     this.authConsumer = new AuthApiConsumer()
-    this.loginForm = document.getElementById('loginForm') as HTMLFormElement
+    this.registerForm = document.getElementById('registerForm') as HTMLFormElement
+    this.nameInput = document.getElementById('name') as HTMLInputElement
     this.emailInput = document.getElementById('email') as HTMLInputElement
     this.passwordInput = document.getElementById('password') as HTMLInputElement
 
@@ -18,8 +18,8 @@ class LoginPage {
   }
 
   private init(): void {
-    if (this.loginForm) {
-      this.loginForm.addEventListener('submit', (e) => this.handleSubmit(e))
+    if (this.registerForm) {
+      this.registerForm.addEventListener('submit', (e) => this.handleSubmit(e))
     }
 
     this.setupInputAnimations()
@@ -28,31 +28,35 @@ class LoginPage {
   private async handleSubmit(e: Event): Promise<void> {
     e.preventDefault()
 
-    if (!this.loginForm || !this.emailInput || !this.passwordInput) return
+    if (!this.registerForm || !this.nameInput || !this.emailInput || !this.passwordInput) return
 
-    const submitBtn = this.loginForm.querySelector(
+    const submitBtn = this.registerForm.querySelector(
       'button[type="submit"]',
     ) as HTMLButtonElement
     const originalBtnText = submitBtn.innerHTML
 
     submitBtn.disabled = true
-    submitBtn.innerHTML = '<span>Entrando...</span>'
+    submitBtn.innerHTML = '<span>Cadastrando...</span>'
 
     try {
+      const name = this.nameInput.value
       const email = this.emailInput.value
       const password = this.passwordInput.value
 
-      const response = await this.authConsumer.loginUser(email, password)
+      const response = await this.authConsumer.registerUser(name, email, password)
 
-      if (response.ok) {
-        alert('Login realizado com sucesso!')
-        window.location.href = '/';
+      if (response.status === 201) {
+        alert('Cadastro realizado com sucesso!')
+        window.location.href = '/login'
+      } else if (response.status === 409) {
+        const data = await response.json()
+        alert(data.message || 'Este e-mail já está cadastrado.')
       } else {
-        throw new Error('Falha no login')
+        throw new Error('Falha no cadastro')
       }
     } catch (error) {
-      console.error('Login error:', error)
-      alert('Erro ao tentar fazer login. Tente novamente.')
+      console.error('Register error:', error)
+      alert('Erro ao tentar realizar cadastro. Tente novamente.')
     } finally {
       submitBtn.disabled = false
       submitBtn.innerHTML = originalBtnText
@@ -73,5 +77,5 @@ class LoginPage {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  new LoginPage()
+  new RegisterPage()
 })

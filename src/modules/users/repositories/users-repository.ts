@@ -7,7 +7,7 @@ export class UsersRepository {
   async add(user: Omit<User, 'id'>) {
     await db.run(
       'INSERT INTO users (id, name, email, password, role) VALUES (?, ?, ?, ?, ?)',
-      [ uuid(), user.name, user.email, user.password, user.role]
+      [uuid(), user.name, user.email, user.password, user.role]
     )
   }
 

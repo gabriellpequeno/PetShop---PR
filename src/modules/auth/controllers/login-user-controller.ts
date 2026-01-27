@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express'
 import { LoginUserService } from '../services/login-user-service'
 import { JwtProvider } from '../providers/jwt-provider'
+import { CryptoProvider } from '../providers/crypto-provider'
 import { UsersRepository } from '@/modules/users/repositories/users-repository'
 
 export class LoginUserController {
@@ -9,9 +10,17 @@ export class LoginUserController {
 
     const repository = new UsersRepository()
     const jwtProvider = new JwtProvider()
-    const service = new LoginUserService(repository, jwtProvider)
-    await service.execute({ email, password })
+    const cryptoProvider = new CryptoProvider()
+    const service = new LoginUserService(repository, jwtProvider, cryptoProvider)
+    const { token } = await service.execute({ email, password })
 
-    return response.json({ message: 'Login feito com sucesso' })
+    response.cookie('token', token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 // 1 day
+    })
+
+    return response.json({ token })
+
   }
 }
+

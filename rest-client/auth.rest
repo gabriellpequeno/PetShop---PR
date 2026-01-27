@@ -1,7 +1,23 @@
+### Login
 POST http://localhost:3333/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "Maribel50@hotmailff.com",
+    "email": "Joao@hotmailff.com",
     "password": "12345ff6"
 }
+
+### Register
+POST http://localhost:3333/api/auth/register
+Content-Type: application/json
+
+{
+    "name": "Joao",
+    "email": "Joao@hotmailff.com",
+    "password": "12345ff6"
+}
+
+
+### Home
+GET http://localhost:3333
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiOGQyN2FlZi0wM2FiLTQ5ZWYtYWZiNy05Y2Q3NmQ5YjI5MjQiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3Njk1NDYwOTgsImV4cCI6MTc2OTYzMjQ5OH0.vYG4B6CtZ0QmXWE1MGAmx7Ouhx44x19LF92oSUodEOQ
