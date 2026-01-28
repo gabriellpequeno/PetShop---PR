@@ -6,6 +6,7 @@ import { HandleErrorMiddleware } from './middlewares/handle-error-middleware'
 import { UI_STATIC_PATH } from './constants/ui-static-path'
 import { authRouter } from './modules/auth/routers/auth-router'
 import { petsRouter } from './modules/pets/routers/pets-router'
+import { usersRouter } from './modules/users/routers/users-router'
 import { EnsureAuthenticationMiddleware } from './middlewares/ensure-authentication-middleware'
 
 const app = express()
@@ -20,6 +21,7 @@ app.get(/^\/scripts\/(.+)\.js$/, TranspileScriptMiddleware.handle)
 
 app.use(authRouter)
 app.use('/api/pets', petsRouter)
+app.use('/api/users', usersRouter)
 
 app.get('/', (_, res) => {
   res.sendFile(join(UI_STATIC_PATH, 'pages', 'home.html'))

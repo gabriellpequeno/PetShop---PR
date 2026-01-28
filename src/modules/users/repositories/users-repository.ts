@@ -6,8 +6,8 @@ import { v4 as uuid } from 'uuid'
 export class UsersRepository {
   async add(user: Omit<User, 'id'>) {
     await db.run(
-      'INSERT INTO users (id, name, email, password, role) VALUES (?, ?, ?, ?, ?)',
-      [uuid(), user.name, user.email, user.password, user.role]
+      'INSERT INTO users (id, name, email, password, role, phone, location, birth_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [uuid(), user.name, user.email, user.password, user.role, user.phone ?? null, user.location ?? null, user.birth_date ?? null]
     )
   }
 
@@ -17,5 +17,25 @@ export class UsersRepository {
       [email]
     )
     return user
+  }
+
+  async findById(id: string) {
+    const user = await db.get<User>(
+      'SELECT * FROM users WHERE id = ?',
+      [id]
+    )
+    return user
+  }
+
+  async update(id: string, data: Partial<User>) {
+    await db.run(
+      `UPDATE users SET 
+        name = COALESCE(?, name), 
+        phone = COALESCE(?, phone), 
+        location = COALESCE(?, location), 
+        birth_date = COALESCE(?, birth_date) 
+      WHERE id = ?`,
+      [data.name, data.phone ?? null, data.location ?? null, data.birth_date ?? null, id]
+    )
   }
 }

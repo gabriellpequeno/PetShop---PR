@@ -6,7 +6,10 @@ db.exec(`
     name TEXT NOT NULL,
     email TEXT NOT NULL,
     password TEXT NOT NULL,
-    role TEXT NOT NULL
+    role TEXT NOT NULL,
+    phone TEXT,
+    location TEXT,
+    birth_date TEXT
   );
 
   CREATE TABLE IF NOT EXISTS pets (

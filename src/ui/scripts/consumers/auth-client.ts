@@ -9,6 +9,10 @@ export class AuthClient {
     }
   }
 
+  isAuthenticated(): boolean {
+    return !!this.getUser();
+  }
+
   logout() {
     localStorage.removeItem('user');
     // Also call backend logout if exists, or remove cookie if possible (can't remove HttpOnly)
