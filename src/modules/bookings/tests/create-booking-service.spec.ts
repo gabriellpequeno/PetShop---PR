@@ -40,6 +40,7 @@ describe("CreateBookingService", () => {
             name: "Rex",
             species: "Cachorro",
             breed: null,
+            age: null,
             weight: null,
         });
         vi.spyOn(jobsRepositoryMock, "findById").mockResolvedValueOnce({
@@ -118,6 +119,7 @@ describe("CreateBookingService", () => {
             name: "Rex",
             species: "Cachorro",
             breed: null,
+            age: null,
             weight: null,
         });
 
@@ -138,6 +140,7 @@ describe("CreateBookingService", () => {
             name: "Rex",
             species: "Cachorro",
             breed: null,
+            age: null,
             weight: null,
         });
         vi.spyOn(jobsRepositoryMock, "findById").mockResolvedValueOnce(undefined);
@@ -159,6 +162,7 @@ describe("CreateBookingService", () => {
             name: "Rex",
             species: "Cachorro",
             breed: null,
+            age: null,
             weight: null,
         });
         vi.spyOn(jobsRepositoryMock, "findById").mockResolvedValueOnce({

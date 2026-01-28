@@ -4,7 +4,6 @@ import { BadRequestError } from "../../../errors/bad-request-error";
 import { NotFoundError } from "../../../errors/not-found-error";
 import type { JobsRepository } from "../repositories/jobs-repository";
 
-// Mock do repository
 const repositoryMock = {
   findById: vi.fn(),
   delete: vi.fn(),
