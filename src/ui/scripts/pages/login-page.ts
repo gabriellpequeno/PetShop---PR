@@ -1,7 +1,5 @@
 import { AuthApiConsumer } from "../consumers/auth-api-consumer"
 
-
-
 class LoginPage {
   private authConsumer: AuthApiConsumer
   private loginForm: HTMLFormElement | null
