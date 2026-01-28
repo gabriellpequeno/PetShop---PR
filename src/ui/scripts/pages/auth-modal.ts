@@ -1,3 +1,5 @@
+import { AuthApiConsumer } from "../consumers/auth-api-consumer"
+
 interface AuthResponse {
   user?: { id: number; email: string; name: string }
   token?: string
@@ -37,6 +39,9 @@ class AuthModal {
   private registerErrorMessage: HTMLElement | null = null
   private registerSuccessMessage: HTMLElement | null = null
 
+  // API consumer
+  private authConsumer: AuthApiConsumer | null = null
+
   // Password strength
   private passwordStrengthContainer: HTMLElement | null = null
   private passwordStrengthFill: HTMLElement | null = null
@@ -47,6 +52,7 @@ class AuthModal {
   private registerSubmitBtn: HTMLButtonElement | null = null
 
   constructor() {
+    this.authConsumer = new AuthApiConsumer()
     this.initElements()
     this.bindEvents()
   }
@@ -297,11 +303,7 @@ class AuthModal {
     this.setLoading(true)
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
+      const response = await this.authConsumer!.loginUser(email, password)
 
       const data: AuthResponse = await response.json()
 
@@ -380,11 +382,7 @@ class AuthModal {
     this.setLoading(true)
 
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-      })
+      const response = await this.authConsumer!.registerUser(name, email, password)
 
       const data: AuthResponse = await response.json()
 
