@@ -68,7 +68,7 @@ describe("UpdateJobService", () => {
   it("deve lançar erro se o preço for inválido", async () => {
     vi.spyOn(dbMock, "get").mockResolvedValueOnce({ id: "123", name: "Teste" });
     await expect(
-      updateJobService.execute({ id: "123", price: -10 }),
+      updateJobService.execute({ id: "123", priceP: -10, priceM: -10, priceG: -10 }),
     ).rejects.toBeInstanceOf(BadRequestError);
   });
 });
