@@ -5,4 +5,5 @@ export interface Pet {
     species: string;
     breed: string | null;
     weight: number | null;
+    age: number | null;
 }
