@@ -168,7 +168,7 @@ O sistema possui dois níveis de acesso baseados em roles (funções).
 Para atender ao requisito de banco de dados relacional e ao contexto de PetShop:
 
 * **Users:** `id, name, email, password, role ('admin'|'customer')`
-* **Pets:** `id, user_id (FK), name, species, breed, birth_date`
+* **Pets:** `id, user_id (FK), name, species, breed, birth_date, weight`
 * **Services:** `id, name, description, price, duration_min, max_capacity`
 * **Bookings:** `id, user_id (FK), pet_id (FK), service_id (FK), scheduled_date, status ('agendado'|'concluido'|'cancelado'), real_start_time, real_end_time`
 

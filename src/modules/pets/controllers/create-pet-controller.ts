@@ -4,7 +4,7 @@ import { PetsRepository } from '../repositories/pets-repository'
 
 export class CreatePetController {
   static async handle(request: Request, response: Response) {
-    const { name, species, breed, birthDate } = request.body
+    const { name, species, breed, birthDate, weight } = request.body
     
     // The user id comes from the authenticated user token (EnsureAuthenticationMiddleware)
     // Assuming the middleware adds the user to the request object (needs verification)
@@ -25,7 +25,7 @@ export class CreatePetController {
     // Let's assume `request.user.id` is NOT available by default in TypeScript without type extension.
     // I recall `EnsureAuthenticationMiddleware` is in `src/middlewares/ensure-authentication-middleware.ts`.
     
-    // I will act optimistically and assume `response.locals.user.id` or similar common pattern if I can't check.
+    // I will act optimistically and assume `response.locals.userId` or similar common pattern if I can't check.
     // But wait, the `users` module might guide me.
     
     // Actually, I'll write the controller to expect `request.body.userId` if it was passed manually, but it should be from the token.
@@ -49,7 +49,8 @@ export class CreatePetController {
       name,
       species,
       breed,
-      birthDate
+      birthDate,
+      weight
     })
     
     return response.status(201).send()

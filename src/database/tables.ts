@@ -16,6 +16,7 @@ db.exec(`
     species TEXT NOT NULL,
     breed TEXT NOT NULL,
     birth_date TEXT NOT NULL,
+    weight REAL NOT NULL,
     FOREIGN KEY(user_id) REFERENCES users(id)
   )
 

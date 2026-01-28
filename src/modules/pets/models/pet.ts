@@ -5,4 +5,5 @@ export type Pet = {
   species: string
   breed: string
   birth_date: string
+  weight: number
 }

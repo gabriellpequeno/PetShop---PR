@@ -11,17 +11,31 @@ describe('List Pets Service', () => {
     service = new ListPetsService(repository)
   })
 
-  it('should return a list of pets for the user', async () => {
+  it('should return a list of pets for the user (customer)', async () => {
     const pets = [
-      { id: '1', user_id: 'user-id', name: 'Buddy', species: 'Dog', breed: 'Golden', birth_date: '2020-01-01' },
-      { id: '2', user_id: 'user-id', name: 'Mittens', species: 'Cat', breed: 'Siamese', birth_date: '2019-01-01' }
+      { id: '1', user_id: 'user-id', name: 'Buddy', species: 'Dog', breed: 'Golden', birth_date: '2020-01-01', weight: 30 },
+      { id: '2', user_id: 'user-id', name: 'Mittens', species: 'Cat', breed: 'Siamese', birth_date: '2019-01-01', weight: 5 }
     ]
 
     repository.findByUserId.mockResolvedValue(pets)
 
-    const result = await service.execute({ userId: 'user-id' })
+    const result = await service.execute({ userId: 'user-id', role: 'customer' })
 
     expect(result).toEqual(pets)
     expect(repository.findByUserId).toHaveBeenCalledWith('user-id')
+  })
+
+  it('should return all pets for admin', async () => {
+    const pets = [
+      { id: '1', user_id: 'user-1', name: 'Buddy', species: 'Dog', breed: 'Golden', birth_date: '2020-01-01', weight: 30 },
+      { id: '3', user_id: 'user-2', name: 'Rex', species: 'Dog', breed: 'Labrador', birth_date: '2021-01-01', weight: 35 }
+    ]
+
+    repository.findAll.mockResolvedValue(pets)
+
+    const result = await service.execute({ userId: 'admin-id', role: 'admin' })
+
+    expect(result).toEqual(pets)
+    expect(repository.findAll).toHaveBeenCalled()
   })
 })
