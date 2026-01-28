@@ -7,6 +7,7 @@ import { UI_STATIC_PATH } from "./constants/ui-static-path";
 import { authRouter } from "./modules/auth/routers/auth-router";
 import { EnsureAuthenticationMiddleware } from "./middlewares/ensure-authentication-middleware";
 import { jobsRouter } from "./modules/jobs/routers/jobs-router";
+import { bookingRouter } from "./modules/bookings/routers/booking-router";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.get(/^\/scripts\/(.+)\.js$/, TranspileScriptMiddleware.handle);
 
 app.use(authRouter);
 app.use("/jobs", jobsRouter);
+app.use("/bookings", EnsureAuthenticationMiddleware.handle, bookingRouter);
 
 app.get('/', EnsureAuthenticationMiddleware.handle, (_, res) => {
   res.sendFile(join(UI_STATIC_PATH, 'pages', 'home.html'))
