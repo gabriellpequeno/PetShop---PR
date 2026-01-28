@@ -4,16 +4,19 @@ import { CreateJobService } from "../services/create-job-service";
 import { ListJobsService } from "../services/list-jobs-service";
 import { UpdateJobService } from "../services/update-job-service";
 import { DeleteJobService } from "../services/delete-job-service";
+import { BadRequestError } from "../../../errors/bad-request-error";
 
 export class JobsController {
   static async create(request: Request, response: Response) {
-    const { name, description, price, duration } = request.body;
+    const { name, description, priceP, priceM, priceG, duration } = request.body;
 
     const createJobService = new CreateJobService(db);
     const job = await createJobService.execute({
       name,
       description,
-      price,
+      priceP,
+      priceM,
+      priceG,
       duration,
     });
 
@@ -31,17 +34,19 @@ export class JobsController {
     const { id } = request.params;
 
     if (!id || typeof id !== "string") {
-      throw new Error("ID inválido"); // Ou use BadRequestError se disponível no escopo
+      throw new BadRequestError("ID inválido");
     }
 
-    const { name, description, price, duration } = request.body;
+    const { name, description, priceP, priceM, priceG, duration } = request.body;
 
     const updateJobService = new UpdateJobService(db);
     const job = await updateJobService.execute({
       id,
       name,
       description,
-      price,
+      priceP,
+      priceM,
+      priceG,
       duration,
     });
 
@@ -52,7 +57,7 @@ export class JobsController {
     const { id } = request.params;
 
     if (!id || typeof id !== "string") {
-      throw new Error("ID inválido");
+      throw new BadRequestError("ID inválido");
     }
 
     const deleteJobService = new DeleteJobService(db);

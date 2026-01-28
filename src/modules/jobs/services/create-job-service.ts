@@ -6,14 +6,16 @@ import { ConflictError } from "../../../errors/conflict-error";
 interface CreateJobRequest {
   name: string;
   description?: string;
-  price: number;
+  priceP: number;
+  priceM: number;
+  priceG: number;
   duration: number;
 }
 
 export class CreateJobService {
-  constructor(private db: Database) {}
+  constructor(private db: Database) { }
 
-  async execute({ name, description, price, duration }: CreateJobRequest) {
+  async execute({ name, description, priceP, priceM, priceG, duration }: CreateJobRequest) {
     // 1. Validação Manual: Nome
     if (!name || name.trim().length < 3) {
       throw new BadRequestError(
@@ -22,7 +24,7 @@ export class CreateJobService {
     }
 
     // 2. Validação Manual: Preço
-    if (typeof price !== "number" || price <= 0) {
+    if (typeof priceP !== "number" || typeof priceM !== "number" || typeof priceG !== "number" || priceP <= 0 || priceM <= 0 || priceG <= 0) {
       throw new BadRequestError("O preço deve ser um número maior que zero.");
     }
 
@@ -31,6 +33,10 @@ export class CreateJobService {
       throw new BadRequestError(
         "A duração deve ser informada em minutos e ser maior que zero.",
       );
+    }
+
+    if (!description) {
+      description = ""
     }
 
     // 4. Verificação de Duplicidade (Opcional, mas boa prática)
@@ -46,18 +52,22 @@ export class CreateJobService {
       id: randomUUID(),
       name,
       description: description || "",
-      price,
+      priceP,
+      priceM,
+      priceG,
       duration,
     };
 
     // 5. Persistência
     await this.db.run(
-      "INSERT INTO jobs (id, name, description, price, duration) VALUES (?, ?, ?, ?, ?)",
+      "INSERT INTO jobs (id, name, description, priceP, priceM, priceG, duration) VALUES (?, ?, ?, ?, ?, ?, ?)",
       [
         newJob.id,
         newJob.name,
         newJob.description,
-        newJob.price,
+        newJob.priceP,
+        newJob.priceM,
+        newJob.priceG,
         newJob.duration,
       ],
     );

@@ -7,13 +7,15 @@ db.exec(`
     email TEXT NOT NULL,
     password TEXT NOT NULL,
     role TEXT NOT NULL
-  )
+  );
 
   CREATE TABLE IF NOT EXISTS jobs (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT,
-    price REAL NOT NULL,
+    priceP REAL NOT NULL,
+    priceM REAL NOT NULL,
+    priceG REAL NOT NULL,
     duration INTEGER NOT NULL -- Duração estimada em minutos
   );
 `)

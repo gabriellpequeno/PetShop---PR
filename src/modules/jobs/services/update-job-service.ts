@@ -6,14 +6,16 @@ interface UpdateJobRequest {
   id: string;
   name?: string;
   description?: string;
-  price?: number;
+  priceP?: number;
+  priceM?: number;
+  priceG?: number;
   duration?: number;
 }
 
 export class UpdateJobService {
-  constructor(private db: Database) {}
+  constructor(private db: Database) { }
 
-  async execute({ id, name, description, price, duration }: UpdateJobRequest) {
+  async execute({ id, name, description, priceP, priceM, priceG, duration }: UpdateJobRequest) {
     if (!id) {
       throw new BadRequestError("O ID do serviço é obrigatório.");
     }
@@ -31,9 +33,16 @@ export class UpdateJobService {
         "O nome do serviço deve ter pelo menos 3 caracteres.",
       );
     }
+    if (priceP !== undefined && (typeof priceP !== "number" || priceP <= 0)) {
+      throw new BadRequestError("O preço P deve ser um número maior que zero.");
+    }
 
-    if (price !== undefined && (typeof price !== "number" || price <= 0)) {
-      throw new BadRequestError("O preço deve ser um número maior que zero.");
+    if (priceM !== undefined && (typeof priceM !== "number" || priceM <= 0)) {
+      throw new BadRequestError("O preço M deve ser um número maior que zero.");
+    }
+
+    if (priceG !== undefined && (typeof priceG !== "number" || priceG <= 0)) {
+      throw new BadRequestError("O preço G deve ser um número maior que zero.");
     }
 
     if (
@@ -50,21 +59,25 @@ export class UpdateJobService {
     const updatedName = name !== undefined ? name : job.name;
     const updatedDescription =
       description !== undefined ? description : job.description;
-    const updatedPrice = price !== undefined ? price : job.price;
+    const updatedPriceP = priceP !== undefined ? priceP : job.priceP;
+    const updatedPriceM = priceM !== undefined ? priceM : job.priceM;
+    const updatedPriceG = priceG !== undefined ? priceG : job.priceG;
     const updatedDuration = duration !== undefined ? duration : job.duration;
 
     await this.db.run(
       `UPDATE jobs 
-       SET name = ?, description = ?, price = ?, duration = ?
+       SET name = ?, description = ?, priceP = ?, priceM = ?, priceG = ?, duration = ?
        WHERE id = ?`,
-      [updatedName, updatedDescription, updatedPrice, updatedDuration, id],
+      [updatedName, updatedDescription, updatedPriceP, updatedPriceM, updatedPriceG, updatedDuration, id],
     );
 
     return {
       id,
       name: updatedName,
       description: updatedDescription,
-      price: updatedPrice,
+      priceP: updatedPriceP,
+      priceM: updatedPriceM,
+      priceG: updatedPriceG,
       duration: updatedDuration,
     };
   }
