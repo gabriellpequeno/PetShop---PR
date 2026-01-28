@@ -1,8 +1,3 @@
-/**
- * Auth Modal Module
- * Handles login and registration modal interactions
- */
-
 interface AuthResponse {
   user?: { id: number; email: string; name: string }
   token?: string
@@ -24,6 +19,7 @@ class AuthModal {
   // Input elements
   private loginEmailInput: HTMLInputElement | null = null
   private loginPasswordInput: HTMLInputElement | null = null
+  private registerNameInput: HTMLInputElement | null = null
   private registerEmailInput: HTMLInputElement | null = null
   private registerPasswordInput: HTMLInputElement | null = null
   private registerConfirmPasswordInput: HTMLInputElement | null = null
@@ -31,6 +27,7 @@ class AuthModal {
   // Error elements
   private loginEmailError: HTMLElement | null = null
   private loginPasswordError: HTMLElement | null = null
+  private registerNameError: HTMLElement | null = null
   private registerEmailError: HTMLElement | null = null
   private registerPasswordError: HTMLElement | null = null
   private registerConfirmPasswordError: HTMLElement | null = null
@@ -66,6 +63,7 @@ class AuthModal {
     this.loginPasswordInput = document.getElementById('loginPassword') as HTMLInputElement
 
     // Register inputs
+    this.registerNameInput = document.getElementById('registerName') as HTMLInputElement
     this.registerEmailInput = document.getElementById('registerEmail') as HTMLInputElement
     this.registerPasswordInput = document.getElementById('registerPassword') as HTMLInputElement
     this.registerConfirmPasswordInput = document.getElementById('registerConfirmPassword') as HTMLInputElement
@@ -73,6 +71,7 @@ class AuthModal {
     // Error elements
     this.loginEmailError = document.getElementById('loginEmailError')
     this.loginPasswordError = document.getElementById('loginPasswordError')
+    this.registerNameError = document.getElementById('registerNameError')
     this.registerEmailError = document.getElementById('registerEmailError')
     this.registerPasswordError = document.getElementById('registerPasswordError')
     this.registerConfirmPasswordError = document.getElementById('registerConfirmPasswordError')
@@ -338,12 +337,18 @@ class AuthModal {
 
     this.clearAllErrors()
 
+    const name = this.registerNameInput?.value.trim() || ''
     const email = this.registerEmailInput?.value.trim() || ''
     const password = this.registerPasswordInput?.value || ''
     const confirmPassword = this.registerConfirmPasswordInput?.value || ''
 
     // Validation
     let hasError = false
+
+    if (!name) {
+      this.showInputError(this.registerNameInput, this.registerNameError, 'Nome é obrigatório')
+      hasError = true
+    }
 
     if (!email) {
       this.showInputError(this.registerEmailInput, this.registerEmailError, 'Email é obrigatório')
@@ -378,7 +383,7 @@ class AuthModal {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password }),
       })
 
       const data: AuthResponse = await response.json()

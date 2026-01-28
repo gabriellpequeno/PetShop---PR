@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Mobile Menu Logic
     const mobileMenuBtn = document.getElementById('mobileMenuBtn') as HTMLButtonElement | null;
     const mobileMenu = document.getElementById('mobileMenu') as HTMLDivElement | null;
     const menuIcon = document.getElementById('menuIcon') as HTMLElement | null;
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileMenuBtn.addEventListener('click', toggleMenu);
     }
 
-    // Close menu when clicking a link
     mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
             if (mobileMenu && mobileMenu.classList.contains('open')) {
@@ -35,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Navbar Scroll Logic
     const navbar = document.getElementById('navbar') as HTMLElement | null;
 
     function handleScroll(): void {
