@@ -94,7 +94,8 @@
 
         <div class="hero-image-container">
           <div class="hero-blob"></div>
-          <img src="../assets/img/hero-dog.png" alt="Cachorro fofo usando roupão e segurando um drink, estilo spa" class="hero-img" />
+          <img src="../assets/img/hero-dog.png" alt="Cachorro fofo usando roupão e segurando um drink, estilo spa"
+            class="hero-img" />
         </div>
       </div>
 
@@ -441,13 +442,8 @@
             <div class="auth-form-group">
               <label class="auth-form-label" for="loginEmail">Email</label>
               <div class="auth-form-input-wrapper">
-                <input 
-                  type="email" 
-                  id="loginEmail" 
-                  class="auth-form-input" 
-                  placeholder="seu@email.com"
-                  autocomplete="email"
-                />
+                <input type="email" id="loginEmail" class="auth-form-input" placeholder="seu@email.com"
+                  autocomplete="email" />
                 <i data-lucide="mail"></i>
               </div>
               <div class="auth-form-error" id="loginEmailError">
@@ -459,13 +455,8 @@
             <div class="auth-form-group">
               <label class="auth-form-label" for="loginPassword">Senha</label>
               <div class="auth-form-input-wrapper">
-                <input 
-                  type="password" 
-                  id="loginPassword" 
-                  class="auth-form-input" 
-                  placeholder="Sua senha"
-                  autocomplete="current-password"
-                />
+                <input type="password" id="loginPassword" class="auth-form-input" placeholder="Sua senha"
+                  autocomplete="current-password" />
                 <i data-lucide="lock"></i>
               </div>
               <div class="auth-form-error" id="loginPasswordError">
@@ -482,7 +473,7 @@
 
           <div class="auth-toggle-container">
             <p class="auth-toggle-text">
-              Não tem uma conta? 
+              Não tem uma conta?
               <button class="auth-toggle-link" id="toggleToRegister">Cadastre-se</button>
             </p>
           </div>
@@ -511,16 +502,25 @@
           </div>
 
           <form id="registerForm">
+
+            <div class="auth-form-group">
+              <label class="auth-form-label" for="registerName">Nome</label>
+              <div class="auth-form-input-wrapper">
+                <input type="text" id="registerName" class="auth-form-input" placeholder="Seu nome"
+                  autocomplete="name" />
+                <i data-lucide="user"></i>
+              </div>
+              <div class="auth-form-error" id="registerNameError">
+                <i data-lucide="alert-circle"></i>
+                <span></span>
+              </div>
+            </div>
+
             <div class="auth-form-group">
               <label class="auth-form-label" for="registerEmail">Email</label>
               <div class="auth-form-input-wrapper">
-                <input 
-                  type="email" 
-                  id="registerEmail" 
-                  class="auth-form-input" 
-                  placeholder="seu@email.com"
-                  autocomplete="email"
-                />
+                <input type="email" id="registerEmail" class="auth-form-input" placeholder="seu@email.com"
+                  autocomplete="email" />
                 <i data-lucide="mail"></i>
               </div>
               <div class="auth-form-error" id="registerEmailError">
@@ -532,13 +532,8 @@
             <div class="auth-form-group">
               <label class="auth-form-label" for="registerPassword">Senha</label>
               <div class="auth-form-input-wrapper">
-                <input 
-                  type="password" 
-                  id="registerPassword" 
-                  class="auth-form-input" 
-                  placeholder="Mínimo 8 caracteres"
-                  autocomplete="new-password"
-                />
+                <input type="password" id="registerPassword" class="auth-form-input" placeholder="Mínimo 8 caracteres"
+                  autocomplete="new-password" />
                 <i data-lucide="lock"></i>
               </div>
               <div class="auth-form-error" id="registerPasswordError">
@@ -556,13 +551,8 @@
             <div class="auth-form-group">
               <label class="auth-form-label" for="registerConfirmPassword">Confirmar Senha</label>
               <div class="auth-form-input-wrapper">
-                <input 
-                  type="password" 
-                  id="registerConfirmPassword" 
-                  class="auth-form-input" 
-                  placeholder="Repita sua senha"
-                  autocomplete="new-password"
-                />
+                <input type="password" id="registerConfirmPassword" class="auth-form-input"
+                  placeholder="Repita sua senha" autocomplete="new-password" />
                 <i data-lucide="lock-keyhole"></i>
               </div>
               <div class="auth-form-error" id="registerConfirmPasswordError">
@@ -579,7 +569,7 @@
 
           <div class="auth-toggle-container">
             <p class="auth-toggle-text">
-              Já tem uma conta? 
+              Já tem uma conta?
               <button class="auth-toggle-link" id="toggleToLogin">Faça login</button>
             </p>
           </div>
