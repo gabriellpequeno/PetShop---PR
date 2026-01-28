@@ -17,7 +17,7 @@ db.exec(`
     breed TEXT NOT NULL,
     age INTEGER NOT NULL,
     weight REAL NOT NULL,
-    FOREIGN KEY(user_id) REFERENCES users(id)
+    FOREIGN KEY(userId) REFERENCES users(id)
   );
 
   CREATE TABLE IF NOT EXISTS jobs (
