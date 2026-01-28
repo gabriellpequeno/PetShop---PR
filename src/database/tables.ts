@@ -9,6 +9,17 @@ db.exec(`
     role TEXT NOT NULL
   );
 
+  CREATE TABLE IF NOT EXISTS pets (
+    id TEXT PRIMARY KEY,
+    userId TEXT NOT NULL,
+    name TEXT NOT NULL,
+    species TEXT NOT NULL,
+    breed TEXT NOT NULL,
+    age INTEGER NOT NULL,
+    weight REAL NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+  );
+
   CREATE TABLE IF NOT EXISTS jobs (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -17,16 +28,6 @@ db.exec(`
     priceM REAL NOT NULL,
     priceG REAL NOT NULL,
     duration INTEGER NOT NULL -- Duração estimada em minutos
-  );
-
-  CREATE TABLE IF NOT EXISTS pets (
-    id TEXT PRIMARY KEY,
-    userId TEXT NOT NULL,
-    name TEXT NOT NULL,
-    species TEXT NOT NULL,
-    breed TEXT,
-    weight REAL,
-    FOREIGN KEY (userId) REFERENCES users(id)
   );
 
   CREATE TABLE IF NOT EXISTS bookings (
