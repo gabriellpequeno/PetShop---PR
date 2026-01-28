@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', handleScroll);
 
-    // Auth State Logic
     const userString = localStorage.getItem('user');
     const authConsumer = new AuthApiConsumer();
 
@@ -60,12 +59,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             loginBtns.forEach(btn => {
                 const button = btn as HTMLButtonElement;
-                // Get first name
                 const firstName = user.name.split(' ')[0];
                 button.textContent = `Olá, ${firstName}`;
                 button.removeAttribute('data-auth-modal');
                 
-                // Add logout functionality
                 button.addEventListener('click', async (e) => {
                    e.preventDefault();
                    if(confirm('Deseja sair da sua conta?')) {

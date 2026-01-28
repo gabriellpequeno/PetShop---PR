@@ -19,7 +19,7 @@ export class CreatePetService {
     }
 
     await this.petsRepository.add({
-      user_id: userId,
+      userId: userId,
       name,
       species,
       breed,

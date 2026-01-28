@@ -5,7 +5,7 @@ export class PetsFaker {
   static fake(baseData?: Partial<Pet>): Pet {
     return {
       id: faker.string.uuid(),
-      user_id: faker.string.uuid(),
+      userId: faker.string.uuid(),
       name: faker.animal.dog(),
       species: faker.helpers.arrayElement(['Dog', 'Cat', 'Bird']),
       breed: faker.animal.type(),

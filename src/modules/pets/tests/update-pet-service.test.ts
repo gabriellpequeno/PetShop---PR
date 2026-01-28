@@ -10,7 +10,7 @@ describe('UpdatePetService', () => {
   const service = new UpdatePetService(repository)
 
   it('should update a pet if owner', async () => {
-    const pet = PetsFaker.fake({ user_id: 'user-id' })
+    const pet = PetsFaker.fake({ userId: 'user-id' })
     repository.findById.mockResolvedValue(pet)
 
     await expect(service.execute({
@@ -31,7 +31,7 @@ describe('UpdatePetService', () => {
   })
 
   it('should update a pet if admin', async () => {
-    const pet = PetsFaker.fake({ user_id: 'other-user-id' })
+    const pet = PetsFaker.fake({ userId: 'other-user-id' })
     repository.findById.mockResolvedValue(pet)
 
     await expect(service.execute({
@@ -66,7 +66,7 @@ describe('UpdatePetService', () => {
   })
 
   it('should throw AppError if user is not owner and not admin', async () => {
-    const pet = PetsFaker.fake({ user_id: 'other-user-id' })
+    const pet = PetsFaker.fake({ userId: 'other-user-id' })
     repository.findById.mockResolvedValue(pet)
 
     await expect(service.execute({
