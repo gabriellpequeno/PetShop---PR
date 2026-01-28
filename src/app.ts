@@ -8,6 +8,9 @@ import { authRouter } from './modules/auth/routers/auth-router'
 import { petsRouter } from './modules/pets/routers/pets-router'
 import { usersRouter } from './modules/users/routers/users-router'
 import { EnsureAuthenticationMiddleware } from './middlewares/ensure-authentication-middleware'
+import { homeRouter } from './modules/home/routers/home-router'
+import { petsPageRouter } from './modules/pets/routers/pets-page-router'
+import { usersPageRouter } from './modules/users/routers/users-page-router'
 
 const app = express()
 
@@ -20,12 +23,12 @@ app.use(express.static(UI_STATIC_PATH))
 app.get(/^\/scripts\/(.+)\.js$/, TranspileScriptMiddleware.handle)
 
 app.use(authRouter)
+app.use(homeRouter)
+app.use(petsPageRouter)
+app.use(usersPageRouter)
+
 app.use('/api/pets', petsRouter)
 app.use('/api/users', usersRouter)
-
-app.get('/', (_, res) => {
-  res.sendFile(join(UI_STATIC_PATH, 'pages', 'home.html'))
-})
 
 app.use(HandleErrorMiddleware.handle)
 
