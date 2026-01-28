@@ -18,7 +18,7 @@ describe('Create Pet Service', () => {
       name: 'Buddy',
       species: 'Dog',
       breed: 'Golden Retriever',
-      birthDate: '2020-01-01',
+      age: 2,
       weight: 30
     })).resolves.not.toThrow()
 
@@ -27,7 +27,7 @@ describe('Create Pet Service', () => {
       name: 'Buddy',
       species: 'Dog',
       breed: 'Golden Retriever',
-      birth_date: '2020-01-01',
+      age: 2,
       weight: 30
     }))
   })
@@ -38,7 +38,7 @@ describe('Create Pet Service', () => {
       name: '',
       species: 'Dog',
       breed: 'Golden Retriever',
-      birthDate: '2020-01-01',
+      age: 2,
       weight: 30
     })).rejects.toThrow(AppError)
   })

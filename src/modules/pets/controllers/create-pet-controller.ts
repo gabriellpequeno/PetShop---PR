@@ -4,7 +4,7 @@ import { PetsRepository } from '../repositories/pets-repository'
 
 export class CreatePetController {
   static async handle(request: Request, response: Response) {
-    const { name, species, breed, birthDate, weight } = request.body
+    const { name, species, breed, age, weight } = request.body
     
     // The user id comes from the authenticated user token (EnsureAuthenticationMiddleware)
     // Assuming the middleware adds the user to the request object (needs verification)
@@ -49,7 +49,7 @@ export class CreatePetController {
       name,
       species,
       breed,
-      birthDate,
+      age,
       weight
     })
     

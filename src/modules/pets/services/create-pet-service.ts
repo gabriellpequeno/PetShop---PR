@@ -6,15 +6,15 @@ type Request = {
   name: string
   species: string
   breed: string
-  birthDate: string
+  age: number
   weight: number
 }
 
 export class CreatePetService {
   constructor(private readonly petsRepository: PetsRepository) {}
 
-  async execute({ userId, name, species, breed, birthDate, weight }: Request) {
-    if (!name || !species || !breed || !birthDate || !weight) {
+  async execute({ userId, name, species, breed, age, weight }: Request) {
+    if (!name || !species || !breed || !age || !weight) {
       throw new AppError('Validation Error', 'All fields are required', 400)
     }
 
@@ -23,7 +23,7 @@ export class CreatePetService {
       name,
       species,
       breed,
-      birth_date: birthDate,
+      age,
       weight
     })
   }

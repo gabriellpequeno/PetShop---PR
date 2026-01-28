@@ -4,6 +4,6 @@ export type Pet = {
   name: string
   species: string
   breed: string
-  birth_date: string
+  age: number
   weight: number
 }
