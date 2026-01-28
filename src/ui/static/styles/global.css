@@ -41,6 +41,7 @@ body {
   color: var(--text-main-light);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  /* cursor: url('../assets/img/cursor.svg'), auto; - Replaced by CustomCursor */
   transition:
     background-color 0.3s,
     color 0.3s;
@@ -56,6 +57,7 @@ body {
 a {
   text-decoration: none;
   color: inherit;
+  /* cursor: url('../assets/img/cursor-active.svg'), pointer; */
 }
 
 ul {
@@ -69,7 +71,7 @@ img {
 
 button {
   font-family: inherit;
-  cursor: pointer;
+  /* cursor: url('../assets/img/cursor-active.svg'), pointer; - Replaced by CustomCursor */
   border: none;
 }
 
@@ -155,7 +157,7 @@ button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  cursor: pointer;
+  /* cursor: url('../assets/img/cursor-active.svg'), pointer; */
 }
 
 .logo-container:hover .logo-icon-bg {
@@ -331,7 +333,7 @@ button {
   left: 0;
   right: 0;
   height: 4rem;
-  background-color: var(--secondary);
+  /* background-color: var(--secondary); */
   border-bottom-left-radius: 50%;
   border-bottom-right-radius: 50%;
   margin-top: -2rem;
@@ -484,5 +486,62 @@ button {
 
   50% {
     transform: translateY(-10px);
+  }
+}
+
+/* Custom Cursor Styles */
+@media (hover: hover) and (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
+
+  .custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 32px;
+    height: 32px;
+    background: url('../assets/img/cursor.svg') no-repeat center/contain;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate3d(-50%, -50%, 0);
+    transition: transform 0.1s ease-out, width 0.2s, height 0.2s;
+    will-change: transform;
+  }
+
+  .custom-cursor.hovering {
+    background-image: url('../assets/img/cursor-clicavel.svg');
+    transform: translate3d(-50%, -50%, 0) scale(1.5);
+  }
+
+  .custom-cursor.clicking {
+    background-image: url('../assets/img/cursor-active.svg');
+    transform: translate3d(-50%, -50%, 0) scale(0.9);
+  }
+
+  .cursor-footprint {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 32px;
+    height: 32px;
+    background: url('../assets/img/cursor-trail.svg') no-repeat center/contain;
+    pointer-events: none; 
+    z-index: 9998;
+    transform: translate3d(var(--x), var(--y), 0) translate(-50%, -50%) rotate(var(--r));
+    animation: footprints-fade 0.5s forwards;
+    will-change: transform, opacity;
+  }
+
+  @keyframes footprints-fade {
+    0% {
+      opacity: 0.4;
+      transform: translate3d(var(--x), var(--y), 0) translate(-50%, -50%) rotate(var(--r)) scale(1);
+    }
+
+    100% {
+      opacity: 0;
+      transform: translate3d(var(--x), var(--y), 0) translate(-50%, -50%) rotate(var(--r)) scale(0.5);
+    }
   }
 }

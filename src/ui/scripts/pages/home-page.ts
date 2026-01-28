@@ -1,4 +1,9 @@
+import { CustomCursor } from '../components/custom-cursor.js'
+// import { TestimonialsCarousel } from '../components/testimonials-carousel';
+
 document.addEventListener('DOMContentLoaded', () => {
+    new CustomCursor()
+
     // Mobile Menu Logic
     const mobileMenuBtn = document.getElementById('mobileMenuBtn') as HTMLButtonElement | null;
     const mobileMenu = document.getElementById('mobileMenu') as HTMLDivElement | null;
