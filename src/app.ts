@@ -19,7 +19,7 @@ app.use(express.static(UI_STATIC_PATH))
 app.get(/^\/scripts\/(.+)\.js$/, TranspileScriptMiddleware.handle)
 
 app.use(authRouter)
-app.use(petsRouter)
+app.use('/api/pets', petsRouter)
 
 app.get('/', (_, res) => {
   res.sendFile(join(UI_STATIC_PATH, 'pages', 'home.html'))
