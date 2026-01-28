@@ -20,9 +20,9 @@ app.get(/^\/scripts\/(.+)\.js$/, TranspileScriptMiddleware.handle);
 app.use(authRouter);
 app.use("/jobs", jobsRouter);
 
-app.get("/", EnsureAuthenticationMiddleware.handle, (_, res) => {
-  res.sendFile(join(UI_STATIC_PATH, "pages", "home.html"));
-});
+app.get('/', EnsureAuthenticationMiddleware.handle, (_, res) => {
+  res.sendFile(join(UI_STATIC_PATH, 'pages', 'home.html'))
+})
 
 app.use(HandleErrorMiddleware.handle);
 
