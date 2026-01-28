@@ -43,8 +43,10 @@ class LoginPage {
       const response = await this.authConsumer.loginUser(email, password)
 
       if (response.ok) {
+        const data = await response.json()
+        localStorage.setItem('user', JSON.stringify(data.user))
         alert('Login realizado com sucesso!')
-        window.location.href = '/';
+        window.location.href = '/pages/pets.html'; // Redirect to dashboard
       } else {
         throw new Error('Falha no login')
       }

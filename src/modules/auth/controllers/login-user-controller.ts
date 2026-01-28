@@ -12,14 +12,14 @@ export class LoginUserController {
     const jwtProvider = new JwtProvider()
     const cryptoProvider = new CryptoProvider()
     const service = new LoginUserService(repository, jwtProvider, cryptoProvider)
-    const { token } = await service.execute({ email, password })
+    const { token, user } = await service.execute({ email, password })
 
     response.cookie('token', token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 // 1 day
     })
 
-    return response.json({ token })
+    return response.json({ token, user })
 
   }
 }

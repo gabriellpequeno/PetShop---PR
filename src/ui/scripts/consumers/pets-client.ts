@@ -1,0 +1,43 @@
+import { ApiConsumer } from './api-consumer';
+
+export class PetsClient extends ApiConsumer {
+  async listPets() {
+    const response = await fetch(`${ApiConsumer.BASE_URL}/pets`, {
+      method: 'GET',
+      headers: this.getHeaders()
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch pets');
+    }
+    
+    return response.json();
+  }
+
+  async createPet(data: any) {
+    const response = await fetch(`${ApiConsumer.BASE_URL}/pets`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to create pet');
+    }
+
+    return response.json();
+  }
+
+  async deletePet(id: string) {
+    const response = await fetch(`${ApiConsumer.BASE_URL}/pets/${id}`, {
+      method: 'DELETE',
+      headers: this.getHeaders()
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete pet');
+    }
+
+    return true; // No content usually
+  }
+}
