@@ -38,9 +38,14 @@ src/
 │   │   ├── services/    # Regras de negócio (Use Cases)
 │   │   └── tests/       # Testes unitários do módulo
 │   ├── bookings/      # Módulo de Agendamentos
-│   ├── pets/          # Módulo de Pets
-│   ├── users/         # Módulo de Usuários
-│   └── jobs/          # Módulo de Serviços
+│   ├── pets/          # Módulo de Pets (Gerenciamento de animais)
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── repositories/
+│   │   ├── routers/
+│   │   ├── services/
+│   │   └── tests/
+│   └── users/         # Módulo de Usuários
 ├── ui/                # Camada de Frontend
 │   ├── scripts/       # Lógica TypeScript do frontend (Transpilada on-the-fly)
 │   │   ├── consumers/ # Clientes HTTP para comunicação com API
@@ -59,6 +64,56 @@ O backend segue uma arquitetura em camadas limpa, organizada dentro de módulos 
 2. **Controller (`controllers/`)**: Extrai dados da requisição (body, params), valida tipos básicos e invoca o Service. Responsável por formatar a resposta HTTP.
 3. **Service (`services/`)**: Contém a regra de negócios pura. Não deve conhecer detalhes do HTTP (req/res). Lança erros customizados (`AppError`) se as regras forem violadas. interage com o Banco de Dados.
 4. **Database**: Acesso direto via driver `sqlite` ou Repository Pattern (se implementado).
+
+### Render Controllers (Server-Side Routing)
+Para servir páginas HTML específicas em rotas da aplicação (ex: `/login`, `/dashboard`), utiliza-se o padrão de **Render Controllers**.
+Embora a pasta `ui/static` seja servida estaticamente, Render Controllers permitem controle explícito sobre qual arquivo HTML é entregue para uma determinada rota, facilitando a manutenção e separação de rotas de API vs Rotas de Página, além de permitir injeção de dados lado-servidor se necessário no futuro.
+
+**Exemplo de Implementação (Padrão):**
+```typescript
+import type { Request, Response } from 'express'
+import { join } from 'node:path'
+import { UI_STATIC_PATH } from '@/constants/ui-static-path'
+
+export class RenderPageController {
+  static handle(request: Request, response: Response) {
+    // Retorna o arquivo HTML estático correspondente à página
+    return response.sendFile(join(UI_STATIC_PATH, 'pages', 'nome-da-pagina.html'))
+  }
+}
+```
+
+**Exemplo real — Página de Login (documentação do padrão):**
+- Arquivo: `src/modules/auth/controllers/render-login-page-controller.ts`
+- Rota: `GET /login`
+
+Controller:
+```typescript
+import type { Request, Response } from 'express'
+import { join } from 'node:path'
+import { UI_STATIC_PATH } from '@/constants/ui-static-path'
+
+export class RenderLoginPageController {
+  static handle(_req: Request, res: Response) {
+    // Serve o HTML estático da página de login
+    return res.sendFile(join(UI_STATIC_PATH, 'pages', 'login.html'))
+  }
+}
+```
+
+Router (ex.: `src/modules/auth/routers/auth-router.ts`):
+```typescript
+import { Router } from 'express'
+import { RenderLoginPageController } from '../controllers/render-login-page-controller'
+
+const authRouter = Router()
+
+authRouter.get('/login', RenderLoginPageController.handle)
+
+export { authRouter }
+```
+
+Nota: Atualmente esse login esta sendo feito por um modal então é apenas um exemplo isso acima, para ser implementado por outras paginas.
 
 ### Controle de Acesso (RBAC)
 O sistema implementa controle de acesso baseado em papéis (RBAC) simples:
