@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Mobile Menu Logic
     const mobileMenuBtn = document.getElementById('mobileMenuBtn') as HTMLButtonElement | null;
     const mobileMenu = document.getElementById('mobileMenu') as HTMLDivElement | null;
     const menuIcon = document.getElementById('menuIcon') as HTMLElement | null;
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileMenuBtn.addEventListener('click', toggleMenu);
     }
 
-    // Close menu when clicking a link
     mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
             if (mobileMenu && mobileMenu.classList.contains('open')) {
@@ -35,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Navbar Scroll Logic
     const navbar = document.getElementById('navbar') as HTMLElement | null;
 
     function handleScroll(): void {
@@ -49,4 +46,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('scroll', handleScroll);
+
+    // Auth State Logic
+    const userString = localStorage.getItem('user');
+    if (userString) {
+        try {
+            const user = JSON.parse(userString);
+            const loginBtns = document.querySelectorAll('[data-auth-modal]');
+            
+            loginBtns.forEach(btn => {
+                const button = btn as HTMLButtonElement;
+                // Get first name
+                const firstName = user.name.split(' ')[0];
+                button.textContent = `Olá, ${firstName}`;
+                button.removeAttribute('data-auth-modal');
+                
+                // Add logout functionality
+                button.addEventListener('click', (e) => {
+                   e.preventDefault();
+                   if(confirm('Deseja sair da sua conta?')) {
+                       localStorage.removeItem('token');
+                       localStorage.removeItem('user');
+                       // Note: HttpOnly cookies must be cleared by server-side logout endpoint
+                       // For now we just clear client state
+                       window.location.reload();
+                   }
+                });
+            });
+        } catch (e) {
+            console.error('Error parsing user data', e);
+        }
+    }
 });
