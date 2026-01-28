@@ -1,3 +1,5 @@
+import { AuthApiConsumer } from '../consumers/auth-api-consumer'
+
 document.addEventListener('DOMContentLoaded', () => {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn') as HTMLButtonElement | null;
     const mobileMenu = document.getElementById('mobileMenu') as HTMLDivElement | null;
@@ -49,6 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Auth State Logic
     const userString = localStorage.getItem('user');
+    const authConsumer = new AuthApiConsumer();
+
     if (userString) {
         try {
             const user = JSON.parse(userString);
@@ -62,14 +66,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.removeAttribute('data-auth-modal');
                 
                 // Add logout functionality
-                button.addEventListener('click', (e) => {
+                button.addEventListener('click', async (e) => {
                    e.preventDefault();
                    if(confirm('Deseja sair da sua conta?')) {
-                       localStorage.removeItem('token');
-                       localStorage.removeItem('user');
-                       // Note: HttpOnly cookies must be cleared by server-side logout endpoint
-                       // For now we just clear client state
-                       window.location.reload();
+                       try {
+                           await authConsumer.logoutUser();
+                       } catch (error) {
+                           console.error('Logout failed on server', error);
+                       } finally {
+                           localStorage.removeItem('token');
+                           localStorage.removeItem('user');
+
+                           window.location.reload();
+                       }
                    }
                 });
             });

@@ -16,4 +16,11 @@ export class AuthApiConsumer extends ApiConsumer {
       body: JSON.stringify({ name, email, password }),
     })
   }
+
+  async logoutUser() {
+    return fetch(`${AuthApiConsumer.BASE_URL}/auth/logout`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+    })
+  }
 }
