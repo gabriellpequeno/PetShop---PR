@@ -19,7 +19,7 @@ app.get(/^\/scripts\/(.+)\.js$/, TranspileScriptMiddleware.handle)
 
 app.use(authRouter)
 
-app.get('/', EnsureAuthenticationMiddleware.handle, (_, res) => {
+app.get('/', (_, res) => {
   res.sendFile(join(UI_STATIC_PATH, 'pages', 'home.html'))
 })
 
