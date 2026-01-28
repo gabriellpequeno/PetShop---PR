@@ -7,7 +7,19 @@ db.exec(`
     email TEXT NOT NULL,
     password TEXT NOT NULL,
     role TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS pets (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    name TEXT NOT NULL,
+    species TEXT NOT NULL,
+    breed TEXT NOT NULL,
+    age INTEGER NOT NULL,
+    weight REAL NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id)
   )
+
 `)
   .then(() => {
     console.log('Tables created successfully!')
