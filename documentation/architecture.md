@@ -38,7 +38,13 @@ src/
 │   │   ├── services/    # Regras de negócio (Use Cases)
 │   │   └── tests/       # Testes unitários do módulo
 │   ├── bookings/      # Módulo de Agendamentos
-│   ├── pets/          # Módulo de Pets
+│   ├── pets/          # Módulo de Pets (Gerenciamento de animais)
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── repositories/
+│   │   ├── routers/
+│   │   ├── services/
+│   │   └── tests/
 │   └── users/         # Módulo de Usuários
 ├── ui/                # Camada de Frontend
 │   ├── scripts/       # Lógica TypeScript do frontend (Transpilada on-the-fly)
