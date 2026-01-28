@@ -1,25 +1,25 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import type { Database } from "sqlite";
 import { CancelBookingService } from "../services/cancel-booking-service";
 import { BadRequestError } from "../../../errors/bad-request-error";
 import { NotFoundError } from "../../../errors/not-found-error";
+import type { BookingsRepository } from "../repositories/bookings-repository";
 
-const dbMock = {
-    get: vi.fn(),
-    run: vi.fn(),
-} as unknown as Database;
+// Mock do repository
+const repositoryMock = {
+    findById: vi.fn(),
+    updateStatus: vi.fn(),
+} as unknown as BookingsRepository;
 
 describe("CancelBookingService", () => {
     let cancelBookingService: CancelBookingService;
 
     beforeEach(() => {
-        cancelBookingService = new CancelBookingService(dbMock);
+        cancelBookingService = new CancelBookingService(repositoryMock);
         vi.clearAllMocks();
     });
 
     it("deve cancelar um agendamento futuro com sucesso", async () => {
-        // Data futura (2026-12-31)
-        vi.spyOn(dbMock, "get").mockResolvedValueOnce({
+        vi.spyOn(repositoryMock, "findById").mockResolvedValueOnce({
             id: "booking-123",
             userId: "user-123",
             petId: "pet-123",
@@ -38,18 +38,23 @@ describe("CancelBookingService", () => {
         });
 
         expect(result.status).toBe("cancelado");
-        expect(dbMock.run).toHaveBeenCalledWith(
-            "UPDATE bookings SET status = 'cancelado' WHERE id = ?",
-            ["booking-123"]
+        expect(repositoryMock.updateStatus).toHaveBeenCalledWith(
+            "booking-123",
+            "cancelado"
         );
     });
 
     it("deve permitir que admin cancele agendamento de outro usuário", async () => {
-        vi.spyOn(dbMock, "get").mockResolvedValueOnce({
+        vi.spyOn(repositoryMock, "findById").mockResolvedValueOnce({
             id: "booking-123",
             userId: "outro-usuario",
+            petId: "pet-123",
+            jobId: "job-123",
             bookingDate: "2026-12-31 10:00",
             status: "agendado",
+            realStartTime: null,
+            realEndTime: null,
+            createdAt: "2026-01-01T00:00:00Z",
         });
 
         const result = await cancelBookingService.execute({
@@ -62,7 +67,7 @@ describe("CancelBookingService", () => {
     });
 
     it("deve lançar erro se o agendamento não existir", async () => {
-        vi.spyOn(dbMock, "get").mockResolvedValueOnce(undefined);
+        vi.spyOn(repositoryMock, "findById").mockResolvedValueOnce(undefined);
 
         await expect(
             cancelBookingService.execute({
@@ -74,11 +79,16 @@ describe("CancelBookingService", () => {
     });
 
     it("deve lançar erro se cliente tentar cancelar agendamento de outro", async () => {
-        vi.spyOn(dbMock, "get").mockResolvedValueOnce({
+        vi.spyOn(repositoryMock, "findById").mockResolvedValueOnce({
             id: "booking-123",
             userId: "outro-usuario",
+            petId: "pet-123",
+            jobId: "job-123",
             bookingDate: "2026-12-31 10:00",
             status: "agendado",
+            realStartTime: null,
+            realEndTime: null,
+            createdAt: "2026-01-01T00:00:00Z",
         });
 
         await expect(
@@ -91,11 +101,16 @@ describe("CancelBookingService", () => {
     });
 
     it("deve lançar erro se o agendamento já foi cancelado", async () => {
-        vi.spyOn(dbMock, "get").mockResolvedValueOnce({
+        vi.spyOn(repositoryMock, "findById").mockResolvedValueOnce({
             id: "booking-123",
             userId: "user-123",
+            petId: "pet-123",
+            jobId: "job-123",
             bookingDate: "2026-12-31 10:00",
             status: "cancelado",
+            realStartTime: null,
+            realEndTime: null,
+            createdAt: "2026-01-01T00:00:00Z",
         });
 
         await expect(
@@ -108,11 +123,16 @@ describe("CancelBookingService", () => {
     });
 
     it("deve lançar erro se o agendamento já foi concluído", async () => {
-        vi.spyOn(dbMock, "get").mockResolvedValueOnce({
+        vi.spyOn(repositoryMock, "findById").mockResolvedValueOnce({
             id: "booking-123",
             userId: "user-123",
+            petId: "pet-123",
+            jobId: "job-123",
             bookingDate: "2026-12-31 10:00",
             status: "concluido",
+            realStartTime: null,
+            realEndTime: null,
+            createdAt: "2026-01-01T00:00:00Z",
         });
 
         await expect(
@@ -125,12 +145,16 @@ describe("CancelBookingService", () => {
     });
 
     it("deve lançar erro se tentar cancelar agendamento passado", async () => {
-        // Data no passado
-        vi.spyOn(dbMock, "get").mockResolvedValueOnce({
+        vi.spyOn(repositoryMock, "findById").mockResolvedValueOnce({
             id: "booking-123",
             userId: "user-123",
+            petId: "pet-123",
+            jobId: "job-123",
             bookingDate: "2020-01-01 10:00",
             status: "agendado",
+            realStartTime: null,
+            realEndTime: null,
+            createdAt: "2019-12-01T00:00:00Z",
         });
 
         await expect(

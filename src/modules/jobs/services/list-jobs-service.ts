@@ -1,20 +1,10 @@
-import { Database } from 'sqlite';
-
-export interface Job {
-  id: string;
-  name: string;
-  priceP: number;
-  priceM: number;
-  priceG: number;
-  duration: number;
-  status: string;
-}
+import type { JobsRepository } from "../repositories/jobs-repository";
+import type { Job } from "../models/job";
 
 export class ListJobsService {
-  constructor(private db: Database) {}
+  constructor(private repository: JobsRepository) { }
 
   async execute(): Promise<Job[]> {
-    const jobs = await this.db.all<Job[]>('SELECT * FROM jobs');
-    return jobs;
+    return this.repository.findAll();
   }
 }

@@ -1,11 +1,14 @@
 import { Router } from "express";
-import { BookingController } from "../controllers/booking-controller";
+import { CreateBookingController } from "../controllers/create-booking-controller";
+import { ListBookingsController } from "../controllers/list-bookings-controller";
+import { CancelBookingController } from "../controllers/cancel-booking-controller";
+import { CompleteBookingController } from "../controllers/complete-booking-controller";
 
 const bookingRouter = Router();
 
-bookingRouter.post("/", BookingController.create);
-bookingRouter.get("/", BookingController.list);
-bookingRouter.patch("/:id/cancel", BookingController.cancel);
-bookingRouter.patch("/:id/complete", BookingController.complete);
+bookingRouter.post("/", CreateBookingController.handle);
+bookingRouter.get("/", ListBookingsController.handle);
+bookingRouter.patch("/:id/cancel", CancelBookingController.handle);
+bookingRouter.patch("/:id/complete", CompleteBookingController.handle);
 
 export { bookingRouter };
