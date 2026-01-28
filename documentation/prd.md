@@ -192,6 +192,8 @@ Para atender ao requisito de banco de dados relacional e ao contexto de PetShop:
 
 * `GET /api/pets` - Lista meus pets
 * `POST /api/pets` - Cadastra novo pet
+* `PUT /api/pets/:id` - Edita pet (Dono/Admin)
+* `DELETE /api/pets/:id` - Remove pet (Dono/Admin)
 
 ### Bookings (Protegido)
 

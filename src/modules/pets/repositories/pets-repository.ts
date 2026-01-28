@@ -22,4 +22,23 @@ export class PetsRepository {
     const pets = await db.all<Pet[]>('SELECT * FROM pets')
     return pets
   }
+
+  async findById(id: string) {
+    const pet = await db.get<Pet>(
+      'SELECT * FROM pets WHERE id = ?',
+      [id]
+    )
+    return pet
+  }
+
+  async update(pet: Pet) {
+    await db.run(
+      'UPDATE pets SET name = ?, species = ?, breed = ?, age = ?, weight = ? WHERE id = ?',
+      [pet.name, pet.species, pet.breed, pet.age, pet.weight, pet.id]
+    )
+  }
+
+  async delete(id: string) {
+    await db.run('DELETE FROM pets WHERE id = ?', [id])
+  }
 }
