@@ -39,7 +39,8 @@ src/
 │   │   └── tests/       # Testes unitários do módulo
 │   ├── bookings/      # Módulo de Agendamentos
 │   ├── pets/          # Módulo de Pets
-│   └── users/         # Módulo de Usuários
+│   ├── users/         # Módulo de Usuários
+│   └── jobs/          # Módulo de Serviços
 ├── ui/                # Camada de Frontend
 │   ├── scripts/       # Lógica TypeScript do frontend (Transpilada on-the-fly)
 │   │   ├── consumers/ # Clientes HTTP para comunicação com API
