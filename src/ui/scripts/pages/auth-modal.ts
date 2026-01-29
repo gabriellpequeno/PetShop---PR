@@ -313,8 +313,7 @@ class AuthModal {
         localStorage.setItem('user', JSON.stringify(data.user))
 
         this.close()
-        window.location.hash = '#/home'
-        window.location.reload()
+        window.location.href = '/profile'
       } else {
         // Error
         if (this.loginErrorMessage) {
