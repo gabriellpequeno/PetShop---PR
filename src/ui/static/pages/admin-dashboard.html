@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Admin - Little's Petshop</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/admin-dashboard.css" />
+
+  <!-- Scripts -->
+  <script src="/scripts/components/sidebar-component.js" type="module"></script>
+  <script src="/scripts/pages/admin-dashboard-page.js" type="module"></script>
+</head>
+
+<body>
+
+  <div class="dashboard-container">
+    <petshop-sidebar mode="admin" active="dashboard"></petshop-sidebar>
+
+    <main class="main-content">
+      <!-- Header -->
+      <header class="admin-header">
+        <h1 class="page-title">Torre de Controle</h1>
+
+        <!-- Period Filter -->
+        <div class="period-filter">
+          <button class="period-btn" data-period="today">Hoje</button>
+          <button class="period-btn" data-period="week">Semana</button>
+          <button class="period-btn active" data-period="month">Mês</button>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="admin-content">
+        <!-- Metrics Grid -->
+        <div class="metrics-grid" id="metricsGrid">
+          <!-- Users Card -->
+          <div class="metric-card" data-view="users" style="cursor: pointer;">
+            <div class="metric-icon users">
+              <i data-lucide="users"></i>
+            </div>
+            <div class="metric-info">
+              <div class="metric-value" id="usersCount">--</div>
+              <div class="metric-label">Usuários Cadastrados</div>
+            </div>
+          </div>
+
+          <!-- Pets Card -->
+          <div class="metric-card" data-view="pets" style="cursor: pointer;">
+            <div class="metric-icon pets">
+              <i data-lucide="paw-print"></i>
+            </div>
+            <div class="metric-info">
+              <div class="metric-value" id="petsCount">--</div>
+              <div class="metric-label">Pets Registrados</div>
+            </div>
+          </div>
+
+          <!-- Bookings Card -->
+          <div class="metric-card" data-view="bookings" style="cursor: pointer;">
+            <div class="metric-icon bookings">
+              <i data-lucide="calendar"></i>
+            </div>
+            <div class="metric-info">
+              <div class="metric-value" id="bookingsCount">--</div>
+              <div class="metric-label">Agendamentos</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Table Section -->
+        <section class="users-section" id="dataSection">
+          <div class="section-header">
+            <h2 class="section-title" id="sectionTitle">Usuários</h2>
+          </div>
+
+          <div class="users-table-container">
+            <table class="users-table">
+              <thead>
+                <tr id="tableHeaderRow">
+                  <th>Nome</th>
+                  <th>Próximo Serviço</th>
+                  <th>Total de Pets</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <!-- Populated by JavaScript -->
+                <tr>
+                  <td colspan="4">
+                    <div class="empty-state">
+                      <i data-lucide="loader-2" class="animate-spin"></i>
+                      <p class="empty-state-text">Carregando usuários...</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Initialize Icons
+    lucide.createIcons();
+  </script>
+</body>
+
+</html>

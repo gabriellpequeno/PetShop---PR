@@ -1,7 +1,7 @@
 import { AuthApiConsumer } from "../consumers/auth-api-consumer"
 
 interface AuthResponse {
-  user?: { id: number; email: string; name: string }
+  user?: { id: number; email: string; name: string; role: string }
   token?: string
   message?: string
   error?: string
@@ -313,7 +313,13 @@ class AuthModal {
         localStorage.setItem('user', JSON.stringify(data.user))
 
         this.close()
-        window.location.href = '/profile'
+
+        // Redirect based on user role
+        if (data.user.role === 'admin') {
+          window.location.href = '/admin/dashboard'
+        } else {
+          window.location.href = '/profile'
+        }
       } else {
         // Error
         if (this.loginErrorMessage) {

@@ -16,6 +16,7 @@ import { petsRouter } from './modules/pets/routers/pets-router'
 import { homeRouter } from './modules/home/routers/home-router'
 import { jobsRouter } from "./modules/jobs/routers/jobs-router";
 import { bookingRouter } from "./modules/bookings/routers/booking-router";
+import { adminRouter } from "./modules/admin/routers/admin-router";
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use(jobsRouter)
 app.use(bookingRouter)
 app.use(petsRouter)
 app.use(usersRouter)
+app.use(adminRouter)
 
 app.use(HandleErrorMiddleware.handle);
 
