@@ -18,48 +18,14 @@
   <link rel="stylesheet" href="../styles/pets.css" />
   
   <!-- Scripts -->
+  <script src="/scripts/components/sidebar-component.js" type="module"></script>
   <script src="/scripts/pages/pets-page.js" type="module"></script>
 </head>
 <body>
 
   <div class="dashboard-container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-logo">
-        <div class="logo-icon-bg" style="width: 32px; height: 32px; padding: 6px;">
-          <i data-lucide="paw-print" style="width: 100%; height: 100%;"></i>
-        </div>
-        <span class="font-display" style="font-weight: 700; font-size: 1.25rem;">Little's</span>
-      </div>
-
-      <nav class="sidebar-nav">
-        <a href="/pages/profile.html" class="sidebar-link">
-          <i data-lucide="user"></i>
-          Perfil
-        </a>
-        <a href="#" class="sidebar-link active">
-          <i data-lucide="dog"></i>
-          Meus Pets
-        </a>
-        <a href="#" class="sidebar-link">
-          <i data-lucide="calendar"></i>
-          Agenda
-        </a>
-        <a href="#" class="sidebar-link">
-          <i data-lucide="settings"></i>
-          Configurações
-        </a>
-      </nav>
-
-      <div class="user-profile">
-        <img src="https://ui-avatars.com/api/?name=Maria+Silva&background=random" alt="User" class="user-avatar" id="userAvatar" />
-        <div style="flex: 1; overflow: hidden;">
-          <p style="font-weight: 600; font-size: 0.875rem;" id="userName">Maria Silva</p>
-          <p style="font-size: 0.75rem; color: #888;">Cliente VIP</p>
-        </div>
-        <button id="logoutBtn" style="color: #888;"><i data-lucide="log-out" style="width: 18px;"></i></button>
-      </div>
-    </aside>
+    <!-- Sidebar Component -->
+    <petshop-sidebar active="pets"></petshop-sidebar>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -161,24 +127,24 @@
     <div class="modal-content">
       <button class="close-modal" id="closeDetailsModal">&times;</button>
       <div style="text-align: center; margin-bottom: 1.5rem;">
-        <img id="detailPetImage" src="" alt="Pet" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem;">
-        <h2 id="detailPetName" style="font-family: var(--font-display); color: var(--secondary); margin-bottom: 0.5rem; Font-size: 2rem;">Pet Name</h2>
-        <p id="detailPetBreed" style="color: #666;">Breed • Age</p>
+        <img id="detailPetImage" src="" alt="Pet" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; border: 4px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        <h2 id="detailPetName" style="font-family: var(--font-display); color: var(--secondary); margin-bottom: 0.25rem; font-size: 2.25rem; font-weight: 800;">Pet Name</h2>
+        <p id="detailPetBreed" style="color: #475569; font-weight: 600; font-size: 1.1rem; letter-spacing: -0.01em;">Breed • Age</p>
       </div>
       
-      <div style="background: #f9fafb; padding: 1.5rem; border-radius: 1rem; margin-bottom: 1.5rem;">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div style="background: #f1f5f9; padding: 1.5rem; border-radius: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e2e8f0;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
           <div>
-            <p style="font-size: 0.75rem; color: #888; text-transform: uppercase; font-weight: 600;">Espécie</p>
-            <p id="detailPetSpecies" style="font-weight: 500;">Cachorro</p>
+            <p style="font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 0.25rem; opacity: 0.7;">Espécie</p>
+            <p id="detailPetSpecies" style="font-weight: 700; color: #1e293b; font-size: 1.1rem;">Cachorro</p>
           </div>
           <div>
-            <p style="font-size: 0.75rem; color: #888; text-transform: uppercase; font-weight: 600;">Peso</p>
-            <p id="detailPetWeight" style="font-weight: 500;">10 kg</p>
+            <p style="font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 0.25rem; opacity: 0.7;">Peso</p>
+            <p id="detailPetWeight" style="font-weight: 700; color: #1e293b; font-size: 1.1rem;">10 kg</p>
           </div>
           <div>
-            <p style="font-size: 0.75rem; color: #888; text-transform: uppercase; font-weight: 600;">Idade</p>
-            <p id="detailPetAge" style="font-weight: 500;">5 anos</p>
+            <p style="font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 0.25rem; opacity: 0.7;">Idade</p>
+            <p id="detailPetAge" style="font-weight: 700; color: #1e293b; font-size: 1.1rem;">5 anos</p>
           </div>
         </div>
       </div>
