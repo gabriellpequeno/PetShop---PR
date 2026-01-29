@@ -81,22 +81,17 @@ async function loadPets() {
 }
 
 function applyPhoneMask(value: string): string {
-  // Remove tudo que não é dígito
   const numbers = value.replace(/\D/g, '')
   
-  // Limita a 11 dígitos (00 00000-0000)
   const limited = numbers.substring(0, 11)
   
-  // Aplica a máscara
   if (limited.length <= 2) {
     return limited
   } else if (limited.length <= 6) {
     return `(${limited.substring(0, 2)}) ${limited.substring(2)}`
   } else if (limited.length <= 10) {
-    // Formato: (00) 0000-0000
     return `(${limited.substring(0, 2)}) ${limited.substring(2, 6)}-${limited.substring(6)}`
   } else {
-    // Formato: (00) 00000-0000
     return `(${limited.substring(0, 2)}) ${limited.substring(2, 7)}-${limited.substring(7)}`
   }
 }
@@ -109,7 +104,6 @@ function setupEditModal() {
 
   if (!modal || !openBtn || !closeBtn || !form) return
 
-  // Set max date to today for birth date input
   const birthDateInput = document.getElementById('editBirthDate') as HTMLInputElement
   if (birthDateInput) {
     const todayParts = new Date().toISOString().split('T')
@@ -197,9 +191,7 @@ function setInput(id: string, value: string) {
 }
 
 function validatePhone(phone: string): boolean {
-  // Remove todos os caracteres não numéricos para validar
   const numbers = phone.replace(/\D/g, '')
-  // Aceita telefone fixo (10 dígitos) ou celular (11 dígitos)
   return numbers.length === 10 || numbers.length === 11
 }
 
@@ -214,14 +206,11 @@ function showFormError(inputId: string, message: string) {
   const input = document.getElementById(inputId) as HTMLInputElement
   if (!input) return
 
-  // Remove existing error if any
   const existingError = input.parentElement?.querySelector('.form-error')
   if (existingError) existingError.remove()
 
-  // Add error styling
   input.style.borderColor = '#ef4444'
 
-  // Create error message
   const errorEl = document.createElement('span')
   errorEl.className = 'form-error'
   errorEl.textContent = message
