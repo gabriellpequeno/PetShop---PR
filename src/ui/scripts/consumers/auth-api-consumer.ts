@@ -5,6 +5,7 @@ export class AuthApiConsumer extends ApiConsumer {
     return fetch(`${AuthApiConsumer.BASE_URL}/auth/login`, {
       method: 'POST',
       headers: this.getHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ email, password }),
     })
   }
@@ -21,6 +22,7 @@ export class AuthApiConsumer extends ApiConsumer {
     return fetch(`${AuthApiConsumer.BASE_URL}/auth/logout`, {
       method: 'POST',
       headers: this.getHeaders(),
+      credentials: 'include',
     })
   }
 }

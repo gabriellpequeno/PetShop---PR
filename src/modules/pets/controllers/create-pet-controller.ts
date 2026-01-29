@@ -20,6 +20,6 @@ export class CreatePetController {
       weight
     })
     
-    return response.status(201).send()
+    return response.status(201).json({ message: 'Pet created successfully' })
   }
 }

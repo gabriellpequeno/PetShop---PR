@@ -1,0 +1,405 @@
+/* Inherit dashboard styles from pets.css (sidebar, main layout) */
+
+.profile-card-section {
+    margin-bottom: 2rem;
+}
+
+.profile-card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    flex-wrap: wrap;
+}
+
+.profile-avatar-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.main-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #f0fdfa; /* Light teal border */
+}
+
+.edit-avatar-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--p-500);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.profile-name {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--secondary);
+    margin: 0;
+}
+
+.badge-verified {
+    background: #d1fae5;
+    color: #065f46;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+}
+
+.profile-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.detail-item i {
+    width: 18px;
+    height: 18px;
+    color: var(--p-500);
+}
+
+/* Pets List (Horizontal) */
+.pets-horizontal-list {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+}
+
+.pet-preview-card {
+    min-width: 220px;
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s;
+}
+
+.pet-preview-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--p-300);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.add-pet-preview {
+    min-width: 220px;
+    background: transparent;
+    border: 2px dashed #cbd5e1;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #64748b;
+    transition: all 0.2s;
+}
+
+.add-pet-preview:hover {
+    border-color: var(--p-500);
+    color: var(--p-500);
+    background: #f0fdfa;
+}
+
+/* Dashboard Bottom Grid */
+.dashboard-grid-bottom {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+@media (max-width: 900px) {
+    .dashboard-grid-bottom {
+        grid-template-columns: 1fr;
+    }
+}
+
+.schedule-widget {
+    background: white;
+    border-radius: 2rem;
+    padding: 2rem;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 10px 30px rgba(12, 78, 90, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.section-heading {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--secondary);
+    margin-bottom: 0; /* Let header-row handle spacing */
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.section-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 2px solid #f8fafc;
+}
+
+.link-secondary {
+    background: #f0fdfa;
+    color: var(--secondary); /* Corrigindo contraste */
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.link-secondary:hover {
+    background: var(--secondary);
+    color: white;
+}
+
+.schedule-item {
+    background: #f8fafc; /* Lighter background inside the white container */
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent; /* Remove the visible border, use background */
+    transition: all 0.2s ease;
+}
+
+.schedule-item:last-child {
+    margin-bottom: 0;
+}
+
+.schedule-item:hover {
+    transform: translateX(4px);
+    background: white;
+    border-color: var(--p-200);
+    box-shadow: 0 4px 12px rgba(12, 78, 90, 0.08);
+}
+
+.date-box {
+    background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+    color: var(--secondary); /* Corrigindo contraste */
+    border-radius: 1rem;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 70px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.date-box .month {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
+}
+
+.date-box .day {
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.schedule-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.schedule-info h4 {
+    margin: 0;
+    color: var(--secondary);
+    font-size: 1.125rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+}
+
+.schedule-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.status-badge {
+    margin-left: auto;
+    font-size: 0.75rem;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.status-badge.confirmed {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+/* Loyalty Card */
+.loyalty-card {
+    background: var(--secondary);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    color: white;
+    background-image: radial-gradient(circle at top right, rgba(255,255,255,0.1), transparent);
+}
+
+.loyalty-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.progress-bar-container {
+    background: rgba(255,255,255,0.2);
+    height: 8px;
+    border-radius: 4px;
+    margin: 1.5rem 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: var(--p-400); /* Orange/Amber tint */
+    height: 100%;
+    border-radius: 4px;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.modal.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: translateY(20px);
+    transition: transform 0.3s;
+}
+
+.modal.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-content h2 {
+    font-family: var(--font-display);
+    color: var(--secondary);
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--secondary);
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-family: var(--font-body);
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary); /* Usando cor primária definida */
+}
