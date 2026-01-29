@@ -114,72 +114,99 @@ class AdminUsersPage {
   private renderUsers(users: User[]) {
     if (!this.usersList) return
 
+    this.usersList.innerHTML = '' // Clear content safely
+
     if (users.length === 0) {
-      this.usersList.innerHTML = `
-        <div class="empty-state">
-          <i data-lucide="users"></i>
-          <h3>Nenhum usuário encontrado</h3>
-          <p>Tente ajustar sua busca</p>
-        </div>
-      `
+      const emptyState = document.createElement('div')
+      emptyState.className = 'empty-state'
+
+      const i = document.createElement('i')
+      i.setAttribute('data-lucide', 'users')
+
+      const h3 = document.createElement('h3')
+      h3.textContent = 'Nenhum usuário encontrado'
+
+      const p = document.createElement('p')
+      p.textContent = 'Tente ajustar sua busca'
+
+      emptyState.append(i, h3, p)
+      this.usersList.appendChild(emptyState)
       lucide.createIcons()
       return
     }
 
-    this.usersList.innerHTML = users
-      .map(
-        (user) => `
-      <div class="user-card" data-user-id="${user.id}">
-        <div class="user-card-header">
-          <img
-            src="https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=e0f2f1&color=0c4e5a"
-            alt="${user.name}"
-            class="user-avatar"
-          />
-          <div class="user-info">
-            <h3 class="user-name">${user.name}</h3>
-            <p class="user-email">${user.email}</p>
-          </div>
-        </div>
-        <div class="user-card-body">
-          ${user.phone
-            ? `
-            <div class="user-detail-row">
-              <i data-lucide="phone"></i>
-              <span>${user.phone}</span>
-            </div>
-          `
-            : ''
-          }
-          ${user.location
-            ? `
-            <div class="user-detail-row">
-              <i data-lucide="map-pin"></i>
-              <span>${user.location}</span>
-            </div>
-          `
-            : ''
-          }
-          <div class="user-pets-count">
-            <i data-lucide="dog"></i>
-            <span>Ver pets</span>
-          </div>
-        </div>
-      </div>
-    `
-      )
-      .join('')
+    const fragment = document.createDocumentFragment()
 
-    // Re-initialize Lucide icons
-    lucide.createIcons()
-
-    // Add click handlers to user cards
     users.forEach((user) => {
-      const card = this.usersList?.querySelector(
-        `[data-user-id="${user.id}"]`
-      ) as HTMLElement
-      card?.addEventListener('click', () => this.openEditModal(user))
+      const card = document.createElement('div')
+      card.className = 'user-card'
+      card.setAttribute('data-user-id', user.id)
+      card.addEventListener('click', () => this.openEditModal(user))
+
+      // Header
+      const header = document.createElement('div')
+      header.className = 'user-card-header'
+
+      const img = document.createElement('img')
+      img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=e0f2f1&color=0c4e5a`
+      img.alt = user.name
+      img.className = 'user-avatar'
+
+      const userInfo = document.createElement('div')
+      userInfo.className = 'user-info'
+
+      const nameH3 = document.createElement('h3')
+      nameH3.className = 'user-name'
+      nameH3.textContent = user.name
+
+      const emailP = document.createElement('p')
+      emailP.className = 'user-email'
+      emailP.textContent = user.email
+
+      userInfo.append(nameH3, emailP)
+      header.append(img, userInfo)
+
+      // Body
+      const body = document.createElement('div')
+      body.className = 'user-card-body'
+
+      if (user.phone) {
+        const row = document.createElement('div')
+        row.className = 'user-detail-row'
+        const icon = document.createElement('i')
+        icon.setAttribute('data-lucide', 'phone')
+        const span = document.createElement('span')
+        span.textContent = user.phone
+        row.append(icon, span)
+        body.appendChild(row)
+      }
+
+      if (user.location) {
+        const row = document.createElement('div')
+        row.className = 'user-detail-row'
+        const icon = document.createElement('i')
+        icon.setAttribute('data-lucide', 'map-pin')
+        const span = document.createElement('span')
+        span.textContent = user.location
+        row.append(icon, span)
+        body.appendChild(row)
+      }
+
+      const petsCount = document.createElement('div')
+      petsCount.className = 'user-pets-count'
+      const dogIcon = document.createElement('i')
+      dogIcon.setAttribute('data-lucide', 'dog')
+      const spanPets = document.createElement('span')
+      spanPets.textContent = 'Ver pets'
+      petsCount.append(dogIcon, spanPets)
+      body.appendChild(petsCount)
+
+      card.append(header, body)
+      fragment.appendChild(card)
     })
+
+    this.usersList.appendChild(fragment)
+    lucide.createIcons()
   }
 
   private async openEditModal(user: User) {
@@ -227,40 +254,53 @@ class AdminUsersPage {
     const petsContainer = document.getElementById('userPetsList')
     if (!petsContainer) return
 
+    petsContainer.innerHTML = '' // Clear content safely
+
     if (this.currentUserPets.length === 0) {
-      petsContainer.innerHTML = `
-        <div class="empty-pets">
-          <p>Este usuário não possui pets cadastrados</p>
-        </div>
-      `
+      const emptyDiv = document.createElement('div')
+      emptyDiv.className = 'empty-pets'
+      const p = document.createElement('p')
+      p.textContent = 'Este usuário não possui pets cadastrados'
+      emptyDiv.appendChild(p)
+      petsContainer.appendChild(emptyDiv)
       return
     }
 
-    petsContainer.innerHTML = this.currentUserPets
-      .map((pet) => {
-        const speciesMap: { [key: string]: string } = {
-          dog: 'Cachorro',
-          cat: 'Gato',
-          bird: 'Pássaro',
-          other: 'Outro',
-        }
+    const fragment = document.createDocumentFragment()
 
-        const imageUrl =
-          pet.image_url ||
-          `https://ui-avatars.com/api/?name=${encodeURIComponent(pet.name)}&background=ffa500&color=fff`
+    const speciesMap: { [key: string]: string } = {
+      dog: 'Cachorro',
+      cat: 'Gato',
+      bird: 'Pássaro',
+      other: 'Outro',
+    }
 
-        return `
-        <div class="pet-mini-card">
-          <img src="${imageUrl}" alt="${pet.name}" class="pet-mini-image" />
-          <div class="pet-mini-info">
-            <p class="pet-mini-name">${pet.name}</p>
-            <p class="pet-mini-breed">${speciesMap[pet.species] || pet.species} • ${pet.breed}</p>
-          </div>
-        </div>
-      `
-      })
-      .join('')
+    this.currentUserPets.forEach((pet) => {
+      const card = document.createElement('div')
+      card.className = 'pet-mini-card'
 
+      const img = document.createElement('img')
+      img.src = pet.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(pet.name)}&background=ffa500&color=fff`
+      img.alt = pet.name
+      img.className = 'pet-mini-image'
+
+      const info = document.createElement('div')
+      info.className = 'pet-mini-info'
+
+      const nameP = document.createElement('p')
+      nameP.className = 'pet-mini-name'
+      nameP.textContent = pet.name
+
+      const breedP = document.createElement('p')
+      breedP.className = 'pet-mini-breed'
+      breedP.textContent = `${speciesMap[pet.species] || pet.species} • ${pet.breed}`
+
+      info.append(nameP, breedP)
+      card.append(img, info)
+      fragment.appendChild(card)
+    })
+
+    petsContainer.appendChild(fragment)
     lucide.createIcons()
   }
 
@@ -279,50 +319,79 @@ class AdminUsersPage {
     const bookingsContainer = document.getElementById('userBookingsList')
     if (!bookingsContainer) return
 
+    bookingsContainer.innerHTML = '' // Clear content safely
+
     if (this.currentUserBookings.length === 0) {
-      bookingsContainer.innerHTML = `
-        <div class="empty-bookings">
-          <p>Nenhum agendamento encontrado</p>
-        </div>
-      `
+      const emptyDiv = document.createElement('div')
+      emptyDiv.className = 'empty-bookings'
+      const p = document.createElement('p')
+      p.textContent = 'Nenhum agendamento encontrado'
+      emptyDiv.appendChild(p)
+      bookingsContainer.appendChild(emptyDiv)
       return
     }
 
-    bookingsContainer.innerHTML = this.currentUserBookings
-      .map((booking: any) => {
-        const date = new Date(booking.bookingDate).toLocaleDateString('pt-BR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        })
+    const fragment = document.createDocumentFragment()
 
-        let statusClass = ''
-        switch (booking.status) {
-          case 'agendado': statusClass = 'status-agendado'; break;
-          case 'concluido': statusClass = 'status-concluido'; break;
-          case 'cancelado': statusClass = 'status-cancelado'; break;
-        }
-
-        return `
-        <div class="booking-mini-card">
-          <div class="booking-info">
-            <span class="booking-service">${booking.jobName || 'Serviço'}</span>
-            <div class="booking-pet">
-              <i data-lucide="dog" style="width: 14px; height: 14px;"></i>
-              ${booking.petName || 'Pet'}
-            </div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 0.25rem; align-items: flex-end;">
-            <span class="booking-date">${date}</span>
-            <span class="booking-status ${statusClass}">${booking.status}</span>
-          </div>
-        </div>
-      `
+    this.currentUserBookings.forEach((booking: any) => {
+      const date = new Date(booking.bookingDate).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
       })
-      .join('')
 
+      let statusClass = ''
+      switch (booking.status) {
+        case 'agendado': statusClass = 'status-agendado'; break;
+        case 'concluido': statusClass = 'status-concluido'; break;
+        case 'cancelado': statusClass = 'status-cancelado'; break;
+      }
+
+      const card = document.createElement('div')
+      card.className = 'booking-mini-card'
+
+      const info = document.createElement('div')
+      info.className = 'booking-info'
+
+      const serviceSpan = document.createElement('span')
+      serviceSpan.className = 'booking-service'
+      serviceSpan.textContent = booking.jobName || 'Serviço'
+
+      const petDiv = document.createElement('div')
+      petDiv.className = 'booking-pet'
+
+      const dogIcon = document.createElement('i')
+      dogIcon.setAttribute('data-lucide', 'dog')
+      dogIcon.style.width = '14px'
+      dogIcon.style.height = '14px'
+
+      const petNameNode = document.createTextNode(` ${booking.petName || 'Pet'}`)
+
+      petDiv.append(dogIcon, petNameNode)
+      info.append(serviceSpan, petDiv)
+
+      const dateStatusContainer = document.createElement('div')
+      dateStatusContainer.style.display = 'flex'
+      dateStatusContainer.style.flexDirection = 'column'
+      dateStatusContainer.style.gap = '0.25rem'
+      dateStatusContainer.style.alignItems = 'flex-end'
+
+      const dateSpan = document.createElement('span')
+      dateSpan.className = 'booking-date'
+      dateSpan.textContent = date
+
+      const statusSpan = document.createElement('span')
+      statusSpan.className = `booking-status ${statusClass}`
+      statusSpan.textContent = booking.status
+
+      dateStatusContainer.append(dateSpan, statusSpan)
+      card.append(info, dateStatusContainer)
+      fragment.appendChild(card)
+    })
+
+    bookingsContainer.appendChild(fragment)
     lucide.createIcons()
   }
 
@@ -392,23 +461,37 @@ class AdminUsersPage {
   private showLoading() {
     if (!this.usersList) return
 
-    this.usersList.innerHTML = `
-      <div class="loading-spinner">
-        <div class="spinner"></div>
-      </div>
-    `
+    this.usersList.innerHTML = '' // Clear content safely
+
+    const loadingSpinner = document.createElement('div')
+    loadingSpinner.className = 'loading-spinner'
+
+    const spinner = document.createElement('div')
+    spinner.className = 'spinner'
+
+    loadingSpinner.appendChild(spinner)
+    this.usersList.appendChild(loadingSpinner)
   }
 
   private showError(message: string) {
     if (!this.usersList) return
 
-    this.usersList.innerHTML = `
-      <div class="empty-state">
-        <i data-lucide="alert-circle"></i>
-        <h3>Erro</h3>
-        <p>${message}</p>
-      </div>
-    `
+    this.usersList.innerHTML = '' // Clear content safely
+
+    const emptyState = document.createElement('div')
+    emptyState.className = 'empty-state'
+
+    const i = document.createElement('i')
+    i.setAttribute('data-lucide', 'alert-circle')
+
+    const h3 = document.createElement('h3')
+    h3.textContent = 'Erro'
+
+    const p = document.createElement('p')
+    p.textContent = message
+
+    emptyState.append(i, h3, p)
+    this.usersList.appendChild(emptyState)
     lucide.createIcons()
   }
 }
