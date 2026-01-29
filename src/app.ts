@@ -1,7 +1,6 @@
 
 import express from 'express'
 import cookieParser from 'cookie-parser'
-import { join } from 'node:path'
 import { TranspileScriptMiddleware } from './middlewares/transpile-script-middleware'
 import { HandleErrorMiddleware } from './middlewares/handle-error-middleware'
 import { UI_STATIC_PATH } from './constants/ui-static-path'
@@ -32,10 +31,10 @@ app.use(usersPageRouter)
 
 app.use(authRouter)
 app.use(homeRouter)
-app.use("/jobs", jobsRouter);
-app.use('/bookings', bookingRouter);
-app.use('/api/pets', petsRouter)
-app.use('/api/users', usersRouter)
+app.use(jobsRouter)
+app.use(bookingRouter)
+app.use(petsRouter)
+app.use(usersRouter)
 
 app.use(HandleErrorMiddleware.handle);
 

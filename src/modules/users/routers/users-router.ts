@@ -8,5 +8,5 @@ const usersController = new UsersController()
 // All routes here are protected
 usersRouter.use(EnsureAuthenticationMiddleware.handle)
 
-usersRouter.get('/me', usersController.getProfile)
-usersRouter.put('/me', usersController.updateProfile)
+usersRouter.get('/api/users/me', usersController.getProfile)
+usersRouter.put('/api/users/me', usersController.updateProfile)

@@ -7,9 +7,9 @@ import { EnsureAuthenticationMiddleware } from "@/middlewares/ensure-authenticat
 
 const jobsRouter = Router();
 
-jobsRouter.post("/", EnsureAuthenticationMiddleware.handle, CreateJobController.handle);
-jobsRouter.get("/", EnsureAuthenticationMiddleware.handle, ListJobsController.handle);
-jobsRouter.put("/:id", EnsureAuthenticationMiddleware.handle, UpdateJobController.handle);
-jobsRouter.delete("/:id", EnsureAuthenticationMiddleware.handle, DeleteJobController.handle);
+jobsRouter.post("/api/jobs", EnsureAuthenticationMiddleware.handle, CreateJobController.handle);
+jobsRouter.get("/api/jobs", EnsureAuthenticationMiddleware.handle, ListJobsController.handle);
+jobsRouter.put("/api/jobs/:id", EnsureAuthenticationMiddleware.handle, UpdateJobController.handle);
+jobsRouter.delete("/api/jobs/:id", EnsureAuthenticationMiddleware.handle, DeleteJobController.handle);
 
-export { jobsRouter };
+export { jobsRouter }; 

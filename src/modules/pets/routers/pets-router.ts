@@ -7,9 +7,9 @@ import { UpdatePetController } from '../controllers/update-pet-controller'
 
 const petsRouter = Router()
 
-petsRouter.post('/', EnsureAuthenticationMiddleware.handle, CreatePetController.handle)
-petsRouter.get('/', EnsureAuthenticationMiddleware.handle, ListPetsController.handle)
-petsRouter.put('/:id', EnsureAuthenticationMiddleware.handle, UpdatePetController.handle)
-petsRouter.delete('/:id', EnsureAuthenticationMiddleware.handle, DeletePetController.handle)
+petsRouter.post('/api/pets', EnsureAuthenticationMiddleware.handle, CreatePetController.handle)
+petsRouter.get('/api/pets', EnsureAuthenticationMiddleware.handle, ListPetsController.handle)
+petsRouter.put('/api/pets/:id', EnsureAuthenticationMiddleware.handle, UpdatePetController.handle)
+petsRouter.delete('/api/pets/:id', EnsureAuthenticationMiddleware.handle, DeletePetController.handle)
 
 export { petsRouter }

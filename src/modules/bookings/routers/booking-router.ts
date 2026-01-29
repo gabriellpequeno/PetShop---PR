@@ -6,9 +6,9 @@ import { CompleteBookingController } from "../controllers/complete-booking-contr
 import { EnsureAuthenticationMiddleware } from "@/middlewares/ensure-authentication-middleware";
 const bookingRouter = Router();
 
-bookingRouter.post("/", EnsureAuthenticationMiddleware.handle, CreateBookingController.handle);
-bookingRouter.get("/", EnsureAuthenticationMiddleware.handle, ListBookingsController.handle);
-bookingRouter.patch("/:id/cancel", EnsureAuthenticationMiddleware.handle, CancelBookingController.handle);
-bookingRouter.patch("/:id/complete", EnsureAuthenticationMiddleware.handle, CompleteBookingController.handle);
+bookingRouter.post("/api/bookings", EnsureAuthenticationMiddleware.handle, CreateBookingController.handle);
+bookingRouter.get("/api/bookings", EnsureAuthenticationMiddleware.handle, ListBookingsController.handle);
+bookingRouter.patch("/api/bookings/:id/cancel", EnsureAuthenticationMiddleware.handle, CancelBookingController.handle);
+bookingRouter.patch("/api/bookings/:id/complete", EnsureAuthenticationMiddleware.handle, CompleteBookingController.handle);
 
-export { bookingRouter };
+export { bookingRouter }; 
