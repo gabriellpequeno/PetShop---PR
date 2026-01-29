@@ -5,14 +5,14 @@ import type { Pet } from '../models/pet'
 export class PetsRepository {
   async add(pet: Omit<Pet, 'id'>) {
     await db.run(
-      'INSERT INTO pets (id, user_id, name, species, breed, age, weight) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [uuid(), pet.user_id, pet.name, pet.species, pet.breed, pet.age, pet.weight]
+      'INSERT INTO pets (id, userId, name, species, breed, age, weight) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [uuid(), pet.userId, pet.name, pet.species, pet.breed, pet.age, pet.weight]
     )
   }
 
   async findByUserId(userId: string) {
     const pets = await db.all<Pet[]>(
-      'SELECT * FROM pets WHERE user_id = ?',
+      'SELECT * FROM pets WHERE userId = ?',
       [userId]
     )
     return pets

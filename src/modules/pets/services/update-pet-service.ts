@@ -22,7 +22,7 @@ export class UpdatePetService {
       throw new AppError('Pet not found', 'Pet not found', 404)
     }
 
-    if (role !== 'admin' && pet.user_id !== userId) {
+    if (role !== 'admin' && pet.userId !== userId) {
       throw new AppError('Forbidden', 'You are not allowed to update this pet', 403)
     }
 

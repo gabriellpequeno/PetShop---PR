@@ -1,9 +1,9 @@
-export type Pet = {
-  id: string
-  user_id: string
-  name: string
-  species: string
-  breed: string
-  age: number
-  weight: number
+export interface Pet {
+    id: string;
+    userId: string;
+    name: string;
+    species: string;
+    breed: string | null;
+    weight: number | null;
+    age: number | null;
 }
