@@ -8,6 +8,10 @@ export class AdminUpdateUserController {
     const { id } = request.params
     const { name, email, phone, location, birth_date } = request.body
 
+    if (typeof id !== 'string') {
+      throw new Error('User ID is required and must be a string')
+    }
+
     const usersRepository = new UsersRepository()
     const adminUpdateUserService = new AdminUpdateUserService(usersRepository)
 

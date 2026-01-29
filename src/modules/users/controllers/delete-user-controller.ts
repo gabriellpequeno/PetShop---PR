@@ -7,6 +7,10 @@ export class DeleteUserController {
     const role = request.user.role
     const { id } = request.params
 
+    if (typeof id !== 'string') {
+      throw new Error('User ID is required and must be a string')
+    }
+
     const usersRepository = new UsersRepository()
     const deleteUserService = new DeleteUserService(usersRepository)
 

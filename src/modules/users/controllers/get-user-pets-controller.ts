@@ -7,6 +7,10 @@ export class GetUserPetsController {
     const role = request.user.role
     const { id } = request.params
 
+    if (typeof id !== 'string') {
+      throw new Error('User ID is required and must be a string')
+    }
+
     if (role !== 'admin') {
       throw new UnauthorizedError('Apenas administradores podem acessar esta funcionalidade')
     }

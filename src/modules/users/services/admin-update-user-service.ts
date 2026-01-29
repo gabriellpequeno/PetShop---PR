@@ -1,4 +1,5 @@
 import type { UsersRepository } from '../repositories/users-repository'
+import type { User } from '@/modules/users/models/user'
 import { UnauthorizedError } from '@/errors/unauthorized-error'
 import { NotFoundError } from '@/errors/not-found-error'
 import { BadRequestError } from '@/errors/bad-request-error'
@@ -14,7 +15,7 @@ type Request = {
 }
 
 export class AdminUpdateUserService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(private readonly usersRepository: UsersRepository) { }
 
   async execute({ role, userId, name, email, phone, location, birth_date }: Request) {
     if (role !== 'admin') {
@@ -34,12 +35,13 @@ export class AdminUpdateUserService {
       }
     }
 
-    await this.usersRepository.update(userId, {
-      name,
-      phone,
-      location,
-      birth_date,
-    })
+    const updateData: Partial<User> = {}
+    if (name) updateData.name = name
+    if (phone) updateData.phone = phone
+    if (location) updateData.location = location
+    if (birth_date) updateData.birth_date = birth_date
+
+    await this.usersRepository.update(userId, updateData)
 
     return true
   }
