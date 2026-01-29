@@ -1,0 +1,86 @@
+@baseUrl = http://localhost:3333
+@authToken = {{login.response.body.token}}
+
+# Login to get auth token
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@petshop.com",
+  "password": "admin"
+}
+
+###
+
+# Create Job (Success)
+POST {{baseUrl}}/jobs
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Banho e Tosa Completa",
+  "description": "Banho relaxante com tosa higiênica e corte.",
+  "priceP": 50.00,
+  "priceM": 70.00,
+  "priceG": 90.00,
+  "duration": 60
+}
+
+###
+
+# Create Job (Validation Error - Price)
+POST {{baseUrl}}/jobs
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Banho Simples",
+  "priceP": -10.00,
+  "priceM": 30.00,
+  "priceG": 40.00,
+  "duration": 30
+}
+
+###
+
+# List Jobs
+GET {{baseUrl}}/jobs
+Authorization: Bearer {{authToken}}
+
+###
+
+# Update Job
+# @name createForUpdate
+POST {{baseUrl}}/jobs
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Job Para Atualizar",
+  "priceP": 100,
+  "priceM": 120,
+  "priceG": 150,
+  "duration": 120
+}
+
+###
+
+@jobId = {{createForUpdate.response.body.id}}
+
+PUT {{baseUrl}}/jobs/{{jobId}}
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Job Atualizado",
+  "priceP": 110,
+  "priceM": 130,
+  "priceG": 160
+}
+
+###
+
+# Delete Job
+DELETE {{baseUrl}}/jobs/{{jobId}}
+Authorization: Bearer {{authToken}}
