@@ -15,6 +15,7 @@ import { usersRouter } from './modules/users/routers/users-router'
 import { petsRouter } from './modules/pets/routers/pets-router'
 import { homeRouter } from './modules/home/routers/home-router'
 import { jobsRouter } from "./modules/jobs/routers/jobs-router";
+import { jobsPageRouter } from './modules/jobs/routers/jobs-page-router'
 import { bookingRouter } from "./modules/bookings/routers/booking-router";
 
 const app = express();
@@ -32,6 +33,7 @@ app.use(usersPageRouter)
 app.use(authRouter)
 app.use(homeRouter)
 app.use(jobsRouter)
+app.use(jobsPageRouter)
 app.use(bookingRouter)
 app.use(petsRouter)
 app.use(usersRouter)

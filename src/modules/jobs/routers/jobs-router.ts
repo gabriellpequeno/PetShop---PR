@@ -4,6 +4,7 @@ import { ListJobsController } from "../controllers/list-jobs-controller";
 import { UpdateJobController } from "../controllers/update-job-controller";
 import { DeleteJobController } from "../controllers/delete-job-controller";
 import { EnsureAuthenticationMiddleware } from "@/middlewares/ensure-authentication-middleware";
+import { EnsureAdminMiddleware } from "@/middlewares/ensure-admin-middleware";
 
 const jobsRouter = Router();
 
