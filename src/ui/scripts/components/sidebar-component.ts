@@ -18,7 +18,6 @@ const DEFAULT_NAV_ITEMS: NavigationItem[] = [
   { slug: 'profile', label: 'Perfil', icon: 'user', href: '/pages/profile.html' },
   { slug: 'pets', label: 'Meus Pets', icon: 'dog', href: '/pages/pets.html' },
   { slug: 'agenda', label: 'Agenda', icon: 'calendar', href: '#' },
-  { slug: 'settings', label: 'Configurações', icon: 'settings', href: '#' },
 ]
 
 const template = document.createElement('template')
@@ -53,7 +52,9 @@ template.innerHTML = `
       left: 0;
       z-index: 100;
       width: var(--_sidebar-width);
-      height: 100dvh;
+      height: 100vh;
+      overflow-y: auto; /* allow the sidebar to scroll on small screens */
+      -webkit-overflow-scrolling: touch;
       background: var(--_sidebar-bg);
       border-right: 1px solid #e5e7eb;
       display: flex;
@@ -662,9 +663,13 @@ export class PetshopSidebar extends HTMLElement {
     this._mobileToggle?.setAttribute('aria-expanded', 'true')
     this._mobileToggle?.setAttribute('aria-label', 'Fechar menu')
 
-    // Focus first link
     const firstLink = this._shadow.querySelector('.nav-link') as HTMLElement
     firstLink?.focus()
+    try {
+      document.body.style.overflow = 'hidden'
+      document.documentElement.style.overflow = 'hidden'
+    } catch (err) {
+    }
   }
 
   private _closeMobile = (): void => {
@@ -673,6 +678,11 @@ export class PetshopSidebar extends HTMLElement {
     this._overlay?.classList.remove('visible')
     this._mobileToggle?.setAttribute('aria-expanded', 'false')
     this._mobileToggle?.setAttribute('aria-label', 'Abrir menu')
+    try {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    } catch (err) {
+    }
   }
 
   private _setupKeyboardNavigation(): void {
@@ -721,5 +731,4 @@ export class PetshopSidebar extends HTMLElement {
   }
 }
 
-// Register the custom element
 customElements.define('petshop-sidebar', PetshopSidebar)

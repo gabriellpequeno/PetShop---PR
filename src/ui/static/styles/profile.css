@@ -95,16 +95,15 @@
     color: var(--p-500);
 }
 
-/* Pets List (Horizontal) */
+/* Pets List (Responsive Grid) */
 .pets-horizontal-list {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 1.5rem;
-    overflow-x: auto;
     padding-bottom: 1rem;
 }
 
 .pet-preview-card {
-    min-width: 220px;
     background: white;
     border-radius: 1rem;
     padding: 1.5rem;
@@ -114,6 +113,14 @@
     text-align: center;
     border: 1px solid #e2e8f0;
     transition: transform 0.2s;
+    overflow: hidden; /* Prevent overflow */
+}
+
+.pet-preview-card h4 {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .pet-preview-card:hover {
@@ -123,7 +130,7 @@
 }
 
 .add-pet-preview {
-    min-width: 220px;
+    min-height: 180px; /* Ensure height matches roughly the content cards */
     background: transparent;
     border: 2px dashed #cbd5e1;
     border-radius: 1rem;
@@ -403,3 +410,115 @@
     outline: none;
     border-color: var(--primary); /* Usando cor primária definida */
 }
+
+/* Mobile and Tablet Responsiveness */
+@media (max-width: 768px) {
+    .profile-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+    }
+
+    .profile-avatar-container {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-name {
+        font-size: 1.5rem;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .profile-details-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .detail-item {
+        justify-content: center;
+    }
+
+    .pet-preview-card,
+    .add-pet-preview {
+        min-width: 160px;
+        padding: 1rem;
+    }
+
+    .pet-preview-card img {
+        width: 48px !important;
+        height: 48px !important;
+    }
+
+    .pet-preview-card h4 {
+        font-size: 1rem !important;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+    }
+
+    .modal-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .close-modal {
+        top: 0.5rem;
+        right: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .pets-horizontal-list {
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+
+    .pet-preview-card,
+    .add-pet-preview {
+        padding: 1rem;
+        min-height: 160px;
+    }
+
+    .profile-card-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .section-heading {
+        font-size: 1.25rem;
+    }
+
+    .schedule-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .date-box {
+        min-width: 48px;
+        width: 60px;
+        padding: 0.5rem;
+        border-radius: 0.75rem;
+        align-self: flex-start;
+    }
+
+    .date-box .month { font-size: 0.65rem; }
+    .date-box .day { font-size: 1.25rem; }
+
+    .schedule-info {
+        align-items: flex-start;
+    }
+
+    .status-badge {
+        margin-left: 0;
+        align-self: flex-end;
+        margin-top: 0.5rem;
+    }
+
+    .schedule-info p { font-size: 0.85rem; }
+}
+
