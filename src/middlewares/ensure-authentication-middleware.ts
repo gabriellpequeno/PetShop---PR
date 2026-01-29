@@ -15,7 +15,7 @@ export class EnsureAuthenticationMiddleware {
     }
 
     if (!token) {
-      return response.redirect('/login')
+      return response.redirect('/')
     }
 
 
@@ -23,7 +23,7 @@ export class EnsureAuthenticationMiddleware {
     const payload = jwtProvider.validateToken(token)
 
     if (!payload) {
-      return response.redirect('/login')
+      return response.redirect('/')
     }
 
     request.user = {
