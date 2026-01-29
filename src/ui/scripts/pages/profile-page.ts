@@ -6,26 +6,16 @@ const authClient = new AuthClient()
 const usersClient = new UsersClient()
 const petsClient = new PetsClient()
 
-// Verify Auth
 if (!authClient.isAuthenticated()) {
   window.location.href = '/pages/login.html'
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    // Load User Profile
     await loadUserProfile()
 
-    // Load Pets
     await loadPets()
 
-    // Handle Logout
-    document.getElementById('logoutBtn')?.addEventListener('click', () => {
-      authClient.logout()
-      window.location.href = '/pages/login.html'
-    })
-
-    // Handle Edit Modal
     setupEditModal()
     
   } catch (error) {
@@ -37,13 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadUserProfile() {
   const user = await usersClient.getProfile()
   
-  // Sidebar
-  const sidebarName = document.getElementById('sidebarName')
-  const sidebarAvatar = document.getElementById('sidebarAvatar') as HTMLImageElement
-  if (sidebarName) sidebarName.textContent = user.name
-  if (sidebarAvatar) sidebarAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random`
-
-  // Profile Card
   setText('profileName', user.name)
   setText('profileEmail', user.email)
   setText('profilePhone', user.phone || 'Não informado')
@@ -51,7 +34,6 @@ async function loadUserProfile() {
   
   if (user.birth_date) {
       const date = new Date(user.birth_date)
-      // Basic formatting, could utilize Intl.DateTimeFormat
       const formatted = date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
       setText('profileBirth', formatted)
   } else {
@@ -70,7 +52,6 @@ async function loadPets() {
 
   listContainer.innerHTML = ''
 
-  // Render Pets
   pets.forEach((pet: any) => {
     const card = document.createElement('div')
     card.className = 'pet-preview-card'
@@ -83,7 +64,6 @@ async function loadPets() {
     listContainer.appendChild(card)
   })
 
-  // Add "New Pet" Button in the list
   const addBtn = document.createElement('div')
   addBtn.className = 'add-pet-preview'
   addBtn.innerHTML = `
@@ -91,13 +71,10 @@ async function loadPets() {
     <span style="font-weight: 500;">Adicionar Pet</span>
   `
   addBtn.addEventListener('click', () => {
-      // Redirect to pets page with open modal or just pets page
       window.location.href = '/pages/pets.html'
   })
   listContainer.appendChild(addBtn)
   
-  // Re-init icons for dynamic content if needed, though Lucide usually needs call or observers
-  // lucide.createIcons() // Global not typed here, but available in HTML
   if ((window as any).lucide) {
       (window as any).lucide.createIcons()
   }
@@ -112,7 +89,6 @@ function setupEditModal() {
   if (!modal || !openBtn || !closeBtn || !form) return
 
   openBtn.addEventListener('click', async () => {
-    // Pre-fill
     const user = await usersClient.getProfile()
     setInput('editName', user.name)
     setInput('editPhone', user.phone || '')

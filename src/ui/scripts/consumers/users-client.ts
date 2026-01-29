@@ -5,6 +5,7 @@ export class UsersClient extends ApiConsumer {
     const response = await fetch(`${ApiConsumer.BASE_URL}/users/me`, {
       method: 'GET',
       headers: this.getHeaders(),
+      credentials: 'include',
     })
 
     if (!response.ok) {
