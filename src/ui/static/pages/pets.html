@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +9,9 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -16,11 +19,12 @@
   <!-- Styles -->
   <link rel="stylesheet" href="../styles/global.css" />
   <link rel="stylesheet" href="../styles/pets.css" />
-  
+
   <!-- Scripts -->
   <script src="/scripts/components/sidebar-component.js" type="module"></script>
   <script src="/scripts/pages/pets-page.js" type="module"></script>
 </head>
+
 <body>
 
   <div class="dashboard-container">
@@ -43,10 +47,11 @@
       <section class="pets-section">
         <div class="pets-grid" id="petsGrid">
           <!-- Pet cards will be injected here by JS -->
-          
+
           <!-- Static Add Card for Visual -->
           <button class="add-pet-card" onclick="document.getElementById('newPetBtn').click()">
-            <div style="background: #e0f2f1; padding: 1rem; border-radius: 50%; margin-bottom: 0.5rem; color: var(--secondary);">
+            <div
+              style="background: #e0f2f1; padding: 1rem; border-radius: 50%; margin-bottom: 0.5rem; color: var(--secondary);">
               <i data-lucide="plus"></i>
             </div>
             <strong>Novo Pet</strong>
@@ -61,16 +66,17 @@
             <i data-lucide="calendar" style="color: var(--primary);"></i>
             <h2 class="schedule-title">Próximos Agendamentos</h2>
           </div>
-          
+
           <div class="toggle-group">
             <button class="toggle-btn active">Mensal</button>
             <button class="toggle-btn">Diário</button>
           </div>
         </div>
 
-        <div class="schedule-list">
+        <div class="schedule-list" id="scheduleList">
           <!-- Mock Data Items matching the image -->
-          <div style="min-width: 100px; height: 100px; border: 1px solid #eee; border-radius: 1rem; display: flex; align-items: center; justify-content: center; color: #ccc;">
+          <div
+            style="min-width: 100px; height: 100px; border: 1px solid #eee; border-radius: 1rem; display: flex; align-items: center; justify-content: center; color: #ccc;">
             Sem agendamentos
           </div>
         </div>
@@ -82,14 +88,15 @@
   <div class="modal" id="petModal">
     <div class="modal-content">
       <button class="close-modal" id="closeModal">&times;</button>
-      <h2 style="font-family: var(--font-display); color: var(--secondary); margin-bottom: 1.5rem;">Adicionar Novo Pet</h2>
-      
+      <h2 style="font-family: var(--font-display); color: var(--secondary); margin-bottom: 1.5rem;">Adicionar Novo Pet
+      </h2>
+
       <form id="createPetForm">
         <div class="form-group">
           <label>Nome do Pet</label>
           <input type="text" name="name" required placeholder="Ex: Thor" />
         </div>
-        
+
         <div class="row" style="display: flex; gap: 1rem;">
           <div class="form-group" style="flex: 1;">
             <label>Espécie</label>
@@ -127,23 +134,34 @@
     <div class="modal-content">
       <button class="close-modal" id="closeDetailsModal">&times;</button>
       <div style="text-align: center; margin-bottom: 1.5rem;">
-        <img id="detailPetImage" src="" alt="Pet" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; border: 4px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-        <h2 id="detailPetName" style="font-family: var(--font-display); color: var(--secondary); margin-bottom: 0.25rem; font-size: 2.25rem; font-weight: 800;">Pet Name</h2>
-        <p id="detailPetBreed" style="color: #475569; font-weight: 600; font-size: 1.1rem; letter-spacing: -0.01em;">Breed • Age</p>
+        <img id="detailPetImage" src="" alt="Pet"
+          style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; border: 4px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        <h2 id="detailPetName"
+          style="font-family: var(--font-display); color: var(--secondary); margin-bottom: 0.25rem; font-size: 2.25rem; font-weight: 800;">
+          Pet Name</h2>
+        <p id="detailPetBreed" style="color: #475569; font-weight: 600; font-size: 1.1rem; letter-spacing: -0.01em;">
+          Breed • Age</p>
       </div>
-      
-      <div style="background: #f1f5f9; padding: 1.5rem; border-radius: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e2e8f0;">
+
+      <div
+        style="background: #f1f5f9; padding: 1.5rem; border-radius: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e2e8f0;">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
           <div>
-            <p style="font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 0.25rem; opacity: 0.7;">Espécie</p>
+            <p
+              style="font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 0.25rem; opacity: 0.7;">
+              Espécie</p>
             <p id="detailPetSpecies" style="font-weight: 700; color: #1e293b; font-size: 1.1rem;">Cachorro</p>
           </div>
           <div>
-            <p style="font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 0.25rem; opacity: 0.7;">Peso</p>
+            <p
+              style="font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 0.25rem; opacity: 0.7;">
+              Peso</p>
             <p id="detailPetWeight" style="font-weight: 700; color: #1e293b; font-size: 1.1rem;">10 kg</p>
           </div>
           <div>
-            <p style="font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 0.25rem; opacity: 0.7;">Idade</p>
+            <p
+              style="font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 0.25rem; opacity: 0.7;">
+              Idade</p>
             <p id="detailPetAge" style="font-weight: 700; color: #1e293b; font-size: 1.1rem;">5 anos</p>
           </div>
         </div>
@@ -156,8 +174,35 @@
     </div>
   </div>
 
+  <!-- Cancel Booking Confirmation Modal -->
+  <div class="modal" id="cancelBookingModal">
+    <div class="modal-content">
+      <button class="close-modal" id="closeCancelModal">&times;</button>
+      <div style="text-align: center; margin-bottom: 1.5rem;">
+        <div
+          style="background: #fee2e2; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+          <i data-lucide="alert-triangle" style="width: 32px; height: 32px; color: #dc2626;"></i>
+        </div>
+        <h2 style="font-family: var(--font-display); color: var(--secondary); margin-bottom: 0.5rem;">Cancelar
+          Agendamento?
+        </h2>
+        <p style="color: #666;">Você tem certeza que deseja cancelar?</p>
+      </div>
+
+      <div class="modal-actions" style="display: flex; gap: 1rem; justify-content: center;">
+        <button type="button" class="btn btn-secondary" id="cancelBookingNoBtn"
+          style="background: #f1f5f9; color: #64748b;">Não, manter</button>
+        <button type="button" class="btn btn-delete" id="cancelBookingYesBtn"
+          style="background: #dc2626; color: white;">
+          Sim, cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     lucide.createIcons();
   </script>
 </body>
+
 </html>

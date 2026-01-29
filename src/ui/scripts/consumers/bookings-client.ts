@@ -45,4 +45,17 @@ export class BookingsClient extends ApiConsumer {
 
     return response.json()
   }
+
+  async cancelBooking(id: string): Promise<void> {
+    const response = await fetch(`${ApiConsumer.BASE_URL}/bookings/${id}/cancel`, {
+      method: 'PATCH',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.message || 'Falha ao cancelar agendamento')
+    }
+  }
 }
