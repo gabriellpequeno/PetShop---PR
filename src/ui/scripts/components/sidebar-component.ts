@@ -21,6 +21,12 @@ const DEFAULT_NAV_ITEMS: NavigationItem[] = [
   { slug: 'settings', label: 'Configurações', icon: 'settings', href: '#' },
 ]
 
+const ADMIN_NAV_ITEMS: NavigationItem[] = [
+  { slug: 'profile', label: 'Perfil', icon: 'user', href: '/pages/profile.html' },
+  { slug: 'admin-users', label: 'Gerenciar Usuários', icon: 'users', href: '/pages/admin/users.html' },
+  { slug: 'settings', label: 'Configurações', icon: 'settings', href: '#' },
+]
+
 const template = document.createElement('template')
 template.innerHTML = `
   <style>
@@ -469,6 +475,9 @@ export class PetshopSidebar extends HTMLElement {
     const nav = this._shadow.querySelector('nav')
     if (!nav) return
 
+    // Clear existing links to avoid duplication
+    nav.innerHTML = '<slot name="links"></slot>'
+
     this._navItems.forEach(item => {
       const link = this._createNavLink(item)
       nav.appendChild(link)
@@ -500,6 +509,7 @@ export class PetshopSidebar extends HTMLElement {
   private _getIcon(name: string): string {
     const icons: Record<string, string> = {
       user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',
+      users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
       dog: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5"></path><path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.855-1.45-2.239-2.5"></path><path d="M8 14v.5"></path><path d="M16 14v.5"></path><path d="M11.25 16.25h1.5L12 17l-.75-.75Z"></path><path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 5c.78 0 1.5.108 2.161.306"></path></svg>',
       calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>',
       settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>',
@@ -551,6 +561,13 @@ export class PetshopSidebar extends HTMLElement {
 
       if (user) {
         localStorage.setItem('user', JSON.stringify(user))
+
+        // Update nav items based on user role
+        if (user.role === 'admin') {
+          this._navItems = [...ADMIN_NAV_ITEMS]
+          this._renderNavLinks()
+          this._updateActiveLink()
+        }
 
         const firstName = user.name?.split(' ')[0] || 'Usuário'
         const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'U')}&background=e0f2f1&color=0c4e5a`

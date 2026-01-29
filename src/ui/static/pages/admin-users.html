@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerenciar Usuários | Little's Petshop</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/styles/global.css" />
+  <link rel="stylesheet" href="/styles/pets.css" />
+  <link rel="stylesheet" href="/styles/admin-users.css" />
+
+  <!-- Scripts -->
+  <script src="/scripts/components/sidebar-component.js" type="module"></script>
+  <script src="/scripts/pages/admin-users-page.js" type="module"></script>
+</head>
+
+<body>
+
+  <div class="dashboard-container">
+    <!-- Sidebar Component -->
+    <petshop-sidebar active="admin-users"></petshop-sidebar>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">Gerenciar Usuários</h1>
+        <div class="search-box">
+          <i data-lucide="search"></i>
+          <input type="text" id="searchInput" placeholder="Buscar por email..." class="search-input" />
+        </div>
+      </div>
+
+      <p style="color: #666; margin-bottom: 2rem;">Gerencie os perfis de usuários e seus pets.</p>
+
+      <!-- Users List -->
+      <section class="users-section">
+        <div class="users-list" id="usersList">
+          <!-- User cards will be injected here by JS -->
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div class="modal" id="editUserModal">
+    <div class="modal-content modal-large">
+      <button class="close-modal" id="closeModal">&times;</button>
+      <h2 style="font-family: var(--font-display); color: var(--secondary); margin-bottom: 1.5rem;">Editar Usuário</h2>
+
+      <form id="editUserForm">
+        <input type="hidden" id="userId" />
+
+        <div class="form-section">
+          <h3 class="section-title">Informações do Usuário</h3>
+
+          <div class="form-group">
+            <label>Nome</label>
+            <input type="text" id="userName" required placeholder="Nome completo" />
+          </div>
+
+          <div class="row" style="display: flex; gap: 1rem;">
+            <div class="form-group" style="flex: 1;">
+              <label>Email</label>
+              <input type="email" id="userEmail" required placeholder="email@exemplo.com" />
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>Telefone</label>
+              <input type="tel" id="userPhone" placeholder="(11) 99999-9999" />
+            </div>
+          </div>
+
+          <div class="row" style="display: flex; gap: 1rem;">
+            <div class="form-group" style="flex: 1;">
+              <label>Localização</label>
+              <input type="text" id="userLocation" placeholder="Cidade, UF" />
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>Data de Nascimento</label>
+              <input type="date" id="userBirthDate" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="section-title">
+            <i data-lucide="dog" style="width: 20px; height: 20px;"></i>
+            Pets do Usuário
+          </h3>
+
+          <div class="pets-grid-small" id="userPetsList">
+            <!-- Pet cards will be injected here -->
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="section-title">
+            <i data-lucide="calendar" style="width: 20px; height: 20px;"></i>
+            Agendamentos
+          </h3>
+
+          <div class="bookings-list-small" id="userBookingsList">
+            <!-- Bookings will be injected here -->
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-delete" id="deleteUserBtn">
+            <i data-lucide="trash-2" style="margin-right: 0.5rem; width: 18px;"></i>
+            Excluir Usuário
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i data-lucide="save" style="margin-right: 0.5rem; width: 18px;"></i>
+            Salvar Alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" id="deleteConfirmModal">
+    <div class="modal-content">
+      <button class="close-modal" id="closeDeleteModal">&times;</button>
+      <div style="text-align: center; margin-bottom: 1.5rem;">
+        <div
+          style="background: #fee2e2; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+          <i data-lucide="alert-triangle" style="width: 32px; height: 32px; color: #dc2626;"></i>
+        </div>
+        <h2 style="font-family: var(--font-display); color: var(--secondary); margin-bottom: 0.5rem;">Confirmar Exclusão
+        </h2>
+        <p style="color: #666;">Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.</p>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">Cancelar</button>
+        <button type="button" class="btn btn-delete" id="confirmDeleteBtn">
+          <i data-lucide="trash-2" style="margin-right: 0.5rem; width: 18px;"></i>
+          Sim, Excluir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+
+</html>
