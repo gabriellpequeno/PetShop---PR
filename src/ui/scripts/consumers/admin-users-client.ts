@@ -142,15 +142,7 @@ export class AdminUsersClient extends ApiConsumer {
    */
   async getUserBookings(userId: string): Promise<any[]> {
     const response = await fetch(
-      `${ApiConsumer.BASE_URL}/admin/bookings?userId=${userId}`,
-      // Note: We are reusing the main bookings endpoint but passing userId which the updated controller now accepts.
-      // Wait, the controller is bound to `/api/bookings`.
-      // The `admin-users-client` uses `BASE_URL` which usually points to `/api` or similar? 
-      // Let's check `api-consumer.ts` but assuming `BASE_URL` is the API root.
-      // The router booking-router.ts has: `bookingRouter.get("/api/bookings", ...)`
-      // So the URL should be `/api/bookings`.
-      // The AdminUsersClient has methods calling `${ApiConsumer.BASE_URL}/admin/users`.
-      // I should call `${ApiConsumer.BASE_URL}/bookings?userId=${userId}`.
+      `${ApiConsumer.BASE_URL}/bookings?userId=${userId}`,
       {
         method: 'GET',
         headers: this.getHeaders(),
@@ -159,15 +151,6 @@ export class AdminUsersClient extends ApiConsumer {
     )
 
     if (!response.ok) {
-      // If the endpoint is strictly /api/bookings and BASE_URL might include /api...
-      // Let's assume the router paths are relative to app root, so if BASE_URL is just empty string or origin.
-      // I will use `/api/bookings` directly to be safe or check ApiConsumer.
-      // But for now, I'll stick to the pattern.
-      // Wait, looking at file `admin-users-client.ts` content:
-      // `fetch(\`\${ApiConsumer.BASE_URL}/admin/users\`, ...)`
-      // `booking-router.ts` mounts at `/api/bookings`.
-      // So I should call `/api/bookings`.
-      // I will trust the user standard.
       throw new Error('Failed to fetch user bookings')
     }
 
