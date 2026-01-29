@@ -13,6 +13,7 @@
     href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
     rel="stylesheet" />
   <script src="/scripts/pages/home-page.js" type="module"></script>
+  <script src="/scripts/pages/auth-modal.js" type="module"></script>
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -20,6 +21,7 @@
   <!-- Custom Styles -->
   <link rel="stylesheet" href="../styles/global.css" />
   <link rel="stylesheet" href="../styles/home.css" />
+  <link rel="stylesheet" href="../styles/auth-modal.css" />
 </head>
 
 <body>
@@ -43,9 +45,8 @@
         <a href="#contact" class="nav-link">Contato</a>
       </div>
 
-      <!-- Desktop CTA -->
       <div class="nav-cta desktop-only">
-        <a href="/pages/login.html" class="btn btn-primary">Login</a>
+        <button class="btn btn-primary" data-auth-modal>Login</button>
       </div>
 
       <!-- Mobile Menu Button -->
@@ -64,7 +65,7 @@
       <a href="#about" class="mobile-nav-link">Sobre Nós</a>
       <a href="#testimonials" class="mobile-nav-link">Feedbacks</a>
       <a href="#contact" class="mobile-nav-link">Contato</a>
-      <a href="/pages/login.html" class="btn btn-primary full-width-mobile" style="text-align: center;">Login</a>
+      <button class="btn btn-primary full-width-mobile" data-auth-modal>Login</button>
     </div>
   </nav>
 
@@ -93,7 +94,8 @@
 
         <div class="hero-image-container">
           <div class="hero-blob"></div>
-          <img src="../assets/img/hero-dog.png" alt="Cachorro fofo usando roupão e segurando um drink, estilo spa" class="hero-img" />
+          <img src="../assets/img/hero-dog.png" alt="Cachorro fofo usando roupão e segurando um drink, estilo spa"
+            class="hero-img" />
         </div>
       </div>
 
@@ -412,6 +414,169 @@
     // Initialize Icons
     lucide.createIcons();
   </script>
+
+  <!-- Auth Modal -->
+  <div class="auth-modal-backdrop" id="authModalBackdrop">
+    <div class="auth-modal">
+      <button class="auth-modal-close" id="authModalClose" aria-label="Fechar modal">
+        <i data-lucide="x"></i>
+      </button>
+
+      <!-- Login Form -->
+      <div id="loginFormContainer">
+        <div class="auth-modal-header">
+          <div class="auth-modal-icon">
+            <i data-lucide="log-in"></i>
+          </div>
+          <h2 class="auth-modal-title">Bem-vindo de volta!</h2>
+          <p class="auth-modal-subtitle">Entre na sua conta para agendar serviços</p>
+        </div>
+
+        <div class="auth-modal-body">
+          <div class="auth-error-message" id="loginErrorMessage">
+            <i data-lucide="alert-circle"></i>
+            <span>Erro</span>
+          </div>
+
+          <form id="loginForm">
+            <div class="auth-form-group">
+              <label class="auth-form-label" for="loginEmail">Email</label>
+              <div class="auth-form-input-wrapper">
+                <input type="email" id="loginEmail" class="auth-form-input" placeholder="seu@email.com"
+                  autocomplete="email" />
+                <i data-lucide="mail"></i>
+              </div>
+              <div class="auth-form-error" id="loginEmailError">
+                <i data-lucide="alert-circle"></i>
+                <span></span>
+              </div>
+            </div>
+
+            <div class="auth-form-group">
+              <label class="auth-form-label" for="loginPassword">Senha</label>
+              <div class="auth-form-input-wrapper">
+                <input type="password" id="loginPassword" class="auth-form-input" placeholder="Sua senha"
+                  autocomplete="current-password" />
+                <i data-lucide="lock"></i>
+              </div>
+              <div class="auth-form-error" id="loginPasswordError">
+                <i data-lucide="alert-circle"></i>
+                <span></span>
+              </div>
+            </div>
+
+            <button type="submit" class="auth-submit-btn" id="loginSubmitBtn">
+              <span class="btn-text">Entrar</span>
+              <div class="spinner"></div>
+            </button>
+          </form>
+
+          <div class="auth-toggle-container">
+            <p class="auth-toggle-text">
+              Não tem uma conta?
+              <button class="auth-toggle-link" id="toggleToRegister">Cadastre-se</button>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Register Form -->
+      <div id="registerFormContainer" class="hidden">
+        <div class="auth-modal-header">
+          <div class="auth-modal-icon">
+            <i data-lucide="user-plus"></i>
+          </div>
+          <h2 class="auth-modal-title">Crie sua conta</h2>
+          <p class="auth-modal-subtitle">Cadastre-se para agendar serviços para seu pet</p>
+        </div>
+
+        <div class="auth-modal-body">
+          <div class="auth-success-message" id="registerSuccessMessage">
+            <i data-lucide="check-circle"></i>
+            <span>Conta criada! Faça login.</span>
+          </div>
+
+          <div class="auth-error-message" id="registerErrorMessage">
+            <i data-lucide="alert-circle"></i>
+            <span>Erro</span>
+          </div>
+
+          <form id="registerForm">
+
+            <div class="auth-form-group">
+              <label class="auth-form-label" for="registerName">Nome</label>
+              <div class="auth-form-input-wrapper">
+                <input type="text" id="registerName" class="auth-form-input" placeholder="Seu nome"
+                  autocomplete="name" />
+                <i data-lucide="user"></i>
+              </div>
+              <div class="auth-form-error" id="registerNameError">
+                <i data-lucide="alert-circle"></i>
+                <span></span>
+              </div>
+            </div>
+
+            <div class="auth-form-group">
+              <label class="auth-form-label" for="registerEmail">Email</label>
+              <div class="auth-form-input-wrapper">
+                <input type="email" id="registerEmail" class="auth-form-input" placeholder="seu@email.com"
+                  autocomplete="email" />
+                <i data-lucide="mail"></i>
+              </div>
+              <div class="auth-form-error" id="registerEmailError">
+                <i data-lucide="alert-circle"></i>
+                <span></span>
+              </div>
+            </div>
+
+            <div class="auth-form-group">
+              <label class="auth-form-label" for="registerPassword">Senha</label>
+              <div class="auth-form-input-wrapper">
+                <input type="password" id="registerPassword" class="auth-form-input" placeholder="Mínimo 8 caracteres"
+                  autocomplete="new-password" />
+                <i data-lucide="lock"></i>
+              </div>
+              <div class="auth-form-error" id="registerPasswordError">
+                <i data-lucide="alert-circle"></i>
+                <span></span>
+              </div>
+              <div class="password-strength" id="passwordStrength">
+                <div class="password-strength-bar">
+                  <div class="password-strength-fill" id="passwordStrengthFill"></div>
+                </div>
+                <span class="password-strength-text" id="passwordStrengthText">Força da senha</span>
+              </div>
+            </div>
+
+            <div class="auth-form-group">
+              <label class="auth-form-label" for="registerConfirmPassword">Confirmar Senha</label>
+              <div class="auth-form-input-wrapper">
+                <input type="password" id="registerConfirmPassword" class="auth-form-input"
+                  placeholder="Repita sua senha" autocomplete="new-password" />
+                <i data-lucide="lock-keyhole"></i>
+              </div>
+              <div class="auth-form-error" id="registerConfirmPasswordError">
+                <i data-lucide="alert-circle"></i>
+                <span></span>
+              </div>
+            </div>
+
+            <button type="submit" class="auth-submit-btn" id="registerSubmitBtn">
+              <span class="btn-text">Criar Conta</span>
+              <div class="spinner"></div>
+            </button>
+          </form>
+
+          <div class="auth-toggle-container">
+            <p class="auth-toggle-text">
+              Já tem uma conta?
+              <button class="auth-toggle-link" id="toggleToLogin">Faça login</button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
