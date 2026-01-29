@@ -10,7 +10,7 @@ describe('DeletePetService', () => {
   const service = new DeletePetService(repository)
 
   it('should delete a pet if owner', async () => {
-    const pet = PetsFaker.fake({ user_id: 'user-id' })
+    const pet = PetsFaker.fake({ userId: 'user-id' })
     repository.findById.mockResolvedValue(pet)
 
     await expect(service.execute({
@@ -23,7 +23,7 @@ describe('DeletePetService', () => {
   })
 
   it('should delete a pet if admin', async () => {
-    const pet = PetsFaker.fake({ user_id: 'other-user-id' })
+    const pet = PetsFaker.fake({ userId: 'other-user-id' })
     repository.findById.mockResolvedValue(pet)
 
     await expect(service.execute({
@@ -46,7 +46,7 @@ describe('DeletePetService', () => {
   })
 
   it('should throw AppError if user is not owner and not admin', async () => {
-    const pet = PetsFaker.fake({ user_id: 'other-user-id' })
+    const pet = PetsFaker.fake({ userId: 'other-user-id' })
     repository.findById.mockResolvedValue(pet)
 
     await expect(service.execute({

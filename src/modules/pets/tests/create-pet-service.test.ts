@@ -23,7 +23,7 @@ describe('Create Pet Service', () => {
     })).resolves.not.toThrow()
 
     expect(repository.add).toHaveBeenCalledWith(expect.objectContaining({
-      user_id: 'user-id',
+      userId: 'user-id',
       name: 'Buddy',
       species: 'Dog',
       breed: 'Golden Retriever',
