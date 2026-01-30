@@ -6,7 +6,7 @@ import { JobsRepository } from "../../jobs/repositories/jobs-repository";
 
 export class CreateBookingController {
     static async handle(request: Request, response: Response) {
-        const { petId, jobId, bookingDate } = request.body;
+        const { petId, jobId, bookingDate, bookingTime } = request.body;
         const userId = request.user.id;
 
         const bookingsRepository = new BookingsRepository();
@@ -24,6 +24,7 @@ export class CreateBookingController {
             petId,
             jobId,
             bookingDate,
+            bookingTime,
         });
 
         return response.status(201).json(booking);
