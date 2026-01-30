@@ -1,3 +1,5 @@
+export type PetSize = 'P' | 'M' | 'G';
+
 export interface Pet {
     id: string;
     userId: string;
@@ -6,4 +8,5 @@ export interface Pet {
     breed: string | null;
     weight: number | null;
     age: number | null;
+    size: PetSize;
 }

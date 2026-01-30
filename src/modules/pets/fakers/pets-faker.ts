@@ -1,4 +1,4 @@
-import type { Pet } from "../models/pet";
+import type { Pet, PetSize } from "../models/pet";
 import { faker } from "@faker-js/faker";
 
 export class PetsFaker {
@@ -11,6 +11,7 @@ export class PetsFaker {
       breed: faker.animal.type(),
       age: faker.number.int({ min: 0, max: 20 }),
       weight: faker.number.float({ min: 1, max: 50, fractionDigits: 1 }),
+      size: faker.helpers.arrayElement(['P', 'M', 'G'] as PetSize[]),
       ...baseData
     }
   }
