@@ -6,15 +6,14 @@ O projeto **PetShop** é uma aplicação web full-stack desenvolvida com foco em
 A aplicação utiliza **Node.js** com **Express** para o servidor backend e **SQLite** como banco de dados. O frontend é construído com **HTML/CSS** e **TypeScript** vanilla, utilizando um middleware customizado para transpilação on-the-fly de assets, eliminando a necessidade de um passo de build complexo separado para o frontend durante o desenvolvimento.
 
 ## Backlog do Produto
-
 | Valor | User Story |
-|--|--|--|
-| Alto | Como administrador, quero criar e gerenciar os serviços do meu Petshop, poder edita-los, adicionar e remover | |
-| Alto | Como administrador preciso poder gerenciar os meus clientes e os seus Pet ter controle de quantos e pode editar seus perfis. | |
-| Alto | Como administrador preciso controlar a agenda do meu Petshop os dias e horários disponíveis, reagendar e cancelar agendamentos de acordo com a as nossas necessidades. | |
-| Alto | Agendar Serviços para o meu pet de maneira agil e rapida. | |
-| Medio | Como usuário, quero pode cadastrar e editar os perfis dos meus pets, e atualizar os dados cadastrais. | |
-| Medio | Como usuário, quero poder ter acesso e editar o meu perfil e atualizar os meus dados cadastrais. | |
+| -- | -- |
+| Alto | Como administrador, quero criar e gerenciar os serviços do meu Petshop: editar, adicionar e remover serviços. |
+| Alto | Como administrador, preciso gerenciar clientes e seus pets, podendo controlar a quantidade e editar perfis. |
+| Alto | Como administrador, preciso controlar a agenda do Petshop (dias/horários), reagendar e cancelar agendamentos conforme necessário. |
+| Alto | Agendar serviços para meu pet de maneira ágil e rápida. |
+| Médio | Como usuário, quero cadastrar e editar os perfis dos meus pets e atualizar meus dados cadastrais. |
+| Médio | Como usuário, quero acessar e editar meu perfil e atualizar meus dados cadastrais. |
 
 ## Tecnologias
 O sistema foi desenvolvido usando as tecnologias, solicitadas pelo escopo do desafio:
