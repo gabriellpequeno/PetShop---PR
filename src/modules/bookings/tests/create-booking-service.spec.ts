@@ -67,6 +67,7 @@ describe("CreateBookingService", () => {
 
         const booking = await createBookingService.execute({
             userId: "user-123",
+            userRole: "client",
             petId: "pet-123",
             jobId: "job-123",
             bookingDate: "2026-02-15 10:00",
@@ -81,6 +82,7 @@ describe("CreateBookingService", () => {
         await expect(
             createBookingService.execute({
                 userId: "user-123",
+                userRole: "client",
                 petId: "pet-123",
                 jobId: "job-123",
                 bookingDate: "15/02/2026 10:00",
@@ -92,6 +94,7 @@ describe("CreateBookingService", () => {
         await expect(
             createBookingService.execute({
                 userId: "user-123",
+                userRole: "client",
                 petId: "pet-123",
                 jobId: "job-123",
                 bookingDate: "",
@@ -105,6 +108,7 @@ describe("CreateBookingService", () => {
         await expect(
             createBookingService.execute({
                 userId: "user-123",
+                userRole: "client",
                 petId: "pet-inexistente",
                 jobId: "job-123",
                 bookingDate: "2026-02-15 10:00",
@@ -126,6 +130,7 @@ describe("CreateBookingService", () => {
         await expect(
             createBookingService.execute({
                 userId: "user-123",
+                userRole: "client",
                 petId: "pet-123",
                 jobId: "job-123",
                 bookingDate: "2026-02-15 10:00",
@@ -148,6 +153,7 @@ describe("CreateBookingService", () => {
         await expect(
             createBookingService.execute({
                 userId: "user-123",
+                userRole: "client",
                 petId: "pet-123",
                 jobId: "job-inexistente",
                 bookingDate: "2026-02-15 10:00",
@@ -189,10 +195,56 @@ describe("CreateBookingService", () => {
         await expect(
             createBookingService.execute({
                 userId: "user-123",
+                userRole: "client",
                 petId: "pet-123",
                 jobId: "job-123",
                 bookingDate: "2026-02-15 10:00",
             })
         ).rejects.toBeInstanceOf(ConflictError);
+    });
+
+    it("deve permitir que admin crie agendamento para pet de outro usuário", async () => {
+        vi.spyOn(petsRepositoryMock, "findById").mockResolvedValueOnce({
+            id: "pet-123",
+            userId: "dono-do-pet",
+            name: "Rex",
+            species: "Cachorro",
+            breed: null,
+            age: null,
+            weight: null,
+        });
+        vi.spyOn(jobsRepositoryMock, "findById").mockResolvedValueOnce({
+            id: "job-123",
+            name: "Banho",
+            description: "",
+            priceP: 50,
+            priceM: 60,
+            priceG: 70,
+            duration: 30,
+        });
+        vi.spyOn(bookingsRepositoryMock, "findDuplicate").mockResolvedValueOnce(undefined);
+        vi.spyOn(bookingsRepositoryMock, "create").mockResolvedValueOnce({
+            id: "booking-admin",
+            userId: "dono-do-pet",
+            petId: "pet-123",
+            jobId: "job-123",
+            bookingDate: "2026-02-15 10:00",
+            status: "agendado",
+            realStartTime: null,
+            realEndTime: null,
+            createdAt: "2026-01-28T00:00:00Z",
+        });
+
+        await createBookingService.execute({
+            userId: "admin-id",
+            userRole: "admin",
+            petId: "pet-123",
+            jobId: "job-123",
+            bookingDate: "2026-02-15 10:00",
+        });
+
+        expect(bookingsRepositoryMock.create).toHaveBeenCalledWith(expect.objectContaining({
+            userId: "dono-do-pet"
+        }));
     });
 });

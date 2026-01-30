@@ -5,6 +5,7 @@ interface UserData {
   id: string
   name: string
   email: string
+  role?: string
 }
 
 interface NavigationItem {
@@ -14,17 +15,26 @@ interface NavigationItem {
   href: string
 }
 
-const DEFAULT_NAV_ITEMS: NavigationItem[] = [
-  { slug: 'profile', label: 'Perfil', icon: 'user', href: '/pages/profile.html' },
+const CUSTOMER_NAV_ITEMS: NavigationItem[] = [
   { slug: 'pets', label: 'Meus Pets', icon: 'dog', href: '/pages/pets.html' },
   { slug: 'agenda', label: 'Agenda', icon: 'calendar', href: '/pages/booking.html' },
-  { slug: 'settings', label: 'Configurações', icon: 'settings', href: '#' },
+  { slug: 'profile', label: 'Perfil', icon: 'user', href: '/pages/profile.html' },
 ]
 
 const ADMIN_NAV_ITEMS: NavigationItem[] = [
-  { slug: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard', href: '/admin/dashboard' },
-  { slug: 'users', label: 'Gerenciar Usuários', icon: 'users', href: '/admin/users' },
-  { slug: 'services', label: 'Serviços', icon: 'calendar-check', href: '/admin/services' },
+  {
+    slug: 'dashboard',
+    label: 'Dashboard',
+    icon: 'layout-dashboard',
+    href: '/admin/dashboard',
+  },
+  { slug: 'users', label: 'Usuários', icon: 'users', href: '/pages/admin/users.html' },
+  {
+    slug: 'services',
+    label: 'Serviços',
+    icon: 'briefcase',
+    href: '/admin/services',
+  },
 ]
 
 const template = document.createElement('template')
@@ -35,7 +45,7 @@ template.innerHTML = `
       --_sidebar-color: var(--sidebar-color, #0c4e5a);
       --_sidebar-width: var(--sidebar-width, 250px);
       --_sidebar-collapsed-width: var(--sidebar-collapsed-width, 72px);
-      --_sidebar-accent: var(--sidebar-accent, #ffa500);
+      --_sidebar-accent: var(--sidebar-accent, #0c4e5a);
       --_sidebar-link-hover: var(--sidebar-link-hover, #f0fdfa);
       --_sidebar-link-active-bg: var(--sidebar-link-active-bg, #0c4e5a);
       --_sidebar-link-active-color: var(--sidebar-link-active-color, #ffffff);
@@ -59,7 +69,9 @@ template.innerHTML = `
       left: 0;
       z-index: 100;
       width: var(--_sidebar-width);
-      height: 100dvh;
+      height: 100vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       background: var(--_sidebar-bg);
       border-right: 1px solid #e5e7eb;
       display: flex;
@@ -102,13 +114,13 @@ template.innerHTML = `
       background: var(--_sidebar-accent);
       color: white;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(255, 165, 0, 0.4);
+      box-shadow: 0 4px 12px rgba(12, 78, 90, 0.4);
       transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .mobile-toggle:hover {
       transform: scale(1.05);
-      box-shadow: 0 6px 16px rgba(255, 165, 0, 0.5);
+      box-shadow: 0 6px 16px rgba(12, 78, 90, 0.5);
     }
 
     .mobile-toggle svg {
@@ -130,12 +142,12 @@ template.innerHTML = `
     .brand-icon {
       width: 44px;
       height: 44px;
-      background: linear-gradient(135deg, var(--_sidebar-accent), #ffb84d);
+      background: linear-gradient(135deg, var(--_sidebar-accent), #1a6b7a);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(255, 165, 0, 0.3);
+      box-shadow: 0 4px 12px rgba(12, 78, 90, 0.3);
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
@@ -151,8 +163,22 @@ template.innerHTML = `
       font-size: 1.375rem;
       transition: opacity 0.2s;
     }
+    
+    .brand-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #ffa500, #ffb84d);
+      color: white;
+      font-size: 0.625rem;
+      font-weight: 700;
+      padding: 0.125rem 0.5rem;
+      border-radius: 999px;
+      margin-left: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
 
-    :host([collapsed]) .brand-text {
+    :host([collapsed]) .brand-text, 
+    :host([collapsed]) .brand-badge {
       opacity: 0;
       width: 0;
       overflow: hidden;
@@ -187,12 +213,22 @@ template.innerHTML = `
     .nav-link:hover {
       background: var(--_sidebar-link-hover);
       color: var(--_sidebar-color);
+      transform: translateX(4px);
+      box-shadow: 0 2px 8px rgba(12, 78, 90, 0.1);
+    }
+    
+    .nav-link:hover .nav-icon {
+       transform: scale(1.1);
     }
 
     .nav-link.active {
       background: linear-gradient(135deg, var(--_sidebar-link-active-bg), #0a3d47);
       color: var(--_sidebar-link-active-color);
       box-shadow: 0 4px 12px rgba(12, 78, 90, 0.25);
+    }
+    
+    .nav-link.active:hover {
+       transform: translateX(0);
     }
 
     .nav-icon {
@@ -206,8 +242,20 @@ template.innerHTML = `
       white-space: nowrap;
       transition: opacity 0.2s, width 0.2s;
     }
+    
+    .nav-badge {
+      display: inline-block;
+      background: #e2e8f0;
+      color: #64748b;
+      font-size: 0.625rem;
+      font-weight: 600;
+      padding: 0.125rem 0.375rem;
+      border-radius: 999px;
+      margin-left: auto;
+    }
 
-    :host([collapsed]) .nav-label {
+    :host([collapsed]) .nav-label,
+    :host([collapsed]) .nav-badge {
       opacity: 0;
       width: 0;
       overflow: hidden;
@@ -355,7 +403,7 @@ template.innerHTML = `
 
 export class PetshopSidebar extends HTMLElement {
   static get observedAttributes() {
-    return ['collapsed', 'active', 'mode']
+    return ['collapsed', 'active']
   }
 
   private _shadow: ShadowRoot
@@ -364,8 +412,8 @@ export class PetshopSidebar extends HTMLElement {
   private _sidebar: HTMLElement | null = null
   private _overlay: HTMLElement | null = null
   private _mobileToggle: HTMLButtonElement | null = null
-  private _navItems: NavigationItem[] = [...DEFAULT_NAV_ITEMS]
   private _isMobileOpen = false
+  private _userRole: string | undefined = undefined
 
   constructor() {
     super()
@@ -424,7 +472,8 @@ export class PetshopSidebar extends HTMLElement {
 
   /** Navigate to a specific route programmatically */
   navigateTo(route: string): void {
-    const item = this._navItems.find(n => n.slug === route)
+    const items = this._getNavItems()
+    const item = items.find(n => n.slug === route)
     if (item) {
       this._handleNavigation(item)
     }
@@ -462,6 +511,33 @@ export class PetshopSidebar extends HTMLElement {
   // PRIVATE METHODS
   // ========================
 
+  private _getUserRole(): string | undefined {
+      if (this._userRole) return this._userRole
+      
+      const userStr = localStorage.getItem('user')
+      if (userStr) {
+          try {
+              const user = JSON.parse(userStr)
+              this._userRole = user.role
+          } catch {
+              // ignore
+          }
+      }
+      return this._userRole
+  }
+
+  private _getNavItems(): NavigationItem[] {
+      const role = this._getUserRole()
+      if (role === 'admin' || role === 'ADMIN') {
+          // Admin sees EVERYTHING or just Admin stuff + Profile? 
+          // Usually Admin dashboard is separate. But request said "all routes".
+          // I will show Admin Items THEN Customer Items at bottom (or separate).
+          // Merging lists.
+          return [...ADMIN_NAV_ITEMS, ...CUSTOMER_NAV_ITEMS]
+      }
+      return CUSTOMER_NAV_ITEMS
+  }
+
   private _renderNavLinks(): void {
     const linksSlot = this._shadow.querySelector('slot[name="links"]')
     if (!linksSlot) return
@@ -474,12 +550,24 @@ export class PetshopSidebar extends HTMLElement {
     // Render default links
     const nav = this._shadow.querySelector('nav')
     if (!nav) return
+    
+    // Clear existing (if re-rendering)
+    // NOTE: If slot was used, we wouldn't be here. But since we append to nav directly if slot is empty...
+    // Actually the template has `<slot name="links">`. We can't easily append TO the slot from inside shadow DOM if it's default content.
+    // We should append siblings or replace the slot fallback content. 
+    // The previous implementation appended to `nav`, which is the parent of the slot.
+    // Wait, the template has `<nav><slot name="links"></slot></nav>`.
+    // If I append to `nav`, it appears AFTER the slot.
+    // Correct way for default content is either put it INSIDE the slot tag in template, or append to nav if slot is empty.
+    // The previous implementation did: `nav.appendChild(link)`. This makes links appear after the slot. That works.
+    
+    // Clear previous dynamic links (if any)
+    const dynamicLinks = nav.querySelectorAll('.nav-link')
+    dynamicLinks.forEach(el => el.remove())
 
-    // Select nav items based on mode
-    const mode = this.getAttribute('mode')
-    this._navItems = mode === 'admin' ? [...ADMIN_NAV_ITEMS] : [...DEFAULT_NAV_ITEMS]
+    const items = this._getNavItems()
 
-    this._navItems.forEach(item => {
+    items.forEach(item => {
       const link = this._createNavLink(item)
       nav.appendChild(link)
     })
@@ -514,9 +602,9 @@ export class PetshopSidebar extends HTMLElement {
       calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>',
       settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>',
       'log-out': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16,17 21,12 16,7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>',
-      'layout-dashboard': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>',
-      'users': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
-      'calendar-check': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><path d="m9 16 2 2 4-4"></path></svg>',
+      'layout-dashboard': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg>',
+      users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
+      briefcase: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>',
     }
     return icons[name] || ''
   }
@@ -564,15 +652,23 @@ export class PetshopSidebar extends HTMLElement {
 
       if (user) {
         localStorage.setItem('user', JSON.stringify(user))
+        // Update cached role
+        this._userRole = user.role
+        // Re-render links if role changed/became available (important for async load!)
+        // However, this might cause a flicker. 
+        // Better: render profile then check if nav needs update.
+        this._renderNavLinks()
 
         const firstName = user.name?.split(' ')[0] || 'Usuário'
-        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'U')}&background=e0f2f1&color=0c4e5a`
+        // Using admin-style colors for avatar
+        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'U')}&background=0c4e5a&color=ffffff`
 
         this._userSection.innerHTML = `
           <div class="user-profile">
             <img src="${avatarUrl}" alt="${firstName}" class="user-avatar" />
             <div class="user-info">
               <p class="user-name">${firstName}</p>
+              ${user.role === 'admin' ? '<p class="user-role">Administrador</p>' : ''}
             </div>
             <button class="logout-btn" aria-label="Sair da conta" title="Sair">
               ${this._getIcon('log-out')}
@@ -601,19 +697,23 @@ export class PetshopSidebar extends HTMLElement {
     let user: UserData
     try {
       user = JSON.parse(userStr)
+      this._userRole = user.role
+      // Re-render links if local storage available immediately
+      this._renderNavLinks()
     } catch {
       this._userSection.innerHTML = ''
       return
     }
 
     const firstName = user.name?.split(' ')[0] || 'Usuário'
-    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'U')}&background=e0f2f1&color=0c4e5a`
+    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'U')}&background=0c4e5a&color=ffffff`
 
     this._userSection.innerHTML = `
       <div class="user-profile">
         <img src="${avatarUrl}" alt="${firstName}" class="user-avatar" />
         <div class="user-info">
           <p class="user-name">${firstName}</p>
+          ${user.role === 'admin' ? '<p class="user-role">Administrador</p>' : ''}
         </div>
         <button class="logout-btn" aria-label="Sair da conta" title="Sair">
           ${this._getIcon('log-out')}
@@ -639,6 +739,7 @@ export class PetshopSidebar extends HTMLElement {
 
     // Clear local storage
     localStorage.removeItem('user')
+    this._userRole = undefined
 
     // Clear cookie (fallback)
     document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
@@ -675,9 +776,13 @@ export class PetshopSidebar extends HTMLElement {
     this._mobileToggle?.setAttribute('aria-expanded', 'true')
     this._mobileToggle?.setAttribute('aria-label', 'Fechar menu')
 
-    // Focus first link
     const firstLink = this._shadow.querySelector('.nav-link') as HTMLElement
     firstLink?.focus()
+    try {
+      document.body.style.overflow = 'hidden'
+      document.documentElement.style.overflow = 'hidden'
+    } catch (err) {
+    }
   }
 
   private _closeMobile = (): void => {
@@ -686,6 +791,11 @@ export class PetshopSidebar extends HTMLElement {
     this._overlay?.classList.remove('visible')
     this._mobileToggle?.setAttribute('aria-expanded', 'false')
     this._mobileToggle?.setAttribute('aria-label', 'Abrir menu')
+    try {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    } catch (err) {
+    }
   }
 
   private _setupKeyboardNavigation(): void {
@@ -734,5 +844,4 @@ export class PetshopSidebar extends HTMLElement {
   }
 }
 
-// Register the custom element
 customElements.define('petshop-sidebar', PetshopSidebar)
