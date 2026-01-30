@@ -42,7 +42,8 @@ body {
 .page-subtitle {
   font-family: var(--font-body);
   font-size: 0.95rem;
-  color: #475569; /* Escurecido para melhor contraste */
+  color: #475569;
+  /* Escurecido para melhor contraste */
   margin-top: 0.25rem;
 }
 
@@ -256,7 +257,7 @@ body {
 }
 
 .users-table tbody tr {
-  cursor: pointer;
+  cursor: default;
   transition: background-color 0.2s;
 }
 
@@ -355,6 +356,7 @@ body {
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -368,6 +370,7 @@ body {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
