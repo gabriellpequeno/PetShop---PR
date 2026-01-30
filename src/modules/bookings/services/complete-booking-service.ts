@@ -5,61 +5,78 @@ import type { BookingsRepository } from "../repositories/bookings-repository";
 import type { IBooking } from "../types/booking-types";
 
 interface CompleteBookingRequest {
-    bookingId: string;
-    userRole: string;
-    realStartTime: string;
-    realEndTime: string;
+  bookingId: string;
+  userRole: string;
+  realStartTime?: string;
+  realEndTime?: string;
 }
 
 export class CompleteBookingService {
-    constructor(private repository: BookingsRepository) { }
+  constructor(private repository: BookingsRepository) {}
 
-    async execute({
-        bookingId,
-        userRole,
-        realStartTime,
-        realEndTime,
-    }: CompleteBookingRequest): Promise<IBooking> {
-        if (userRole !== "admin") {
-            throw new UnauthorizedError("Apenas administradores podem registrar a execução de serviços.");
-        }
-        if (!bookingId || typeof bookingId !== "string") {
-            throw new BadRequestError("ID do agendamento é obrigatório.");
-        }
-
-        const timeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
-        if (!realStartTime || !timeRegex.test(realStartTime)) {
-            throw new BadRequestError("Horário de início deve estar no formato YYYY-MM-DD HH:mm");
-        }
-        if (!realEndTime || !timeRegex.test(realEndTime)) {
-            throw new BadRequestError("Horário de término deve estar no formato YYYY-MM-DD HH:mm");
-        }
-
-        const startDate = new Date(realStartTime.replace(" ", "T"));
-        const endDate = new Date(realEndTime.replace(" ", "T"));
-        if (startDate >= endDate) {
-            throw new BadRequestError("O horário de início deve ser anterior ao horário de término.");
-        }
-
-        const booking = await this.repository.findById(bookingId);
-        if (!booking) {
-            throw new NotFoundError("Agendamento não encontrado.");
-        }
-
-        if (booking.status === "cancelado") {
-            throw new BadRequestError("Não é possível completar um agendamento cancelado.");
-        }
-        if (booking.status === "concluido") {
-            throw new BadRequestError("Este agendamento já foi concluído.");
-        }
-
-        await this.repository.complete(bookingId, realStartTime, realEndTime);
-
-        return {
-            ...booking,
-            status: "concluido",
-            realStartTime,
-            realEndTime,
-        };
+  async execute({
+    bookingId,
+    userRole,
+    realStartTime,
+    realEndTime,
+  }: CompleteBookingRequest): Promise<IBooking> {
+    if (userRole !== "admin") {
+      throw new UnauthorizedError(
+        "Apenas administradores podem registrar a execução de serviços.",
+      );
     }
+    if (!bookingId || typeof bookingId !== "string") {
+      throw new BadRequestError("ID do agendamento é obrigatório.");
+    }
+
+    // Validate time format only if provided
+    if (realStartTime && realEndTime) {
+      const timeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
+      if (!timeRegex.test(realStartTime)) {
+        throw new BadRequestError(
+          "Horário de início deve estar no formato YYYY-MM-DD HH:mm",
+        );
+      }
+      if (!timeRegex.test(realEndTime)) {
+        throw new BadRequestError(
+          "Horário de término deve estar no formato YYYY-MM-DD HH:mm",
+        );
+      }
+
+      const startDate = new Date(realStartTime.replace(" ", "T"));
+      const endDate = new Date(realEndTime.replace(" ", "T"));
+      if (startDate >= endDate) {
+        throw new BadRequestError(
+          "O horário de início deve ser anterior ao horário de término.",
+        );
+      }
+    }
+
+    const booking = await this.repository.findById(bookingId);
+    if (!booking) {
+      throw new NotFoundError("Agendamento não encontrado.");
+    }
+
+    if (booking.status === "cancelado") {
+      throw new BadRequestError(
+        "Não é possível completar um agendamento cancelado.",
+      );
+    }
+    if (booking.status === "concluido") {
+      throw new BadRequestError("Este agendamento já foi concluído.");
+    }
+
+    await this.repository.complete(
+      bookingId,
+      realStartTime || null,
+      realEndTime || null,
+    );
+
+    return {
+      ...booking,
+      status: "concluido",
+      realStartTime: realStartTime || null,
+      realEndTime: realEndTime || null,
+    };
+  }
 }
