@@ -14,12 +14,13 @@ class AdminDashboardPage {
 
     private async init() {
         this.setupEventListeners()
+        this.updateDateTime()
+        this.startDateTimeUpdate()
         await this.loadDashboardData()
         await this.loadCurrentView()
     }
 
     private setupEventListeners() {
-        // Period filter buttons
         const periodButtons = document.querySelectorAll('.period-btn')
         periodButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -102,9 +103,9 @@ class AdminDashboardPage {
         const petsCount = document.getElementById('petsCount')
         const bookingsCount = document.getElementById('bookingsCount')
 
-        if (usersCount) usersCount.textContent = summary.usersCount.toString()
-        if (petsCount) petsCount.textContent = summary.petsCount.toString()
-        if (bookingsCount) bookingsCount.textContent = summary.bookingsCount.toString()
+        if (usersCount) this.animateCountUp(usersCount, summary.usersCount, 1000)
+        if (petsCount) this.animateCountUp(petsCount, summary.petsCount, 1200)
+        if (bookingsCount) this.animateCountUp(bookingsCount, summary.bookingsCount, 1400)
     }
 
     private showMetricsError() {
@@ -335,6 +336,54 @@ class AdminDashboardPage {
         if (typeof lucide !== 'undefined') {
             lucide.createIcons()
         }
+    }
+
+    // ========== DATE/TIME UPDATE ==========
+    private updateDateTime() {
+        const dateTimeElement = document.getElementById('currentDateTime')
+        if (!dateTimeElement) return
+
+        const now = new Date()
+        const options: Intl.DateTimeFormatOptions = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        }
+
+        const formatted = now.toLocaleDateString('pt-BR', options)
+        dateTimeElement.textContent = formatted
+    }
+
+    private startDateTimeUpdate() {
+        setInterval(() => {
+            this.updateDateTime()
+        }, 60000)
+    }
+
+    private animateCountUp(element: HTMLElement, target: number, duration: number = 1000) {
+        const start = 0
+        const startTime = performance.now()
+
+        const updateCount = (currentTime: number) => {
+            const elapsed = currentTime - startTime
+            const progress = Math.min(elapsed / duration, 1)
+
+            const easeOutExpo = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress)
+            const current = Math.floor(start + (target - start) * easeOutExpo)
+
+            element.textContent = current.toString()
+
+            if (progress < 1) {
+                requestAnimationFrame(updateCount)
+            } else {
+                element.textContent = target.toString()
+            }
+        }
+
+        requestAnimationFrame(updateCount)
     }
 }
 
