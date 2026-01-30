@@ -11,7 +11,7 @@ jobsPageRouter.get(
   EnsureAuthenticationMiddleware.handle,
   EnsureAdminMiddleware.handle,
   (_, res) => {
-    res.sendFile(join(UI_STATIC_PATH, "pages", "admin-services.html"));
+    res.sendFile(join(UI_STATIC_PATH, "pages", "jobs.html"));
   }
 );
 
