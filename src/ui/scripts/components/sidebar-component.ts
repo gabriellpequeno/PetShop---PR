@@ -525,27 +525,27 @@ export class PetshopSidebar extends HTMLElement {
   // ========================
 
   private _getUserRole(): string | undefined {
-      if (this._userRole) return this._userRole
-      
-      const userStr = localStorage.getItem('user')
-      if (userStr) {
-          try {
-              const user = JSON.parse(userStr)
-              this._userRole = user.role
-          } catch {
-              // ignore
-          }
+    if (this._userRole) return this._userRole
+
+    const userStr = localStorage.getItem('user')
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr)
+        this._userRole = user.role
+      } catch {
+        // ignore
       }
-      return this._userRole
+    }
+    return this._userRole
   }
 
   private _getNavItems(): NavigationItem[] {
-      const role = this._getUserRole()
-      if (role === 'admin' || role === 'ADMIN') {
-          // Admin sees only admin items (no customer dashboard)
-          return ADMIN_NAV_ITEMS
-      }
-      return CUSTOMER_NAV_ITEMS
+    const role = this._getUserRole()
+    if (role === 'admin' || role === 'ADMIN') {
+      // Admin sees only admin items (no customer dashboard)
+      return ADMIN_NAV_ITEMS
+    }
+    return CUSTOMER_NAV_ITEMS
   }
 
   private _renderNavLinks(): void {
@@ -560,7 +560,7 @@ export class PetshopSidebar extends HTMLElement {
     // Render default links
     const nav = this._shadow.querySelector('nav')
     if (!nav) return
-    
+
     // Clear existing (if re-rendering)
     // NOTE: If slot was used, we wouldn't be here. But since we append to nav directly if slot is empty...
     // Actually the template has `<slot name="links">`. We can't easily append TO the slot from inside shadow DOM if it's default content.
@@ -570,7 +570,7 @@ export class PetshopSidebar extends HTMLElement {
     // If I append to `nav`, it appears AFTER the slot.
     // Correct way for default content is either put it INSIDE the slot tag in template, or append to nav if slot is empty.
     // The previous implementation did: `nav.appendChild(link)`. This makes links appear after the slot. That works.
-    
+
     // Clear previous dynamic links (if any)
     const dynamicLinks = nav.querySelectorAll('.nav-link')
     dynamicLinks.forEach(el => el.remove())
@@ -620,6 +620,7 @@ export class PetshopSidebar extends HTMLElement {
     return icons[name] || ''
   }
 
+
   private _handleNavigation(item: NavigationItem): void {
     this.dispatchEvent(
       new CustomEvent('navigate', {
@@ -636,7 +637,16 @@ export class PetshopSidebar extends HTMLElement {
 
     // Navigate to href
     if (item.href && item.href !== '#') {
-      window.location.href = item.href
+      const baseUrl = (window as any).APP_BASE_URL
+      if (baseUrl && baseUrl !== '/') {
+        // Remove trailing slash from base
+        const base = baseUrl.replace(/\/$/, '')
+        // Ensure path starts with slash
+        const cleanPath = item.href.startsWith('/') ? item.href : '/' + item.href
+        window.location.href = base + cleanPath
+      } else {
+        window.location.href = item.href
+      }
     }
   }
 
@@ -763,8 +773,16 @@ export class PetshopSidebar extends HTMLElement {
       })
     )
 
+
     // Redirect to login
-    window.location.href = '/pages/login.html'
+    const baseUrl = (window as any).APP_BASE_URL
+    const loginPath = '/pages/login.html'
+    if (baseUrl && baseUrl !== '/') {
+      const base = baseUrl.replace(/\/$/, '')
+      window.location.href = base + loginPath
+    } else {
+      window.location.href = loginPath
+    }
   }
 
   private _setupEventListeners(): void {

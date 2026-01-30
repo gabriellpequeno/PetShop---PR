@@ -38,7 +38,8 @@ class AdminBookingsPage {
 
   private async loadBookings() {
     try {
-      const response = await fetch('/api/bookings');
+
+      const response = await fetch(((window as any).APP_BASE_URL?.replace(/\/$/, '') || '') + '/api/bookings');
       if (!response.ok) throw new Error('Failed to load bookings');
       this.bookings = await response.json();
       this.applyFilters();
@@ -50,7 +51,7 @@ class AdminBookingsPage {
   }
 
   private applyFilters() {
-    this.filteredBookings = this.bookings.filter(booking => 
+    this.filteredBookings = this.bookings.filter(booking =>
       this.statusFilters.has(booking.status)
     );
   }
@@ -79,7 +80,7 @@ class AdminBookingsPage {
 
     const filterBtn = document.getElementById('filterBtn');
     const filterMenu = document.getElementById('filterMenu');
-    
+
     filterBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
       if (filterMenu) {
@@ -152,7 +153,7 @@ class AdminBookingsPage {
 
   private switchView(view: 'week' | 'month') {
     this.currentView = view;
-    
+
     document.querySelectorAll('.view-btn').forEach(btn => {
       btn.classList.toggle('active', btn.getAttribute('data-view') === view);
     });
@@ -172,15 +173,15 @@ class AdminBookingsPage {
     const agendados = this.bookings.filter(b => b.status === 'agendado').length;
     const concluidos = this.bookings.filter(b => b.status === 'concluido').length;
     const cancelados = this.bookings.filter(b => b.status === 'cancelado').length;
-    
+
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
     const revenue = this.bookings
       .filter(b => {
         const bookingDate = new Date(b.bookingDate);
-        return b.status === 'concluido' && 
-               bookingDate.getMonth() === currentMonth && 
-               bookingDate.getFullYear() === currentYear;
+        return b.status === 'concluido' &&
+          bookingDate.getMonth() === currentMonth &&
+          bookingDate.getFullYear() === currentYear;
       })
       .reduce((sum, b) => sum + b.price, 0);
 
@@ -238,7 +239,7 @@ class AdminBookingsPage {
       daysGrid.innerHTML = days.map(day => {
         const dayBookings = this.getBookingsForDay(day);
         let hoursHtml = '';
-        
+
         for (let hour = 7; hour < 20; hour++) {
           hoursHtml += '<div class="hour-slot"></div>';
         }
@@ -249,10 +250,10 @@ class AdminBookingsPage {
           const hours = timeParts[0] || 9;
           const minutes = timeParts[1] || 0;
           const topOffset = ((hours - 7) * 60) + minutes;
-          
+
           const duration = booking.jobDuration || 60;
           const height = duration;
-          
+
           return `
             <div class="calendar-event admin-event status-${booking.status}"
                  style="top: ${topOffset}px; height: ${height}px;"
@@ -299,7 +300,7 @@ class AdminBookingsPage {
     for (let i = 0; i < 42; i++) {
       const cellDate = new Date(startDate);
       cellDate.setDate(startDate.getDate() + i);
-      
+
       const isOtherMonth = cellDate.getMonth() !== month;
       const isToday = cellDate.getTime() === today.getTime();
       const dayBookings = this.getBookingsForDay(cellDate).slice(0, 3);
@@ -379,8 +380,8 @@ class AdminBookingsPage {
   private isToday(date: Date): boolean {
     const today = new Date();
     return date.getDate() === today.getDate() &&
-           date.getMonth() === today.getMonth() &&
-           date.getFullYear() === today.getFullYear();
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear();
   }
 
   private getBookingsForDay(date: Date): Booking[] {
@@ -457,13 +458,14 @@ class AdminBookingsPage {
     const newStatus = (document.getElementById('bookingStatus') as HTMLSelectElement).value;
     const realStartTimeRaw = (document.getElementById('realStartTime') as HTMLInputElement).value;
     const realEndTimeRaw = (document.getElementById('realEndTime') as HTMLInputElement).value;
-    
+
     const realStartTime = realStartTimeRaw ? realStartTimeRaw.replace('T', ' ') : '';
     const realEndTime = realEndTimeRaw ? realEndTimeRaw.replace('T', ' ') : '';
 
     try {
       if (newStatus === 'concluido' && realStartTime && realEndTime) {
-        const response = await fetch(`/api/bookings/${bookingId}/complete`, {
+
+        const response = await fetch(((window as any).APP_BASE_URL?.replace(/\/$/, '') || '') + `/api/bookings/${bookingId}/complete`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ realStartTime, realEndTime })
@@ -472,7 +474,8 @@ class AdminBookingsPage {
         if (!response.ok) throw new Error('Failed to complete booking');
       } else if (newStatus === 'cancelado') {
         // Cancel booking
-        const response = await fetch(`/api/bookings/${bookingId}/cancel`, {
+
+        const response = await fetch(((window as any).APP_BASE_URL?.replace(/\/$/, '') || '') + `/api/bookings/${bookingId}/cancel`, {
           method: 'PATCH'
         });
 

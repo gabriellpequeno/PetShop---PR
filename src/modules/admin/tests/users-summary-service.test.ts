@@ -50,8 +50,9 @@ describe('UsersSummaryService', () => {
 
             const result = await service.execute()
 
-            expect(result[0].name).toBe('Ana Beatriz')
-            expect(result[1].name).toBe('Bruno Costa')
+
+            expect(result[0]!.name).toBe('Ana Beatriz')
+            expect(result[1]!.name).toBe('Bruno Costa')
         })
     })
 })

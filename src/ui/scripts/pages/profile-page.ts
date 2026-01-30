@@ -9,7 +9,9 @@ const petsClient = new PetsClient()
 const bookingsClient = new BookingsClient()
 
 if (!authClient.isAuthenticated()) {
-  window.location.href = '/pages/login.html'
+
+  const base = ((window as any).APP_BASE_URL || '').replace(/\/$/, '');
+  window.location.href = base + '/pages/login.html'
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -75,7 +77,9 @@ async function loadPets() {
     <span style="font-weight: 500;">Adicionar Pet</span>
   `
   addBtn.addEventListener('click', () => {
-    window.location.href = '/pages/pets.html'
+
+    const base = ((window as any).APP_BASE_URL || '').replace(/\/$/, '');
+    window.location.href = base + '/pages/pets.html'
   })
   listContainer.appendChild(addBtn)
 
@@ -182,9 +186,9 @@ async function loadSchedule() {
 
 function applyPhoneMask(value: string): string {
   const numbers = value.replace(/\D/g, '')
-  
+
   const limited = numbers.substring(0, 11)
-  
+
   if (limited.length <= 2) {
     return limited
   } else if (limited.length <= 6) {
@@ -315,14 +319,14 @@ function showFormError(inputId: string, message: string) {
   errorEl.className = 'form-error'
   errorEl.textContent = message
   errorEl.style.cssText = 'color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem; display: block;'
-  
+
   input.parentElement?.appendChild(errorEl)
 }
 
 function clearFormErrors() {
   const errors = document.querySelectorAll('.form-error')
   errors.forEach(err => err.remove())
-  
+
   const inputs = document.querySelectorAll('#editProfileForm input')
   inputs.forEach((input: any) => {
     input.style.borderColor = ''

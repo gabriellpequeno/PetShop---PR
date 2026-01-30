@@ -3,8 +3,11 @@ import { join } from 'path'
 
 import { UI_STATIC_PATH } from '@/constants/ui-static-path'
 
+
+import { HtmlRenderer } from '@/utils/html-renderer'
+
 export class RenderAdminPetsController {
   static async handle(_: Request, response: Response) {
-    return response.sendFile(join(UI_STATIC_PATH, 'pages', 'admin-pets.html'))
+    return HtmlRenderer.render(response, 'admin-pets.html')
   }
 }

@@ -99,7 +99,8 @@ class AdminPetsPage {
 
   private async loadUsers() {
     try {
-      const response = await fetch('/api/admin/pets/users', {
+
+      const response = await fetch(((window as any).APP_BASE_URL?.replace(/\/$/, '') || '') + '/api/admin/pets/users', {
         credentials: 'include'
       })
 
@@ -116,7 +117,7 @@ class AdminPetsPage {
     if (!this.userFilter) return
 
     this.userFilter.innerHTML = '<option value="">Todos os tutores</option>'
-    
+
     this.users.forEach(user => {
       const option = document.createElement('option')
       option.value = user.id
@@ -134,7 +135,8 @@ class AdminPetsPage {
     if (userId) params.append('userId', userId)
 
     try {
-      const response = await fetch(`/api/admin/pets?${params.toString()}`, {
+
+      const response = await fetch(((window as any).APP_BASE_URL?.replace(/\/$/, '') || '') + `/api/admin/pets?${params.toString()}`, {
         credentials: 'include'
       })
 
@@ -171,7 +173,7 @@ class AdminPetsPage {
 
     this.tableBody.innerHTML = this.pets.map(pet => this.renderPetRow(pet)).join('')
     this.bindRowActions()
-    
+
     // Reinitialize Lucide icons
     // @ts-ignore
     if (window.lucide) window.lucide.createIcons()
@@ -356,7 +358,8 @@ class AdminPetsPage {
     }
 
     try {
-      const response = await fetch(`/api/admin/pets/${this.currentPetId}`, {
+
+      const response = await fetch(((window as any).APP_BASE_URL?.replace(/\/$/, '') || '') + `/api/admin/pets/${this.currentPetId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -398,7 +401,8 @@ class AdminPetsPage {
     if (!this.currentPetId) return
 
     try {
-      const response = await fetch(`/api/admin/pets/${this.currentPetId}`, {
+
+      const response = await fetch(((window as any).APP_BASE_URL?.replace(/\/$/, '') || '') + `/api/admin/pets/${this.currentPetId}`, {
         method: 'DELETE',
         credentials: 'include'
       })

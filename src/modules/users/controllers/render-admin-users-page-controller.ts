@@ -3,6 +3,9 @@ import path from 'path'
 import { UI_STATIC_PATH } from '@/constants/ui-static-path'
 import { UnauthorizedError } from '@/errors/unauthorized-error'
 
+
+import { HtmlRenderer } from '@/utils/html-renderer'
+
 export class RenderAdminUsersPageController {
   static async handle(request: Request, response: Response) {
     const role = request.user?.role
@@ -11,8 +14,6 @@ export class RenderAdminUsersPageController {
       throw new UnauthorizedError('Apenas administradores podem acessar esta página')
     }
 
-    return response.sendFile(
-      path.join(UI_STATIC_PATH, 'pages', 'admin-users.html')
-    )
+    return HtmlRenderer.render(response, 'admin-users.html')
   }
 }

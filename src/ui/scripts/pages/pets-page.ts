@@ -31,7 +31,9 @@ class PetsPage {
     // Check auth
     const user = this.authClient.getUser();
     if (!user) {
-      window.location.href = "/pages/login.html";
+
+      const base = ((window as any).APP_BASE_URL || '').replace(/\/$/, '');
+      window.location.href = base + "/pages/login.html";
       return;
     }
 
@@ -467,7 +469,9 @@ class PetsPage {
     if (logoutBtn) {
       logoutBtn.addEventListener("click", () => {
         this.authClient.logout();
-        window.location.href = "/pages/login.html";
+
+        const base = ((window as any).APP_BASE_URL || '').replace(/\/$/, '');
+        window.location.href = base + "/pages/login.html";
       });
     }
   }

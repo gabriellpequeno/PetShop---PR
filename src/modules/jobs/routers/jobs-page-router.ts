@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { join } from "node:path";
+
 import { EnsureAuthenticationMiddleware } from "@/middlewares/ensure-authentication-middleware";
 import { EnsureAdminMiddleware } from "@/middlewares/ensure-admin-middleware";
-import { UI_STATIC_PATH } from "@/constants/ui-static-path";
+import { HtmlRenderer } from "@/utils/html-renderer";
 
 const jobsPageRouter = Router();
 
@@ -11,7 +11,7 @@ jobsPageRouter.get(
   EnsureAuthenticationMiddleware.handle,
   EnsureAdminMiddleware.handle,
   (_, res) => {
-    res.sendFile(join(UI_STATIC_PATH, "pages", "jobs.html"));
+    HtmlRenderer.render(res, "jobs.html");
   }
 );
 

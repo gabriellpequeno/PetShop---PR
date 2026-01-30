@@ -56,7 +56,7 @@ class MyBookingsPage {
   private jobsClient: JobsClient;
   private petsClient: PetsClient;
   private bookingsClient: BookingsClient;
-  
+
   private bookings: Booking[] = [];
   private occupiedSlots: OccupiedSlot[] = [];
   private jobs: Job[] = [];
@@ -65,7 +65,7 @@ class MyBookingsPage {
   private currentView: 'week' | 'month' = 'week';
   private selectedBooking: Booking | null = null;
   private selectedFilterJob: string = '';
-  
+
   // New booking state
   private selectedDate: string = '';
   private selectedTime: string = '';
@@ -93,7 +93,8 @@ class MyBookingsPage {
 
   private async loadBookings() {
     try {
-      const response = await fetch('/api/bookings');
+
+      const response = await fetch(((window as any).APP_BASE_URL?.replace(/\/$/, '') || '') + '/api/bookings');
       if (!response.ok) throw new Error('Failed to load bookings');
       this.bookings = await response.json();
     } catch (error) {
@@ -109,10 +110,10 @@ class MyBookingsPage {
       startDate.setMonth(startDate.getMonth() - 1);
       const endDate = new Date();
       endDate.setMonth(endDate.getMonth() + 3);
-      
+
       const startDateStr = startDate.toISOString().split('T')[0] || '';
       const endDateStr = endDate.toISOString().split('T')[0] || '';
-      
+
       this.occupiedSlots = await this.bookingsClient.listOccupiedSlots(
         startDateStr,
         endDateStr
@@ -230,7 +231,7 @@ class MyBookingsPage {
 
   private switchView(view: 'week' | 'month') {
     this.currentView = view;
-    
+
     document.querySelectorAll('.view-btn').forEach(btn => {
       btn.classList.toggle('active', btn.getAttribute('data-view') === view);
     });
@@ -259,46 +260,46 @@ class MyBookingsPage {
     const dayOfWeek = date.getDay();
     const timeStr = `${hour.toString().padStart(2, '0')}:00`;
     const dateStr = date.toISOString().split('T')[0];
-    
+
     // If a specific job is selected, check only that job's availability
     if (this.selectedFilterJob) {
       const job = this.jobs.find(j => j.id === this.selectedFilterJob);
       if (!job?.availability?.length) return false;
-      
-      const isJobAvailable = job.availability.some(avail => 
+
+      const isJobAvailable = job.availability.some(avail =>
         avail.dayOfWeek === dayOfWeek &&
         timeStr >= avail.startTime &&
         timeStr < avail.endTime
       );
-      
+
       // Check if this specific job is already booked at this slot
       const isJobOccupied = this.occupiedSlots.some(slot =>
         slot.jobId === this.selectedFilterJob &&
         slot.bookingDate === dateStr &&
         slot.bookingTime === timeStr
       );
-      
+
       return isJobAvailable && !isJobOccupied;
     }
-    
+
     // Otherwise, check if any job is available at this slot
-    const availableJobs = this.jobs.filter(job => 
-      job.availability?.some(avail => 
+    const availableJobs = this.jobs.filter(job =>
+      job.availability?.some(avail =>
         avail.dayOfWeek === dayOfWeek &&
         timeStr >= avail.startTime &&
         timeStr < avail.endTime
       )
     );
-    
+
     // Filter out jobs that are already occupied at this slot
-    const unoccupiedJobs = availableJobs.filter(job => 
+    const unoccupiedJobs = availableJobs.filter(job =>
       !this.occupiedSlots.some(slot =>
         slot.jobId === job.id &&
         slot.bookingDate === dateStr &&
         slot.bookingTime === timeStr
       )
     );
-    
+
     return unoccupiedJobs.length > 0;
   }
 
@@ -313,18 +314,18 @@ class MyBookingsPage {
     const dayOfWeek = date.getDay();
     const timeStr = `${hour.toString().padStart(2, '0')}:00`;
     const dateStr = date.toISOString().split('T')[0];
-    
+
     // Get jobs that are available at this time slot based on their schedule
-    const availableJobs = this.jobs.filter(job => 
-      job.availability?.some(avail => 
+    const availableJobs = this.jobs.filter(job =>
+      job.availability?.some(avail =>
         avail.dayOfWeek === dayOfWeek &&
         timeStr >= avail.startTime &&
         timeStr < avail.endTime
       )
     );
-    
+
     // Filter out jobs that are already occupied at this date/time
-    return availableJobs.filter(job => 
+    return availableJobs.filter(job =>
       !this.occupiedSlots.some(slot =>
         slot.jobId === job.id &&
         slot.bookingDate === dateStr &&
@@ -370,7 +371,7 @@ class MyBookingsPage {
       daysGrid.innerHTML = days.map((day, dayIndex) => {
         const dayBookings = this.getBookingsForDay(day);
         let hoursHtml = '';
-        
+
         for (let hour = 7; hour < 20; hour++) {
           const isPast = this.isPastSlot(day, hour);
           const isAvailable = !isPast && this.isSlotAvailable(day, hour);
@@ -403,7 +404,7 @@ class MyBookingsPage {
           const topOffset = (bookingHour - 7) * 60;
           const job = this.jobs.find(j => j.id === booking.jobId);
           const height = job ? job.duration : 60;
-          
+
           return `
             <div class="calendar-event status-${booking.status}"
                  style="top: ${topOffset}px; height: ${height}px;"
@@ -461,12 +462,12 @@ class MyBookingsPage {
     for (let i = 0; i < 42; i++) {
       const cellDate = new Date(startDate);
       cellDate.setDate(startDate.getDate() + i);
-      
+
       const isOtherMonth = cellDate.getMonth() !== month;
       const isToday = cellDate.getTime() === today.getTime();
       const dayBookings = this.getBookingsForDay(cellDate).slice(0, 3);
       const hasMore = this.getBookingsForDay(cellDate).length > 3;
-      const hasAvailability = this.jobs.some(job => 
+      const hasAvailability = this.jobs.some(job =>
         job.availability?.some(avail => avail.dayOfWeek === cellDate.getDay())
       );
 
@@ -558,8 +559,8 @@ class MyBookingsPage {
   private isToday(date: Date): boolean {
     const today = new Date();
     return date.getDate() === today.getDate() &&
-           date.getMonth() === today.getMonth() &&
-           date.getFullYear() === today.getFullYear();
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear();
   }
 
   private getBookingsForDay(date: Date): Booking[] {
@@ -583,7 +584,7 @@ class MyBookingsPage {
     // Update date/time display
     const dateDisplay = document.getElementById('selectedDate');
     const timeDisplay = document.getElementById('selectedTime');
-    
+
     if (dateDisplay) {
       const dateObj = new Date(date + 'T12:00:00');
       dateDisplay.textContent = dateObj.toLocaleDateString('pt-BR', {
@@ -593,7 +594,7 @@ class MyBookingsPage {
         year: 'numeric'
       });
     }
-    
+
     if (timeDisplay) {
       timeDisplay.textContent = time;
     }
@@ -694,8 +695,9 @@ class MyBookingsPage {
 
     if (this.pets.length === 0) {
       container.innerHTML = `
+
         <div class="no-pets-message">
-          Você não possui pets cadastrados. <a href="/pages/pets.html">Cadastrar pet</a>
+          Você não possui pets cadastrados. <a href="${((window as any).APP_BASE_URL?.replace(/\/$/, '') || '')}/pages/pets.html">Cadastrar pet</a>
         </div>
       `;
       return;
@@ -733,7 +735,7 @@ class MyBookingsPage {
   private updatePriceDisplay() {
     const priceDisplay = document.getElementById('priceDisplay');
     const priceValue = document.getElementById('bookingPrice');
-    
+
     if (!priceDisplay || !priceValue) return;
 
     if (!this.selectedJobId || !this.selectedPetId) {
@@ -743,7 +745,7 @@ class MyBookingsPage {
 
     const job = this.jobs.find(j => j.id === this.selectedJobId);
     const pet = this.pets.find(p => p.id === this.selectedPetId);
-    
+
     if (!job || !pet) {
       priceDisplay.style.display = 'none';
       return;
@@ -769,7 +771,7 @@ class MyBookingsPage {
     if (modal) {
       modal.style.display = 'none';
     }
-    
+
     this.selectedDate = '';
     this.selectedTime = '';
     this.selectedJobId = '';
@@ -784,7 +786,7 @@ class MyBookingsPage {
 
     const btn = document.getElementById('confirmNewBooking') as HTMLButtonElement;
     const originalText = btn.innerHTML;
-    
+
     try {
       btn.disabled = true;
       btn.innerHTML = '<i data-lucide="loader"></i> Agendando...';
@@ -800,14 +802,14 @@ class MyBookingsPage {
       });
 
       this.closeBookingModal();
-      
+
       // Reload bookings and occupied slots, then re-render
       await Promise.all([
         this.loadBookings(),
         this.loadOccupiedSlots()
       ]);
       this.renderCalendar();
-      
+
       alert('Agendamento realizado com sucesso!');
 
     } catch (error) {

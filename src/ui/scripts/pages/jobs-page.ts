@@ -36,7 +36,9 @@ class AdminServicesPage {
   async init() {
     const user = this.authClient.getUser();
     if (!user) {
-      window.location.href = "/";
+
+      const base = ((window as any).APP_BASE_URL || '').replace(/\/$/, '');
+      window.location.href = base + "/";
       return;
     }
 
@@ -245,7 +247,7 @@ class AdminServicesPage {
       const checkbox = document.querySelector(`input[name="day_${day}"]`) as HTMLInputElement;
       const startInput = document.querySelector(`select[name="start_${day}"]`) as HTMLSelectElement;
       const endInput = document.querySelector(`select[name="end_${day}"]`) as HTMLSelectElement;
-      
+
       if (checkbox) checkbox.checked = false;
       if (startInput) {
         startInput.value = '09:00';
@@ -260,14 +262,14 @@ class AdminServicesPage {
 
   populateAvailabilityForm(availability?: JobAvailability[]) {
     this.resetAvailabilityForm();
-    
+
     if (!availability) return;
 
     for (const avail of availability) {
       const checkbox = document.querySelector(`input[name="day_${avail.dayOfWeek}"]`) as HTMLInputElement;
       const startInput = document.querySelector(`select[name="start_${avail.dayOfWeek}"]`) as HTMLSelectElement;
       const endInput = document.querySelector(`select[name="end_${avail.dayOfWeek}"]`) as HTMLSelectElement;
-      
+
       if (checkbox) {
         checkbox.checked = true;
       }
@@ -284,12 +286,12 @@ class AdminServicesPage {
 
   getAvailabilityFromForm(): JobAvailability[] {
     const availability: JobAvailability[] = [];
-    
+
     for (let day = 0; day <= 6; day++) {
       const checkbox = document.querySelector(`input[name="day_${day}"]`) as HTMLInputElement;
       const startInput = document.querySelector(`select[name="start_${day}"]`) as HTMLSelectElement;
       const endInput = document.querySelector(`select[name="end_${day}"]`) as HTMLSelectElement;
-      
+
       if (checkbox?.checked && startInput && endInput) {
         availability.push({
           dayOfWeek: day,
@@ -298,7 +300,7 @@ class AdminServicesPage {
         });
       }
     }
-    
+
     return availability;
   }
 
@@ -363,7 +365,7 @@ class AdminServicesPage {
 
       const formData = new FormData(form);
       const availability = this.getAvailabilityFromForm();
-      
+
       const data = {
         name: (formData.get("name") as string).trim(),
         description: (formData.get("description") as string).trim() || "",
@@ -500,7 +502,9 @@ class AdminServicesPage {
     if (logoutBtn) {
       logoutBtn.addEventListener("click", () => {
         this.authClient.logout();
-        window.location.href = "/pages/login.html";
+
+        const base = ((window as any).APP_BASE_URL || '').replace(/\/$/, '');
+        window.location.href = base + "/pages/login.html";
       });
     }
   }

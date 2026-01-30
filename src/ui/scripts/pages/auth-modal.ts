@@ -115,8 +115,8 @@ class AuthModal {
     this.passwordStrengthFill = document.getElementById('passwordStrengthFill')
     this.passwordStrengthText = document.getElementById('passwordStrengthText')
 
-  // Password toggles
-  this.passwordToggleButtons = Array.from(document.querySelectorAll('.password-toggle')) as HTMLButtonElement[]
+    // Password toggles
+    this.passwordToggleButtons = Array.from(document.querySelectorAll('.password-toggle')) as HTMLButtonElement[]
 
     // Submit buttons
     this.loginSubmitBtn = document.getElementById('loginSubmitBtn') as HTMLButtonElement
@@ -355,11 +355,15 @@ class AuthModal {
 
         this.close()
 
+
         // Redirect based on user role
+        const baseUrl = (window as any).APP_BASE_URL
+        const base = (baseUrl && baseUrl !== '/') ? baseUrl.replace(/\/$/, '') : ''
+
         if (data.user.role === 'admin') {
-          window.location.href = '/admin/dashboard'
+          window.location.href = base + '/admin/dashboard'
         } else {
-          window.location.href = '/dashboard'
+          window.location.href = base + '/dashboard'
         }
       } else {
         // Error

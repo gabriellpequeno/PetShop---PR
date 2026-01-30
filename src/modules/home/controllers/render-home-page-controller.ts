@@ -4,6 +4,9 @@ import { join } from 'path'
 import { UI_STATIC_PATH } from '@/constants/ui-static-path'
 import { JwtProvider } from '@/modules/auth/providers/jwt-provider'
 
+
+import { HtmlRenderer } from '@/utils/html-renderer'
+
 export class RenderHomePageController {
   static async handle(request: Request, response: Response) {
     const authHeader = request.headers.authorization
@@ -22,10 +25,11 @@ export class RenderHomePageController {
       const jwtProvider = new JwtProvider()
       const payload = jwtProvider.validateToken(token)
       if (payload) {
-        return response.redirect('/profile')
+
+        return HtmlRenderer.redirect(response, '/dashboard')
       }
     }
 
-    return response.sendFile(join(UI_STATIC_PATH, 'pages', 'home.html'))
+    return HtmlRenderer.render(response, 'home.html')
   }
 }
