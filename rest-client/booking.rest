@@ -1,0 +1,52 @@
+@baseUrl = http://localhost:3333
+@authToken = {{login.response.body.token}}
+
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "123456"
+}
+
+###
+
+# View Booking Page
+GET {{baseUrl}}/pages/booking.html
+Authorization: Bearer {{authToken}}
+
+###
+
+# Create Booking
+# Requires petId and jobId from respective modules
+# @name createBooking
+POST {{baseUrl}}/api/bookings
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "petId": "2f4533bd-f9c5-487f-892b-bcaa7d10046e",
+  "jobId": "f72031e9-1007-4984-b06c-bb1bc35d5823",
+  "bookingDate": "2026-02-15 14:00"
+}
+
+###
+
+# List Bookings
+GET {{baseUrl}}/api/bookings
+Authorization: Bearer {{authToken}}
+
+###
+
+@bookingId = {{createBooking.response.body.id}}
+
+# Cancel Booking
+PATCH {{baseUrl}}/api/bookings/{{bookingId}}/cancel
+Authorization: Bearer {{authToken}}
+
+###
+
+# Complete Booking
+PATCH {{baseUrl}}/api/bookings/{{bookingId}}/complete
+Authorization: Bearer {{authToken}}
