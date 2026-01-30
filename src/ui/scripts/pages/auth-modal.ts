@@ -47,6 +47,9 @@ class AuthModal {
   private passwordStrengthFill: HTMLElement | null = null
   private passwordStrengthText: HTMLElement | null = null
 
+  // Password toggle buttons
+  private passwordToggleButtons: HTMLButtonElement[] = []
+
   // Submit buttons
   private loginSubmitBtn: HTMLButtonElement | null = null
   private registerSubmitBtn: HTMLButtonElement | null = null
@@ -55,6 +58,26 @@ class AuthModal {
     this.authConsumer = new AuthApiConsumer()
     this.initElements()
     this.bindEvents()
+  }
+
+  private togglePasswordVisibility(btn: HTMLButtonElement): void {
+    const targetId = btn.getAttribute('data-target')
+    if (!targetId) return
+
+    const input = document.getElementById(targetId) as HTMLInputElement | null
+    if (!input) return
+
+    const isVisible = btn.getAttribute('aria-pressed') === 'true'
+
+    if (isVisible) {
+      input.type = 'password'
+      btn.setAttribute('aria-pressed', 'false')
+      btn.setAttribute('aria-label', 'Mostrar senha')
+    } else {
+      input.type = 'text'
+      btn.setAttribute('aria-pressed', 'true')
+      btn.setAttribute('aria-label', 'Ocultar senha')
+    }
   }
 
   private initElements(): void {
@@ -91,6 +114,9 @@ class AuthModal {
     this.passwordStrengthContainer = document.getElementById('passwordStrength')
     this.passwordStrengthFill = document.getElementById('passwordStrengthFill')
     this.passwordStrengthText = document.getElementById('passwordStrengthText')
+
+  // Password toggles
+  this.passwordToggleButtons = Array.from(document.querySelectorAll('.password-toggle')) as HTMLButtonElement[]
 
     // Submit buttons
     this.loginSubmitBtn = document.getElementById('loginSubmitBtn') as HTMLButtonElement
@@ -139,12 +165,17 @@ class AuthModal {
       this.switchMode('login')
     })
 
-    // Form submissions
     this.loginForm?.addEventListener('submit', (e) => this.handleLoginSubmit(e))
     this.registerForm?.addEventListener('submit', (e) => this.handleRegisterSubmit(e))
 
-    // Password strength checker
     this.registerPasswordInput?.addEventListener('input', () => this.updatePasswordStrength())
+
+    this.passwordToggleButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault()
+        this.togglePasswordVisibility(btn)
+      })
+    })
   }
 
   public open(mode: FormMode = 'login'): void {
@@ -203,6 +234,16 @@ class AuthModal {
     this.loginForm?.reset()
     this.registerForm?.reset()
     this.passwordStrengthContainer?.classList.remove('visible')
+    const pwIds = ['loginPassword', 'registerPassword', 'registerConfirmPassword']
+    pwIds.forEach(id => {
+      const el = document.getElementById(id) as HTMLInputElement | null
+      if (el) el.type = 'password'
+    })
+
+    this.passwordToggleButtons.forEach(btn => {
+      btn.setAttribute('aria-pressed', 'false')
+      btn.setAttribute('aria-label', 'Mostrar senha')
+    })
   }
 
   private showInputError(input: HTMLInputElement | null, errorElement: HTMLElement | null, message: string): void {
