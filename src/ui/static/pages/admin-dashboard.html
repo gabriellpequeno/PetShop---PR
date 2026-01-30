@@ -39,13 +39,6 @@
             <p class="page-subtitle" id="currentDateTime">Carregando...</p>
           </div>
         </div>
-
-        <!-- Period Filter -->
-        <div class="period-filter">
-          <button class="period-btn" data-period="today">Hoje</button>
-          <button class="period-btn" data-period="week">Semana</button>
-          <button class="period-btn active" data-period="month">Mês</button>
-        </div>
       </header>
 
       <!-- Content -->
@@ -90,6 +83,11 @@
         <section class="users-section" id="dataSection">
           <div class="section-header">
             <h2 class="section-title" id="sectionTitle">Usuários</h2>
+            
+            <!-- Filter Group -->
+            <div class="filter-group" id="tableFilter" style="display: none;">
+              <!-- Filter options will be populated by JavaScript -->
+            </div>
           </div>
 
           <div class="users-table-container">

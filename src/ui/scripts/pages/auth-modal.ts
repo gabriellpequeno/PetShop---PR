@@ -115,8 +115,8 @@ class AuthModal {
     this.passwordStrengthFill = document.getElementById('passwordStrengthFill')
     this.passwordStrengthText = document.getElementById('passwordStrengthText')
 
-  // Password toggles
-  this.passwordToggleButtons = Array.from(document.querySelectorAll('.password-toggle')) as HTMLButtonElement[]
+    // Password toggles
+    this.passwordToggleButtons = Array.from(document.querySelectorAll('.password-toggle')) as HTMLButtonElement[]
 
     // Submit buttons
     this.loginSubmitBtn = document.getElementById('loginSubmitBtn') as HTMLButtonElement
@@ -266,6 +266,29 @@ class AuthModal {
     return emailRegex.test(email)
   }
 
+  private validateName(name: string): { valid: boolean; message: string } {
+    // Remove espaços extras
+    const trimmedName = name.trim()
+
+    // Verifica se tem pelo menos 3 caracteres
+    if (trimmedName.length < 3) {
+      return { valid: false, message: 'Nome deve ter pelo menos 3 letras' }
+    }
+
+    // Verifica se contém números
+    if (/\d/.test(trimmedName)) {
+      return { valid: false, message: 'Nome não pode conter números' }
+    }
+
+    // Verifica se contém pelo menos 3 letras (excluindo espaços e caracteres especiais)
+    const lettersOnly = trimmedName.replace(/[^a-zA-ZÀ-ÿ]/g, '')
+    if (lettersOnly.length < 3) {
+      return { valid: false, message: 'Nome deve ter pelo menos 3 letras' }
+    }
+
+    return { valid: true, message: '' }
+  }
+
   private updatePasswordStrength(): void {
     const password = this.registerPasswordInput?.value || ''
 
@@ -396,6 +419,12 @@ class AuthModal {
     if (!name) {
       this.showInputError(this.registerNameInput, this.registerNameError, 'Nome é obrigatório')
       hasError = true
+    } else {
+      const nameValidation = this.validateName(name)
+      if (!nameValidation.valid) {
+        this.showInputError(this.registerNameInput, this.registerNameError, nameValidation.message)
+        hasError = true
+      }
     }
 
     if (!email) {
@@ -445,10 +474,22 @@ class AuthModal {
           this.registerSuccessMessage?.classList.remove('visible')
         }, 2000)
       } else {
-        // Error
+        // Error - tratar diferentes tipos de erro
         if (this.registerErrorMessage) {
-          if (data.message?.toLowerCase().includes('email') || data.message?.toLowerCase().includes('existe')) {
-            this.registerErrorMessage.textContent = 'Email já cadastrado. Tente outro ou faça login.'
+          // Erro 409 = Conflito (email já existe)
+          if (response.status === 409) {
+            this.registerErrorMessage.textContent = 'Email já cadastrado'
+            // Também mostrar erro no campo de email
+            this.showInputError(this.registerEmailInput, this.registerEmailError, 'Este email já está em uso')
+          } else if (data.message?.toLowerCase().includes('email')) {
+            this.registerErrorMessage.textContent = 'Email já cadastrado'
+            this.showInputError(this.registerEmailInput, this.registerEmailError, 'Este email já está em uso')
+          } else if (data.message?.toLowerCase().includes('nome') || data.message?.toLowerCase().includes('name')) {
+            this.registerErrorMessage.textContent = data.message
+            this.showInputError(this.registerNameInput, this.registerNameError, data.message)
+          } else if (data.message?.toLowerCase().includes('senha') || data.message?.toLowerCase().includes('password')) {
+            this.registerErrorMessage.textContent = data.message
+            this.showInputError(this.registerPasswordInput, this.registerPasswordError, data.message)
           } else {
             this.registerErrorMessage.textContent = data.message || 'Erro ao criar conta'
           }
