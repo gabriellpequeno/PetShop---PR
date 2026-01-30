@@ -8,6 +8,7 @@ import { UI_STATIC_PATH } from './constants/ui-static-path'
 import { petsPageRouter } from './modules/pets/routers/pets-page-router'
 import { usersPageRouter } from './modules/users/routers/users-page-router'
 import { adminUsersPageRouter } from './modules/users/routers/admin-users-page-router'
+import { customerDashboardRouter } from './modules/home/routers/customer-dashboard-router'
 
 // API Routers
 import { authRouter } from './modules/auth/routers/auth-router'
@@ -18,6 +19,7 @@ import { homeRouter } from './modules/home/routers/home-router'
 import { jobsRouter } from "./modules/jobs/routers/jobs-router";
 import { jobsPageRouter } from './modules/jobs/routers/jobs-page-router'
 import { bookingRouter } from "./modules/bookings/routers/booking-router";
+import { adminRouter } from "./modules/admin/routers/admin-router";
 
 const app = express();
 
@@ -32,6 +34,7 @@ app.use(petsPageRouter)
 app.use(usersPageRouter)
 app.use(adminUsersPageRouter)
 app.use(jobsPageRouter)
+app.use(customerDashboardRouter)
 
 app.use(authRouter)
 app.use(homeRouter)
@@ -39,6 +42,7 @@ app.use(jobsRouter)
 app.use(bookingRouter)
 app.use(petsRouter)
 app.use(usersRouter)
+app.use(adminRouter)
 app.use(adminUsersRouter)
 
 app.use(HandleErrorMiddleware.handle);
