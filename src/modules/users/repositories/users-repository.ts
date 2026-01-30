@@ -29,13 +29,30 @@ export class UsersRepository {
 
   async update(id: string, data: Partial<User>) {
     await db.run(
-      `UPDATE users SET 
-        name = COALESCE(?, name), 
-        phone = COALESCE(?, phone), 
-        location = COALESCE(?, location), 
-        birth_date = COALESCE(?, birth_date) 
+      `UPDATE users SET
+        name = COALESCE(?, name),
+        phone = COALESCE(?, phone),
+        location = COALESCE(?, location),
+        birth_date = COALESCE(?, birth_date)
       WHERE id = ?`,
       [data.name, data.phone ?? null, data.location ?? null, data.birth_date ?? null, id]
     )
+  }
+
+  async findAll() {
+    const users = await db.all<User[]>('SELECT * FROM users')
+    return users
+  }
+
+  async searchByEmail(email: string) {
+    const users = await db.all<User[]>(
+      'SELECT * FROM users WHERE email LIKE ?',
+      [`%${email}%`]
+    )
+    return users
+  }
+
+  async delete(id: string) {
+    await db.run('DELETE FROM users WHERE id = ?', [id])
   }
 }
