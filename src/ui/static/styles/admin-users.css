@@ -400,6 +400,9 @@
 @media (max-width: 768px) {
   .search-box {
     min-width: 100%;
+    width: 100%;
+    max-width: 100%;
+    padding: 0.625rem 1rem;
   }
 
   .users-list {
@@ -420,5 +423,49 @@
 
   .modal-actions button {
     width: 100%;
+  }
+}
+
+/* Additional adjustments for header and small screens */
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding-left: 3.5rem; /* leave space for mobile sidebar toggle */
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  /* Make sure search box behaves and does not overflow */
+  .search-box {
+    box-sizing: border-box;
+    flex: 1 1 auto;
+  }
+
+  /* Ensure main content isn't hidden behind fixed mobile toggle */
+  .main-content {
+    padding-top: 3.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .user-name {
+    font-size: 1rem;
+  }
+
+  .user-card {
+    padding: 1rem;
+  }
+
+  .page-header {
+    padding-left: 1rem;
   }
 }
