@@ -18,7 +18,7 @@ interface NavigationItem {
 const CUSTOMER_NAV_ITEMS: NavigationItem[] = [
   { slug: 'customer-dashboard', label: 'Meu Painel', icon: 'layout-dashboard', href: '/dashboard' },
   { slug: 'pets', label: 'Meus Pets', icon: 'dog', href: '/pages/pets.html' },
-  { slug: 'agenda', label: 'Agenda', icon: 'calendar', href: '/pages/booking.html' },
+  { slug: 'my-bookings', label: 'Agendamentos', icon: 'calendar', href: '/pages/my-bookings.html' },
   { slug: 'profile', label: 'Perfil', icon: 'user', href: '/pages/profile.html' },
 ]
 
@@ -31,6 +31,7 @@ const ADMIN_NAV_ITEMS: NavigationItem[] = [
   },
   { slug: 'users', label: 'Usuários', icon: 'users', href: '/pages/admin/users.html' },
   { slug: 'pets', label: 'Pets', icon: 'paw-print', href: '/admin/pets' },
+  { slug: 'bookings', label: 'Agendamentos', icon: 'calendar', href: '/admin/bookings' },
   {
     slug: 'services',
     label: 'Serviços',
@@ -311,6 +312,16 @@ template.innerHTML = `
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    .user-email {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
     }
 
     .user-role {
@@ -668,7 +679,7 @@ export class PetshopSidebar extends HTMLElement {
             <img src="${avatarUrl}" alt="${firstName}" class="user-avatar" />
             <div class="user-info">
               <p class="user-name">${firstName}</p>
-              ${user.role === 'admin' ? '<p class="user-role">Administrador</p>' : ''}
+              <p class="user-email">${user.email || ''}</p>
             </div>
             <button class="logout-btn" aria-label="Sair da conta" title="Sair">
               ${this._getIcon('log-out')}
@@ -713,7 +724,7 @@ export class PetshopSidebar extends HTMLElement {
         <img src="${avatarUrl}" alt="${firstName}" class="user-avatar" />
         <div class="user-info">
           <p class="user-name">${firstName}</p>
-          ${user.role === 'admin' ? '<p class="user-role">Administrador</p>' : ''}
+          <p class="user-email">${user.email || ''}</p>
         </div>
         <button class="logout-btn" aria-label="Sair da conta" title="Sair">
           ${this._getIcon('log-out')}
