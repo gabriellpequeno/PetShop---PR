@@ -8,12 +8,12 @@ A aplicação utiliza **Node.js** com **Express** para o servidor backend e **SQ
 ## Backlog do Produto
 | Valor | User Story |
 | -- | -- |
-| Alto | Como administrador, quero criar e gerenciar os serviços do meu Petshop: editar, adicionar e remover serviços. |
-| Alto | Como administrador, preciso gerenciar clientes e seus pets, podendo controlar a quantidade e editar perfis. |
-| Alto | Como administrador, preciso controlar a agenda do Petshop (dias/horários), reagendar e cancelar agendamentos conforme necessário. |
-| Alto | Agendar serviços para meu pet de maneira ágil e rápida. |
-| Médio | Como usuário, quero cadastrar e editar os perfis dos meus pets e atualizar meus dados cadastrais. |
-| Médio | Como usuário, quero acessar e editar meu perfil e atualizar meus dados cadastrais. |
+| Alto | Como usuario quero agendar serviços para meu pet de maneira ágil e rápida. |
+| Alto | Como usuário, quero cadastrar e editar os perfis dos meus pets e atualizar meus dados cadastrais. |
+| Alto | Como usuário, quero acessar e editar meu perfil e atualizar meus dados cadastrais. |
+| Medio | Como administrador, quero criar e gerenciar os serviços do meu Petshop: editar, adicionar e remover serviços. |
+| Medio | Como administrador, preciso gerenciar clientes e seus pets, podendo controlar a quantidade e editar perfis. |
+| Medio | Como administrador, preciso controlar a agenda do Petshop (dias/horários), reagendar e cancelar agendamentos conforme necessário. |
 
 ## Tecnologias
 O sistema foi desenvolvido usando as tecnologias, solicitadas pelo escopo do desafio:
