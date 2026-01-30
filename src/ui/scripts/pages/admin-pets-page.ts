@@ -5,6 +5,7 @@ interface Pet {
   breed: string | null
   age: number | null
   weight: number | null
+  size: 'P' | 'M' | 'G'
   userId: string
   ownerName: string
   ownerEmail: string
@@ -154,7 +155,7 @@ class AdminPetsPage {
     if (this.pets.length === 0) {
       this.tableBody.innerHTML = `
         <tr>
-          <td colspan="7">
+          <td colspan="8">
             <div class="empty-state">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="11" cy="11" r="8"></circle>
@@ -179,6 +180,7 @@ class AdminPetsPage {
   private renderPetRow(pet: Pet): string {
     const speciesClass = this.getSpeciesClass(pet.species)
     const speciesIcon = this.getSpeciesIcon(pet.species)
+    const sizeMap: Record<string, string> = { 'P': 'Pequeno', 'M': 'Médio', 'G': 'Grande' }
 
     return `
       <tr data-pet-id="${pet.id}">
@@ -198,6 +200,7 @@ class AdminPetsPage {
         <td>${pet.breed ? this.escapeHtml(pet.breed) : '<span style="color: #94a3b8">—</span>'}</td>
         <td>${pet.age !== null ? `${pet.age} ano${pet.age !== 1 ? 's' : ''}` : '<span style="color: #94a3b8">—</span>'}</td>
         <td>${pet.weight !== null ? `${pet.weight} kg` : '<span style="color: #94a3b8">—</span>'}</td>
+        <td><span class="size-badge size-${pet.size}">${sizeMap[pet.size] || pet.size}</span></td>
         <td>
           <div class="owner-info-cell">
             <span class="owner-name-text">${this.escapeHtml(pet.ownerName)}</span>
@@ -263,7 +266,7 @@ class AdminPetsPage {
 
     this.tableBody.innerHTML = `
       <tr>
-        <td colspan="7">
+        <td colspan="8">
           <div class="empty-state">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"></circle>
@@ -312,6 +315,7 @@ class AdminPetsPage {
     const breedInput = document.getElementById('editPetBreed') as HTMLInputElement
     const ageInput = document.getElementById('editPetAge') as HTMLInputElement
     const weightInput = document.getElementById('editPetWeight') as HTMLInputElement
+    const sizeSelect = document.getElementById('editPetSize') as HTMLSelectElement
     const ownerSpan = document.getElementById('editPetOwner')
 
     if (nameInput) nameInput.value = pet.name
@@ -319,6 +323,7 @@ class AdminPetsPage {
     if (breedInput) breedInput.value = pet.breed || ''
     if (ageInput) ageInput.value = pet.age?.toString() || ''
     if (weightInput) weightInput.value = pet.weight?.toString() || ''
+    if (sizeSelect) sizeSelect.value = pet.size || 'M'
     if (ownerSpan) ownerSpan.textContent = `${pet.ownerName} (${pet.ownerEmail})`
 
     this.editModal?.classList.add('active')
@@ -339,13 +344,15 @@ class AdminPetsPage {
     const breedInput = document.getElementById('editPetBreed') as HTMLInputElement
     const ageInput = document.getElementById('editPetAge') as HTMLInputElement
     const weightInput = document.getElementById('editPetWeight') as HTMLInputElement
+    const sizeSelect = document.getElementById('editPetSize') as HTMLSelectElement
 
     const data = {
       name: nameInput?.value,
       species: speciesInput?.value,
       breed: breedInput?.value || null,
       age: ageInput?.value ? Number(ageInput.value) : null,
-      weight: weightInput?.value ? Number(weightInput.value) : null
+      weight: weightInput?.value ? Number(weightInput.value) : null,
+      size: sizeSelect?.value || 'M'
     }
 
     try {

@@ -9,6 +9,7 @@ interface Pet {
   breed: string;
   age: number;
   weight: number;
+  size: 'P' | 'M' | 'G';
 }
 
 class PetsPage {
@@ -340,6 +341,7 @@ class PetsPage {
     const speciesEl = document.getElementById("detailPetSpecies");
     const weightEl = document.getElementById("detailPetWeight");
     const ageEl = document.getElementById("detailPetAge");
+    const sizeEl = document.getElementById("detailPetSize");
 
     // Set Delete Button ID
     const deleteBtn = document.getElementById("deletePetBtn");
@@ -352,12 +354,16 @@ class PetsPage {
       ? `https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop`
       : `https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200&h=200&fit=crop`;
 
+    // Map size to display text
+    const sizeMap: Record<string, string> = { 'P': 'Pequeno', 'M': 'Médio', 'G': 'Grande' };
+
     if (imgDiv) imgDiv.src = imgUrl;
     if (nameEl) nameEl.textContent = pet.name;
     if (breedEl) breedEl.textContent = `${pet.breed} • ${pet.age} anos`;
     if (speciesEl) speciesEl.textContent = pet.species;
     if (weightEl) weightEl.textContent = `${pet.weight} kg`;
     if (ageEl) ageEl.textContent = `${pet.age} anos`;
+    if (sizeEl) sizeEl.textContent = sizeMap[pet.size] || pet.size;
 
     modal.classList.add("fixed");
   }
@@ -435,7 +441,8 @@ class PetsPage {
         species: formData.get("species") as string,
         breed: formData.get("breed") as string,
         age: Number(formData.get("age")),
-        weight: Number(formData.get("weight"))
+        weight: Number(formData.get("weight")),
+        size: formData.get("size") as 'P' | 'M' | 'G'
       };
 
       try {

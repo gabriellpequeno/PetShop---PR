@@ -1,6 +1,14 @@
 import { JobsClient } from "../consumers/jobs-client";
 import { AuthClient } from "../consumers/auth-client";
 
+interface JobAvailability {
+  id?: string;
+  jobId?: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+}
+
 interface Service {
   id: string;
   name: string;
@@ -9,6 +17,7 @@ interface Service {
   priceM: number;
   priceG: number;
   duration: number;
+  availability?: JobAvailability[];
 }
 
 class AdminServicesPage {
@@ -39,6 +48,24 @@ class AdminServicesPage {
     this.setupDeleteModal();
     this.setupNewServiceButton();
     this.setupLogout();
+    this.setupAvailabilityCheckboxes();
+  }
+
+  setupAvailabilityCheckboxes() {
+    // Add listeners to checkboxes to enable/disable time selects
+    const checkboxes = document.querySelectorAll('.availability-row input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', (e) => {
+        const target = e.target as HTMLInputElement;
+        const row = target.closest('.availability-row');
+        if (row) {
+          const timeSelects = row.querySelectorAll('.avail-time-input') as NodeListOf<HTMLSelectElement>;
+          timeSelects.forEach(select => {
+            select.disabled = !target.checked;
+          });
+        }
+      });
+    });
   }
 
   async loadServices() {
@@ -93,7 +120,15 @@ class AdminServicesPage {
     this.attachCardEventListeners();
   }
 
+  getAvailabilityText(availability?: JobAvailability[]): string {
+    if (!availability || availability.length === 0) {
+      return 'Nenhum dia configurado';
+    }
 
+    const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+    const days = availability.map(a => dayNames[a.dayOfWeek]).join(', ');
+    return days;
+  }
 
   createJobCard(service: Service, index: number): string {
     return `
@@ -131,10 +166,27 @@ class AdminServicesPage {
 
         <div class="service-card-duration">
           <i data-lucide="clock"></i>
-          ${service.duration} minutos
+          ${this.formatDuration(service.duration)}
+        </div>
+        
+        <div class="service-card-duration" style="margin-top: 0.5rem;">
+          <i data-lucide="calendar-days"></i>
+          ${this.getAvailabilityText(service.availability)}
         </div>
       </div>
     `;
+  }
+
+  formatDuration(minutes: number): string {
+    if (minutes < 60) {
+      return `${minutes} minutos`;
+    }
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    if (remainingMinutes === 0) {
+      return hours === 1 ? '1 hora' : `${hours} horas`;
+    }
+    return `${hours}h${remainingMinutes}min`;
   }
 
   attachCardEventListeners() {
@@ -188,6 +240,68 @@ class AdminServicesPage {
     });
   }
 
+  resetAvailabilityForm() {
+    for (let day = 0; day <= 6; day++) {
+      const checkbox = document.querySelector(`input[name="day_${day}"]`) as HTMLInputElement;
+      const startInput = document.querySelector(`select[name="start_${day}"]`) as HTMLSelectElement;
+      const endInput = document.querySelector(`select[name="end_${day}"]`) as HTMLSelectElement;
+      
+      if (checkbox) checkbox.checked = false;
+      if (startInput) {
+        startInput.value = '09:00';
+        startInput.disabled = true;
+      }
+      if (endInput) {
+        endInput.value = day === 0 || day === 6 ? '13:00' : '18:00';
+        endInput.disabled = true;
+      }
+    }
+  }
+
+  populateAvailabilityForm(availability?: JobAvailability[]) {
+    this.resetAvailabilityForm();
+    
+    if (!availability) return;
+
+    for (const avail of availability) {
+      const checkbox = document.querySelector(`input[name="day_${avail.dayOfWeek}"]`) as HTMLInputElement;
+      const startInput = document.querySelector(`select[name="start_${avail.dayOfWeek}"]`) as HTMLSelectElement;
+      const endInput = document.querySelector(`select[name="end_${avail.dayOfWeek}"]`) as HTMLSelectElement;
+      
+      if (checkbox) {
+        checkbox.checked = true;
+      }
+      if (startInput) {
+        startInput.value = avail.startTime;
+        startInput.disabled = false;
+      }
+      if (endInput) {
+        endInput.value = avail.endTime;
+        endInput.disabled = false;
+      }
+    }
+  }
+
+  getAvailabilityFromForm(): JobAvailability[] {
+    const availability: JobAvailability[] = [];
+    
+    for (let day = 0; day <= 6; day++) {
+      const checkbox = document.querySelector(`input[name="day_${day}"]`) as HTMLInputElement;
+      const startInput = document.querySelector(`select[name="start_${day}"]`) as HTMLSelectElement;
+      const endInput = document.querySelector(`select[name="end_${day}"]`) as HTMLSelectElement;
+      
+      if (checkbox?.checked && startInput && endInput) {
+        availability.push({
+          dayOfWeek: day,
+          startTime: startInput.value,
+          endTime: endInput.value
+        });
+      }
+    }
+    
+    return availability;
+  }
+
   openModal() {
     const modal = document.getElementById("serviceModal");
     const modalTitle = document.getElementById("modalTitle");
@@ -198,6 +312,7 @@ class AdminServicesPage {
     this.editingServiceId = null;
     modalTitle.textContent = "Adicionar Novo Serviço";
     form.reset();
+    this.resetAvailabilityForm();
     modal.classList.add("fixed");
   }
 
@@ -219,7 +334,10 @@ class AdminServicesPage {
     (document.getElementById("pricePequeno") as HTMLInputElement).value = service.priceP.toString();
     (document.getElementById("priceMedio") as HTMLInputElement).value = service.priceM.toString();
     (document.getElementById("priceGrande") as HTMLInputElement).value = service.priceG.toString();
-    (document.getElementById("duration") as HTMLInputElement).value = service.duration.toString();
+    (document.getElementById("duration") as HTMLSelectElement).value = service.duration.toString();
+
+    // Populate availability
+    this.populateAvailabilityForm(service.availability);
 
     modal.classList.add("fixed");
   }
@@ -232,6 +350,7 @@ class AdminServicesPage {
 
     modal.classList.remove("fixed");
     form.reset();
+    this.resetAvailabilityForm();
     this.editingServiceId = null;
   }
 
@@ -243,13 +362,16 @@ class AdminServicesPage {
       e.preventDefault();
 
       const formData = new FormData(form);
+      const availability = this.getAvailabilityFromForm();
+      
       const data = {
         name: (formData.get("name") as string).trim(),
         description: (formData.get("description") as string).trim() || "",
         priceP: Number(formData.get("priceP")),
         priceM: Number(formData.get("priceM")),
         priceG: Number(formData.get("priceG")),
-        duration: Number(formData.get("duration"))
+        duration: Number(formData.get("duration")),
+        availability
       };
 
       // Validations
@@ -265,6 +387,11 @@ class AdminServicesPage {
 
       if (data.duration <= 0) {
         alert("Duração deve ser maior que zero");
+        return;
+      }
+
+      if (availability.length === 0) {
+        alert("Selecione pelo menos um dia de disponibilidade");
         return;
       }
 
