@@ -35,32 +35,20 @@
 
       <!-- Main Content -->
       <main class="main-content">
-        <div class="page-header">
-          <h1 class="page-title">Gerenciar Serviços</h1>
-          <button class="btn btn-primary" id="newServiceBtn">
-            <i data-lucide="plus" style="margin-right: 0.5rem; width: 18px"></i>
+        <div class="page-header animate-enter" style="animation-delay: 0ms">
+          <div>
+            <h1 class="page-title">Gerenciar Serviços</h1>
+            <p style="color: #64748b; margin-top: 0.5rem; font-size: 1.1rem; max-width: 600px;">
+              Cadastre e gerencie os serviços oferecidos pelo petshop de forma simples e intuitiva.
+            </p>
+          </div>
+          <button class="btn btn-primary btn-lg" id="newServiceBtn">
+            <i data-lucide="plus" style="margin-right: 0.5rem; width: 20px"></i>
             Novo Serviço
           </button>
         </div>
 
-        <p style="color: #666; margin-bottom: 2rem">
-          Cadastre e gerencie os serviços oferecidos pelo petshop.
-        </p>
 
-        <!-- View Toggle -->
-        <div class="toggle-group" style="margin-bottom: 2rem">
-          <button class="toggle-btn active" id="gridViewBtn">
-            <i
-              data-lucide="grid-3x3"
-              style="width: 16px; margin-right: 0.5rem"
-            ></i>
-            Grade
-          </button>
-          <button class="toggle-btn" id="listViewBtn">
-            <i data-lucide="list" style="width: 16px; margin-right: 0.5rem"></i>
-            Lista
-          </button>
-        </div>
 
         <!-- Loading State -->
         <div id="loadingState" class="loading-container">
@@ -107,16 +95,7 @@
           </div>
         </section>
 
-        <!-- Services List -->
-        <section
-          class="services-section"
-          id="servicesListContainer"
-          style="display: none"
-        >
-          <div class="services-list-view" id="servicesList">
-            <!-- Service list items will be injected here by JS -->
-          </div>
-        </section>
+
       </main>
     </div>
 

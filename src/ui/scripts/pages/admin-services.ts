@@ -15,7 +15,6 @@ class AdminServicesPage {
   private jobsClient: JobsClient;
   private authClient: AuthClient;
   private services: Service[] = [];
-  private currentView: 'grid' | 'list' = 'grid';
   private editingServiceId: string | null = null;
   private deletingServiceId: string | null = null;
 
@@ -47,7 +46,8 @@ class AdminServicesPage {
     this.setupModals();
     this.setupForm();
     this.setupDeleteModal();
-    this.setupViewToggle();
+    this.setupDeleteModal();
+    // this.setupViewToggle(); // Removed
     this.setupNewServiceButton();
     this.setupLogout();
   }
@@ -58,14 +58,14 @@ class AdminServicesPage {
     const gridContainer = document.getElementById("servicesGridContainer");
     const listContainer = document.getElementById("servicesListContainer");
 
-    if (!loadingState || !emptyState || !gridContainer || !listContainer) return;
+    if (!loadingState || !emptyState || !gridContainer) return;
 
     try {
       // Show loading
       loadingState.style.display = "block";
       emptyState.style.display = "none";
       gridContainer.style.display = "none";
-      listContainer.style.display = "none";
+      // listContainer.style.display = "none";
 
       // Fetch services
       this.services = await this.jobsClient.listServices();
@@ -92,50 +92,29 @@ class AdminServicesPage {
   }
 
   renderServices() {
-    if (this.currentView === 'grid') {
-      this.renderGrid();
-    } else {
-      this.renderList();
-    }
+    this.renderGrid();
   }
 
   renderGrid() {
     const gridContainer = document.getElementById("servicesGridContainer");
-    const listContainer = document.getElementById("servicesListContainer");
     const servicesGrid = document.getElementById("servicesGrid");
 
-    if (!gridContainer || !listContainer || !servicesGrid) return;
+    if (!gridContainer || !servicesGrid) return;
 
     gridContainer.style.display = "block";
-    listContainer.style.display = "none";
 
     servicesGrid.innerHTML = this.services
-      .map((service) => this.createServiceCard(service))
+      .map((service, index) => this.createServiceCard(service, index))
       .join("");
 
     this.attachCardEventListeners();
   }
 
-  renderList() {
-    const gridContainer = document.getElementById("servicesGridContainer");
-    const listContainer = document.getElementById("servicesListContainer");
-    const servicesList = document.getElementById("servicesList");
 
-    if (!gridContainer || !listContainer || !servicesList) return;
 
-    gridContainer.style.display = "none";
-    listContainer.style.display = "block";
-
-    servicesList.innerHTML = this.services
-      .map((service) => this.createServiceListItem(service))
-      .join("");
-
-    this.attachCardEventListeners();
-  }
-
-  createServiceCard(service: Service): string {
+  createServiceCard(service: Service, index: number): string {
     return `
-      <div class="service-card" data-id="${service.id}">
+      <div class="service-card" data-id="${service.id}" style="animation-delay: ${index * 100}ms">
         <div class="service-card-header">
           <h3 class="service-card-title">${this.escapeHtml(service.name)}</h3>
           <div class="service-card-actions">
@@ -175,45 +154,6 @@ class AdminServicesPage {
     `;
   }
 
-  createServiceListItem(service: Service): string {
-    return `
-      <div class="service-list-item" data-id="${service.id}">
-        <div class="service-list-info">
-          <h3>${this.escapeHtml(service.name)}</h3>
-          <p>${this.escapeHtml(service.description || 'Sem descrição')}</p>
-        </div>
-
-        <div class="service-list-prices">
-          <div class="price-badge">
-            <span class="price-badge-label">P</span>
-            <span class="price-badge-value">R$ ${this.formatPrice(service.priceP)}</span>
-          </div>
-          <div class="price-badge">
-            <span class="price-badge-label">M</span>
-            <span class="price-badge-value">R$ ${this.formatPrice(service.priceM)}</span>
-          </div>
-          <div class="price-badge">
-            <span class="price-badge-label">G</span>
-            <span class="price-badge-value">R$ ${this.formatPrice(service.priceG)}</span>
-          </div>
-        </div>
-
-        <div class="service-list-duration">
-          <i data-lucide="clock"></i> ${service.duration}min
-        </div>
-
-        <div class="service-list-actions">
-          <button class="icon-btn edit" data-action="edit" title="Editar">
-            <i data-lucide="edit-2"></i>
-          </button>
-          <button class="icon-btn delete" data-action="delete" title="Excluir">
-            <i data-lucide="trash-2"></i>
-          </button>
-        </div>
-      </div>
-    `;
-  }
-
   attachCardEventListeners() {
     const editButtons = document.querySelectorAll('[data-action="edit"]');
     const deleteButtons = document.querySelectorAll('[data-action="delete"]');
@@ -237,31 +177,6 @@ class AdminServicesPage {
     // Refresh icons after adding new elements
     // @ts-ignore
     if (window.lucide) window.lucide.createIcons();
-  }
-
-  setupViewToggle() {
-    const gridBtn = document.getElementById("gridViewBtn");
-    const listBtn = document.getElementById("listViewBtn");
-
-    if (!gridBtn || !listBtn) return;
-
-    gridBtn.addEventListener("click", () => {
-      this.currentView = 'grid';
-      gridBtn.classList.add("active");
-      listBtn.classList.remove("active");
-      if (this.services.length > 0) {
-        this.renderServices();
-      }
-    });
-
-    listBtn.addEventListener("click", () => {
-      this.currentView = 'list';
-      listBtn.classList.add("active");
-      gridBtn.classList.remove("active");
-      if (this.services.length > 0) {
-        this.renderServices();
-      }
-    });
   }
 
   setupNewServiceButton() {
