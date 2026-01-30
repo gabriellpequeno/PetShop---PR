@@ -16,9 +16,9 @@ interface NavigationItem {
 }
 
 const CUSTOMER_NAV_ITEMS: NavigationItem[] = [
-  { slug: 'dashboard', label: 'Meu Painel', icon: 'layout-dashboard', href: '/dashboard' },
+  { slug: 'customer-dashboard', label: 'Meu Painel', icon: 'layout-dashboard', href: '/dashboard' },
   { slug: 'pets', label: 'Meus Pets', icon: 'dog', href: '/pages/pets.html' },
-  { slug: 'agenda', label: 'Agenda', icon: 'calendar', href: '/pages/booking.html' },
+  { slug: 'my-bookings', label: 'Agendamentos', icon: 'calendar', href: '/pages/my-bookings.html' },
   { slug: 'profile', label: 'Perfil', icon: 'user', href: '/pages/profile.html' },
 ]
 
@@ -30,6 +30,8 @@ const ADMIN_NAV_ITEMS: NavigationItem[] = [
     href: '/admin/dashboard',
   },
   { slug: 'users', label: 'Usuários', icon: 'users', href: '/pages/admin/users.html' },
+  { slug: 'pets', label: 'Pets', icon: 'paw-print', href: '/admin/pets' },
+  { slug: 'bookings', label: 'Agendamentos', icon: 'calendar', href: '/admin/bookings' },
   {
     slug: 'services',
     label: 'Serviços',
@@ -312,6 +314,16 @@ template.innerHTML = `
       text-overflow: ellipsis;
     }
 
+    .user-email {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
+    }
+
     .user-role {
       font-size: 0.75rem;
       color: #94a3b8;
@@ -530,11 +542,8 @@ export class PetshopSidebar extends HTMLElement {
   private _getNavItems(): NavigationItem[] {
       const role = this._getUserRole()
       if (role === 'admin' || role === 'ADMIN') {
-          // Admin sees EVERYTHING or just Admin stuff + Profile? 
-          // Usually Admin dashboard is separate. But request said "all routes".
-          // I will show Admin Items THEN Customer Items at bottom (or separate).
-          // Merging lists.
-          return [...ADMIN_NAV_ITEMS, ...CUSTOMER_NAV_ITEMS]
+          // Admin sees only admin items (no customer dashboard)
+          return ADMIN_NAV_ITEMS
       }
       return CUSTOMER_NAV_ITEMS
   }
@@ -606,6 +615,7 @@ export class PetshopSidebar extends HTMLElement {
       'layout-dashboard': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg>',
       users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
       briefcase: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>',
+      'paw-print': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"></circle><circle cx="18" cy="8" r="2"></circle><circle cx="20" cy="16" r="2"></circle><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"></path></svg>',
     }
     return icons[name] || ''
   }
@@ -669,7 +679,7 @@ export class PetshopSidebar extends HTMLElement {
             <img src="${avatarUrl}" alt="${firstName}" class="user-avatar" />
             <div class="user-info">
               <p class="user-name">${firstName}</p>
-              ${user.role === 'admin' ? '<p class="user-role">Administrador</p>' : ''}
+              <p class="user-email">${user.email || ''}</p>
             </div>
             <button class="logout-btn" aria-label="Sair da conta" title="Sair">
               ${this._getIcon('log-out')}
@@ -714,7 +724,7 @@ export class PetshopSidebar extends HTMLElement {
         <img src="${avatarUrl}" alt="${firstName}" class="user-avatar" />
         <div class="user-info">
           <p class="user-name">${firstName}</p>
-          ${user.role === 'admin' ? '<p class="user-role">Administrador</p>' : ''}
+          <p class="user-email">${user.email || ''}</p>
         </div>
         <button class="logout-btn" aria-label="Sair da conta" title="Sair">
           ${this._getIcon('log-out')}

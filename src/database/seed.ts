@@ -2,39 +2,56 @@ import { db } from "./db"
 import { UsersFaker } from "../modules/users/fakers/users-faker";
 import { PetsFaker } from "../modules/pets/fakers/pets-faker";
 import { CryptoProvider } from "../modules/auth/providers/crypto-provider";
-import { randomInt } from "crypto";
 
 async function seed() {
   console.log("Seeding database...")
 
+  await db.exec("DELETE FROM bookings")
   await db.exec("DELETE FROM pets")
   await db.exec("DELETE FROM users")
 
   const cryptoProvider = new CryptoProvider()
   const defaultPassword = "123456"
 
-  const targetUserId = "5655bac0-31e7-4a5e-8c80-5b1e626eb394"
-  
   const fixedUsers = [
     UsersFaker.fake({
-      id: targetUserId,
-      name: "User With Pets",
+      id: "admin-user-id-001",
+      name: "Administrador",
+      email: "admin@gmail.com",
+      password: defaultPassword,
+      role: "admin"
+    }),
+    UsersFaker.fake({
+      id: "user-001",
+      name: "Maria Silva",
       email: "user@gmail.com",
       password: defaultPassword,
       role: "customer"
     }),
     UsersFaker.fake({
-      name: "Admin User",
-      email: "admin@gmail.com",
+      id: "user-002",
+      name: "João Santos",
+      email: "joao@gmail.com",
       password: defaultPassword,
-      role: "admin"
+      role: "customer"
+    }),
+    UsersFaker.fake({
+      id: "user-003",
+      name: "Ana Oliveira",
+      email: "ana@gmail.com",
+      password: defaultPassword,
+      role: "customer"
+    }),
+    UsersFaker.fake({
+      id: "user-004",
+      name: "Pedro Costa",
+      email: "pedro@gmail.com",
+      password: defaultPassword,
+      role: "customer"
     })
   ]
 
-  const randomUsers = UsersFaker.fakeMany(5)
-  const allUsers = [...fixedUsers, ...randomUsers]
-
-  for (const user of allUsers) {
+  for (const user of fixedUsers) {
     const hashedPassword = await cryptoProvider.generateHash(user.password)
 
     await db.run(
@@ -42,27 +59,24 @@ async function seed() {
       [user.id, user.name, user.email, hashedPassword, user.role]
     )
   }
-  console.log(`Created ${allUsers.length} users.`)
+  console.log(`Created ${fixedUsers.length} users.`)
 
-  const targetUserPets = PetsFaker.fakeMany(20, { userId: targetUserId })
-  let allPets = [...targetUserPets]
+  const customers = fixedUsers.filter(u => u.role === "customer")
+  let totalPets = 0
 
-  for (const user of randomUsers) {
-    if (Math.random() > 0.3) {
-      const numPets = randomInt(1, 4)
-      const userPets = PetsFaker.fakeMany(numPets, { userId: user.id })
-      allPets = [...allPets, ...userPets]
+  for (const customer of customers) {
+    const pets = PetsFaker.fakeMany(5, { userId: customer.id })
+    
+    for (const pet of pets) {
+      await db.run(
+        `INSERT INTO pets (id, userId, name, species, breed, age, weight, size) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [pet.id, pet.userId, pet.name, pet.species, pet.breed, pet.age, pet.weight, pet.size]
+      )
     }
+    totalPets += pets.length
   }
   
-  for (const pet of allPets) {
-    await db.run(
-      `INSERT INTO pets (id, userId, name, species, breed, age, weight) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [pet.id, pet.userId, pet.name, pet.species, pet.breed, pet.age, pet.weight]
-    )
-  }
-  console.log(`Created ${targetUserPets.length} pets for target user ${targetUserId}.`)
-  console.log(`Created ${allPets.length - targetUserPets.length} random pets for others.`)
+  console.log(`Created ${totalPets} pets (5 per customer).`)
 }
 
 seed()

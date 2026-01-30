@@ -33,7 +33,9 @@ export class CancelBookingService {
             throw new BadRequestError("Não é possível cancelar um agendamento já concluído.");
         }
 
-        const bookingDateTime = new Date(booking.bookingDate.replace(" ", "T"));
+        // Combine bookingDate and bookingTime for accurate comparison
+        const bookingDateTimeStr = `${booking.bookingDate}T${booking.bookingTime || '00:00'}`;
+        const bookingDateTime = new Date(bookingDateTimeStr);
         const now = new Date();
         if (bookingDateTime <= now) {
             throw new BadRequestError("Não é possível cancelar agendamentos passados ou em andamento.");

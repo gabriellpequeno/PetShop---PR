@@ -36,16 +36,18 @@
     <main class="main-content">
       <div class="page-header">
         <h1 class="page-title">Gerenciar Usuários</h1>
-        <div class="search-box">
-          <i data-lucide="search"></i>
-          <input type="text" id="searchInput" placeholder="Buscar por email..." class="search-input" />
-        </div>
       </div>
 
-      <p style="color: #666; margin-bottom: 2rem;">Gerencie os perfis de usuários e seus pets.</p>
+      <p style="color: #666; margin-bottom: 1rem;">Gerencie os perfis de usuários e seus pets.</p>
 
       <!-- Users List -->
       <section class="users-section">
+        <div class="users-section-header">
+          <div class="search-box">
+            <i data-lucide="search"></i>
+            <input type="text" id="searchInput" placeholder="Buscar por nome ou email..." class="search-input" />
+          </div>
+        </div>
         <div class="users-list" id="usersList">
           <!-- User cards will be injected here by JS -->
         </div>

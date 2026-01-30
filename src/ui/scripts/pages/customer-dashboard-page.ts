@@ -248,7 +248,7 @@ class CustomerDashboardPage {
       const displayServices = services.slice(0, 4); // Show max 4 services
       cardBody.innerHTML = `
         <div class="items-list">
-          ${displayServices.map((service: Job) => `
+          ${displayServices.map((service: any) => `
             <div class="item-row">
               <div class="item-icon service">
                 <i data-lucide="sparkles"></i>
@@ -257,7 +257,7 @@ class CustomerDashboardPage {
                 <p class="item-name">${service.name}</p>
                 <p class="item-details">${service.description?.slice(0, 40) || "Serviço de qualidade"}${service.description?.length > 40 ? "..." : ""}</p>
               </div>
-              <span class="item-badge price">R$ ${service}</span>
+              <span class="item-badge price">A partir de R$ ${(service.priceP || 0).toFixed(2).replace('.', ',')}</span>
             </div>
           `).join("")}
         </div>

@@ -4,7 +4,7 @@ import { PetsRepository } from '../repositories/pets-repository'
 
 export class CreatePetController {
   static async handle(request: Request, response: Response) {
-    const { name, species, breed, age, weight } = request.body
+    const { name, species, breed, age, weight, size } = request.body
     
     const userId = request.user.id
     
@@ -17,7 +17,8 @@ export class CreatePetController {
       species,
       breed,
       age,
-      weight
+      weight,
+      size
     })
     
     return response.status(201).json({ message: 'Pet created successfully' })

@@ -359,7 +359,7 @@ class AuthModal {
         if (data.user.role === 'admin') {
           window.location.href = '/admin/dashboard'
         } else {
-          window.location.href = '/profile'
+          window.location.href = '/dashboard'
         }
       } else {
         // Error

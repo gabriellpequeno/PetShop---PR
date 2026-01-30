@@ -19,7 +19,8 @@ describe('Create Pet Service', () => {
       species: 'Dog',
       breed: 'Golden Retriever',
       age: 2,
-      weight: 30
+      weight: 30,
+      size: 'M'
     })).resolves.not.toThrow()
 
     expect(repository.add).toHaveBeenCalledWith(expect.objectContaining({
@@ -28,7 +29,8 @@ describe('Create Pet Service', () => {
       species: 'Dog',
       breed: 'Golden Retriever',
       age: 2,
-      weight: 30
+      weight: 30,
+      size: 'M'
     }))
   })
 
@@ -39,7 +41,8 @@ describe('Create Pet Service', () => {
       species: 'Dog',
       breed: 'Golden Retriever',
       age: 2,
-      weight: 30
+      weight: 30,
+      size: 'M'
     })).rejects.toThrow(AppError)
   })
 })

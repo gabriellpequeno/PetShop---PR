@@ -5,7 +5,7 @@ import type { Request, Response } from "express";
 export class UpdatePetController {
   static async handle(request: Request, response: Response) {
     const id = request.params.id as string
-    const { name, species, breed, age, weight } = request.body
+    const { name, species, breed, age, weight, size } = request.body
     const userId = request.user.id
     const role = request.user.role
 
@@ -20,7 +20,8 @@ export class UpdatePetController {
       species,
       breed,
       age,
-      weight
+      weight,
+      size
     })
 
     return response.status(204).send()
