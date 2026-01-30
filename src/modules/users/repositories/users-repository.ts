@@ -31,11 +31,12 @@ export class UsersRepository {
     await db.run(
       `UPDATE users SET
         name = COALESCE(?, name),
+        email = COALESCE(?, email),
         phone = COALESCE(?, phone),
         location = COALESCE(?, location),
         birth_date = COALESCE(?, birth_date)
       WHERE id = ?`,
-      [data.name, data.phone ?? null, data.location ?? null, data.birth_date ?? null, id]
+      [data.name, data.email, data.phone ?? null, data.location ?? null, data.birth_date ?? null, id]
     )
   }
 

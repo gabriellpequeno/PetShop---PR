@@ -35,8 +35,25 @@ export class AdminUpdateUserService {
       }
     }
 
+    // Validação de telefone brasileiro: (XX) 9XXXX-XXXX ou (XX) XXXX-XXXX
+    const phoneRegex = /^\(\d{2}\) 9?\d{4}-\d{4}$/
+    if (phone && !phoneRegex.test(phone)) {
+      throw new BadRequestError('Formato de telefone incorreto. Use: (XX) 9XXXX-XXXX ou (XX) XXXX-XXXX')
+    }
+
+    // Validação de data de nascimento: não pode ser no futuro
+    if (birth_date) {
+      const birthDate = new Date(birth_date)
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Ignora hora para comparação apenas de data
+      if (birthDate > today) {
+        throw new BadRequestError('Data de nascimento inválida')
+      }
+    }
+
     const updateData: Partial<User> = {}
     if (name) updateData.name = name
+    if (email) updateData.email = email
     if (phone) updateData.phone = phone
     if (location) updateData.location = location
     if (birth_date) updateData.birth_date = birth_date
