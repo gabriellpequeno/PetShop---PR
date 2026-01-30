@@ -62,4 +62,4 @@ backend/dist/
 prompt.md
 
 src/database/sqlite.db
-
+sqlite.db
