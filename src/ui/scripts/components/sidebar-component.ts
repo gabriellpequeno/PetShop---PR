@@ -16,7 +16,7 @@ interface NavigationItem {
 }
 
 const CUSTOMER_NAV_ITEMS: NavigationItem[] = [
-  { slug: 'dashboard', label: 'Meu Painel', icon: 'layout-dashboard', href: '/dashboard' },
+  { slug: 'customer-dashboard', label: 'Meu Painel', icon: 'layout-dashboard', href: '/dashboard' },
   { slug: 'pets', label: 'Meus Pets', icon: 'dog', href: '/pages/pets.html' },
   { slug: 'agenda', label: 'Agenda', icon: 'calendar', href: '/pages/booking.html' },
   { slug: 'profile', label: 'Perfil', icon: 'user', href: '/pages/profile.html' },
@@ -530,11 +530,8 @@ export class PetshopSidebar extends HTMLElement {
   private _getNavItems(): NavigationItem[] {
       const role = this._getUserRole()
       if (role === 'admin' || role === 'ADMIN') {
-          // Admin sees EVERYTHING or just Admin stuff + Profile? 
-          // Usually Admin dashboard is separate. But request said "all routes".
-          // I will show Admin Items THEN Customer Items at bottom (or separate).
-          // Merging lists.
-          return [...ADMIN_NAV_ITEMS, ...CUSTOMER_NAV_ITEMS]
+          // Admin sees only admin items (no customer dashboard)
+          return ADMIN_NAV_ITEMS
       }
       return CUSTOMER_NAV_ITEMS
   }
