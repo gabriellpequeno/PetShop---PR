@@ -27,7 +27,7 @@ class AdminServicesPage {
   async init() {
     const user = this.authClient.getUser();
     if (!user) {
-      window.location.href = "/pages/login.html";
+      window.location.href = "/";
       return;
     }
 
@@ -54,7 +54,7 @@ class AdminServicesPage {
       emptyState.style.display = "none";
       gridContainer.style.display = "none";
 
-      this.services = await this.jobsClient.listServices();
+      this.services = await this.jobsClient.listJobs();
 
       loadingState.style.display = "none";
 
