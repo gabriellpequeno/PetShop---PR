@@ -20,6 +20,7 @@ export class CreateBookingController {
 
         const booking = await service.execute({
             userId,
+            userRole: request.user.role,
             petId,
             jobId,
             bookingDate,
