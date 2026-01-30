@@ -1,6 +1,7 @@
 import { JobsClient } from '../consumers/jobs-client';
 import { PetsClient } from '../consumers/pets-client';
 import { BookingsClient } from '../consumers/bookings-client';
+import { FeedbackModal } from '../components/feedback-modal.js';
 
 interface JobAvailability {
   id: string;
@@ -255,9 +256,28 @@ class MyBookingsPage {
     this.updatePeriodLabel();
   }
 
-  private isSlotAvailable(date: Date, hour: number): boolean {
+  private getMinutesFromTime(time: string): number {
+    const [h, m] = time.split(':').map(Number);
+    return (h || 0) * 60 + (m || 0);
+  }
+
+  private isTimeOverlapping(
+    slotTimeStr: string,
+    bookingTimeStr: string,
+    durationMinutes: number
+  ): boolean {
+    const slotMins = this.getMinutesFromTime(slotTimeStr);
+    const bookingStartMins = this.getMinutesFromTime(bookingTimeStr);
+    const bookingEndMins = bookingStartMins + durationMinutes;
+    
+    // Check if slot logic: slot is "occupied" if it falls inside the booking duration
+    // i.e., bookingStart <= slot < bookingEnd
+    return slotMins >= bookingStartMins && slotMins < bookingEndMins;
+  }
+
+  private isSlotAvailable(date: Date, hour: number, minute: number): boolean {
     const dayOfWeek = date.getDay();
-    const timeStr = `${hour.toString().padStart(2, '0')}:00`;
+    const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
     const dateStr = date.toISOString().split('T')[0];
     
     // If a specific job is selected, check only that job's availability
@@ -272,11 +292,14 @@ class MyBookingsPage {
       );
       
       // Check if this specific job is already booked at this slot
-      const isJobOccupied = this.occupiedSlots.some(slot =>
-        slot.jobId === this.selectedFilterJob &&
-        slot.bookingDate === dateStr &&
-        slot.bookingTime === timeStr
-      );
+      const isJobOccupied = this.occupiedSlots.some(slot => {
+        if (slot.jobId !== this.selectedFilterJob || slot.bookingDate !== dateStr) return false;
+        
+        const slotJob = this.jobs.find(j => j.id === slot.jobId);
+        const duration = slotJob ? slotJob.duration : 60; // default to 60 if not found
+        
+        return this.isTimeOverlapping(timeStr, slot.bookingTime, duration);
+      });
       
       return isJobAvailable && !isJobOccupied;
     }
@@ -292,26 +315,29 @@ class MyBookingsPage {
     
     // Filter out jobs that are already occupied at this slot
     const unoccupiedJobs = availableJobs.filter(job => 
-      !this.occupiedSlots.some(slot =>
-        slot.jobId === job.id &&
-        slot.bookingDate === dateStr &&
-        slot.bookingTime === timeStr
-      )
+      !this.occupiedSlots.some(slot => {
+        if (slot.jobId !== job.id || slot.bookingDate !== dateStr) return false;
+        
+        const slotJob = this.jobs.find(j => j.id === slot.jobId);
+        const duration = slotJob ? slotJob.duration : 60;
+
+        return this.isTimeOverlapping(timeStr, slot.bookingTime, duration);
+      })
     );
     
     return unoccupiedJobs.length > 0;
   }
 
-  private isPastSlot(date: Date, hour: number): boolean {
+  private isPastSlot(date: Date, hour: number, minute: number): boolean {
     const now = new Date();
     const slotDate = new Date(date);
-    slotDate.setHours(hour, 0, 0, 0);
+    slotDate.setHours(hour, minute, 0, 0);
     return slotDate < now;
   }
 
-  private getAvailableJobsForSlot(date: Date, hour: number): Job[] {
+  private getAvailableJobsForSlot(date: Date, hour: number, minute: number): Job[] {
     const dayOfWeek = date.getDay();
-    const timeStr = `${hour.toString().padStart(2, '0')}:00`;
+    const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
     const dateStr = date.toISOString().split('T')[0];
     
     // Get jobs that are available at this time slot based on their schedule
@@ -325,11 +351,14 @@ class MyBookingsPage {
     
     // Filter out jobs that are already occupied at this date/time
     return availableJobs.filter(job => 
-      !this.occupiedSlots.some(slot =>
-        slot.jobId === job.id &&
-        slot.bookingDate === dateStr &&
-        slot.bookingTime === timeStr
-      )
+      !this.occupiedSlots.some(slot => {
+        if (slot.jobId !== job.id || slot.bookingDate !== dateStr) return false;
+        
+        const slotJob = this.jobs.find(j => j.id === slot.jobId);
+        const duration = slotJob ? slotJob.duration : 60;
+
+        return this.isTimeOverlapping(timeStr, slot.bookingTime, duration);
+      })
     );
   }
 
@@ -357,10 +386,15 @@ class MyBookingsPage {
     if (timeColumn) {
       timeColumn.innerHTML = '';
       for (let hour = 7; hour < 20; hour++) {
-        const timeSlot = document.createElement('div');
-        timeSlot.className = 'time-slot-label';
-        timeSlot.textContent = `${hour.toString().padStart(2, '0')}:00`;
-        timeColumn.appendChild(timeSlot);
+        // Create 2 slots per hour (00 and 30)
+        for (let minute = 0; minute < 60; minute += 30) {
+          const timeSlot = document.createElement('div');
+          timeSlot.className = 'time-slot-label';
+          // Only show label on the hour marks if desired, or show both
+          // Showing both for clarity
+          timeSlot.textContent = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+          timeColumn.appendChild(timeSlot);
+        }
       }
     }
 
@@ -372,37 +406,64 @@ class MyBookingsPage {
         let hoursHtml = '';
         
         for (let hour = 7; hour < 20; hour++) {
-          const isPast = this.isPastSlot(day, hour);
-          const isAvailable = !isPast && this.isSlotAvailable(day, hour);
-          const hasBooking = dayBookings.some(b => {
-            const timeStr = b.bookingTime || '09:00';
-            const bookingHour = parseInt(timeStr.split(':')[0] || '9', 10);
-            return bookingHour === hour;
-          });
+            for (let minute = 0; minute < 60; minute += 30) {
+                const isPast = this.isPastSlot(day, hour, minute);
+                const isAvailable = !isPast && this.isSlotAvailable(day, hour, minute);
+                
+                const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                
+                const hasBooking = dayBookings.some(b => {
+                   const bookingJob = this.jobs.find(j => j.id === b.jobId);
+                   const duration = bookingJob ? bookingJob.duration : 60;
+                   const bTime = b.bookingTime || '09:00';
+                   /* 
+                      Note: b.bookingTime might have seconds or not, 
+                      but getMinutesFromTime handles H:M split.
+                   */
+                   return this.isTimeOverlapping(timeStr, bTime, duration);
+                });
 
-          let slotClass = 'hour-slot';
-          if (isPast) {
-            slotClass += ' past-slot';
-          } else if (hasBooking) {
-            // Don't add availability class if has booking
-          } else if (isAvailable) {
-            slotClass += ' available-slot clickable';
-          } else {
-            slotClass += ' unavailable-slot';
-          }
+                let slotClass = 'hour-slot'; // keeping class name for CSS even though it's 30min now
+                if (isPast) {
+                    slotClass += ' past-slot';
+                } else if (hasBooking) {
+                    // Don't add availability class if has booking
+                } else if (isAvailable) {
+                    slotClass += ' available-slot clickable';
+                } else {
+                    slotClass += ' unavailable-slot';
+                }
 
-          const dateStr = day.toISOString().split('T')[0];
-          const timeStr = `${hour.toString().padStart(2, '0')}:00`;
+                const dateStr = day.toISOString().split('T')[0];
 
-          hoursHtml += `<div class="${slotClass}" data-date="${dateStr}" data-time="${timeStr}" data-day-index="${dayIndex}" data-hour="${hour}"></div>`;
+                hoursHtml += `<div class="${slotClass}" data-date="${dateStr}" data-time="${timeStr}" data-day-index="${dayIndex}" data-hour="${hour}" data-minute="${minute}"></div>`;
+            }
         }
 
         const eventsHtml = dayBookings.map(booking => {
           const bookingTimeStr = booking.bookingTime || '09:00';
-          const bookingHour = parseInt(bookingTimeStr.split(':')[0] || '9', 10);
-          const topOffset = (bookingHour - 7) * 60;
+          const [hStr, mStr] = bookingTimeStr.split(':');
+          const bookingHour = parseInt(hStr || '9', 10);
+          const bookingMinute = parseInt(mStr || '0', 10);
+          
+          // Calculate top offset based on 30-min slots height
+          // Start hour is 7. Each hour has 2 slots. 
+          // Assuming each 30-min slot is same height as before or adjusted?
+          // If we want same visual scale, we need to know CSS height.
+          // Let's assume CSS 'hour-slot' is height of ONE 30-min slot now.
+          // Before: (hour - 7) * 60px.
+          // Now: (hour - 7) * 2 * SLOT_HEIGHT + (minute / 30) * SLOT_HEIGHT
+          // Let's assume SLOT_HEIGHT is 40px (will update CSS).
+          
+          const SLOT_HEIGHT = 40; // Reduced height for 30min slots
+          const slotsFromStart = (bookingHour - 7) * 2 + (bookingMinute / 30);
+          const topOffset = slotsFromStart * SLOT_HEIGHT;
+          
           const job = this.jobs.find(j => j.id === booking.jobId);
-          const height = job ? job.duration : 60;
+          // Duration is in minutes. 
+          // Height = (duration / 30) * SLOT_HEIGHT
+          const duration = job ? job.duration : 60;
+          const height = (duration / 30) * SLOT_HEIGHT;
           
           return `
             <div class="calendar-event status-${booking.status}"
@@ -410,7 +471,7 @@ class MyBookingsPage {
                  data-booking-id="${booking.id}">
               <div class="event-title">${booking.jobName || 'Serviço'}</div>
               <div class="event-time">${booking.bookingTime || '09:00'}</div>
-              <div class="event-pet">${booking.petName || 'Pet'}</div>
+              ${height > 30 ? `<div class="event-pet">${booking.petName || 'Pet'}</div>` : ''}
             </div>
           `;
         }).join('');
@@ -603,6 +664,7 @@ class MyBookingsPage {
     (document.getElementById('bookingTimeInput') as HTMLInputElement).value = time;
 
     // Load available services for this slot
+    // We pass the date string and logic inside will calculate max duration
     await this.loadAvailableServices(date, time);
 
     // Load user's pets
@@ -638,8 +700,45 @@ class MyBookingsPage {
     try {
       const dateObj = new Date(date + 'T12:00:00');
       const timeStr = time || '09:00';
-      const hour = parseInt(timeStr.split(':')[0] || '9', 10);
-      const availableJobs = this.getAvailableJobsForSlot(dateObj, hour);
+      const [hStr, mStr] = timeStr.split(':');
+      const hour = parseInt(hStr || '9', 10);
+      const minute = parseInt(mStr || '0', 10);
+      
+      // Get all services that are theoretically available at this time/day
+      let availableJobs = this.getAvailableJobsForSlot(dateObj, hour, minute);
+
+      // Now filter them by ensuring they fit in the gap until the next booking
+      const timeInMins = hour * 60 + minute;
+      const dateStr = date; // YYYY-MM-DD
+      
+      // Calculate minutes until end of day (e.g. 20:00 = 1200 mins) or next booking
+      let maxDuration = (20 * 60) - timeInMins; // Default max is until 20:00
+
+      // Find the next booking that starts after current time on same day
+      const dayBookings = this.occupiedSlots.filter(s => s.bookingDate === dateStr);
+      
+      // Find nearest next start time
+      let nearestNextStart = 20 * 60; // 20:00 limit
+      
+      for (const slot of dayBookings) {
+          const slotStart = this.getMinutesFromTime(slot.bookingTime);
+          if (slotStart > timeInMins && slotStart < nearestNextStart) {
+              nearestNextStart = slotStart;
+          }
+           // Also handle if we are somehow inside a booking (shouldn't happen if slot was clickable)
+           // But just in case
+           if (slotStart <= timeInMins) {
+              // We are starting at or after a booking start. 
+              // If we are strictly after, we need to check if that booking ends after our start.
+              // But isSlotAvailable should have prevented clicking here.
+           }
+      }
+      
+      const gap = nearestNextStart - timeInMins;
+      maxDuration = Math.min(maxDuration, gap);
+      
+      // Filter jobs that fit in the gap
+      availableJobs = availableJobs.filter(job => job.duration <= maxDuration);
 
       if (availableJobs.length === 0) {
         container.innerHTML = `
@@ -778,7 +877,7 @@ class MyBookingsPage {
 
   private async confirmBooking() {
     if (!this.selectedJobId || !this.selectedPetId || !this.selectedDate || !this.selectedTime) {
-      alert('Por favor, selecione um serviço e um pet.');
+      await FeedbackModal.warning('Por favor, selecione um serviço e um pet.');
       return;
     }
 
@@ -808,11 +907,11 @@ class MyBookingsPage {
       ]);
       this.renderCalendar();
       
-      alert('Agendamento realizado com sucesso!');
+      await FeedbackModal.success('Agendamento realizado com sucesso!');
 
     } catch (error) {
       console.error('Error creating booking:', error);
-      alert('Erro ao realizar agendamento. Tente novamente.');
+      await FeedbackModal.error('Erro ao realizar agendamento. Tente novamente.');
     } finally {
       btn.disabled = false;
       btn.innerHTML = originalText;
@@ -944,7 +1043,7 @@ class MyBookingsPage {
   private async cancelBooking() {
     if (!this.selectedBooking) return;
 
-    if (!confirm('Tem certeza que deseja cancelar este agendamento?')) {
+    if (!await FeedbackModal.confirm('Cancelar Agendamento?', 'Tem certeza que deseja cancelar este agendamento?')) {
       return;
     }
 
@@ -965,10 +1064,10 @@ class MyBookingsPage {
       this.renderCalendar();
       this.closeEventModal();
 
-      alert('Agendamento cancelado com sucesso!');
+      await FeedbackModal.success('Agendamento cancelado com sucesso!');
     } catch (error) {
       console.error('Error canceling booking:', error);
-      alert('Erro ao cancelar agendamento. Tente novamente.');
+      await FeedbackModal.error('Erro ao cancelar agendamento. Tente novamente.');
     }
   }
 }

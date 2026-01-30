@@ -1,3 +1,6 @@
+import { FeedbackModal } from '../components/feedback-modal.js'
+
+
 interface Pet {
   id: string
   name: string
@@ -10,6 +13,8 @@ interface Pet {
   ownerName: string
   ownerEmail: string
 }
+
+
 
 interface User {
   id: string
@@ -370,9 +375,10 @@ class AdminPetsPage {
 
       this.closeEditModal()
       await this.loadPets()
+      await FeedbackModal.success('Pet atualizado com sucesso!')
     } catch (error) {
       console.error('Erro ao atualizar pet:', error)
-      alert(error instanceof Error ? error.message : 'Erro ao atualizar pet')
+      await FeedbackModal.error(error instanceof Error ? error.message : 'Erro ao atualizar pet')
     }
   }
 
@@ -410,9 +416,10 @@ class AdminPetsPage {
 
       this.closeDeleteModal()
       await this.loadPets()
+      await FeedbackModal.success('Pet excluído com sucesso!')
     } catch (error) {
       console.error('Erro ao excluir pet:', error)
-      alert(error instanceof Error ? error.message : 'Erro ao excluir pet')
+      await FeedbackModal.error(error instanceof Error ? error.message : 'Erro ao excluir pet')
     }
   }
 

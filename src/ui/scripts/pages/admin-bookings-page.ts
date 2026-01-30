@@ -1,3 +1,5 @@
+import { FeedbackModal } from '../components/feedback-modal.js'
+
 interface Booking {
   id: string;
   userId: string;
@@ -484,10 +486,10 @@ class AdminBookingsPage {
       this.renderCalendar();
       this.closeModal();
 
-      alert('Alterações salvas com sucesso!');
+      await FeedbackModal.success('Alterações salvas com sucesso!');
     } catch (error) {
       console.error('Error saving changes:', error);
-      alert('Erro ao salvar alterações. Tente novamente.');
+      await FeedbackModal.error('Erro ao salvar alterações. Tente novamente.');
     }
   }
 }

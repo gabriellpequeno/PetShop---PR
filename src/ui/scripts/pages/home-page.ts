@@ -1,4 +1,5 @@
 import { AuthApiConsumer } from '../consumers/auth-api-consumer'
+import { FeedbackModal } from '../components/feedback-modal.js'
 
 document.addEventListener('DOMContentLoaded', () => {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn') as HTMLButtonElement | null;
@@ -65,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 button.addEventListener('click', async (e) => {
                    e.preventDefault();
-                   if(confirm('Deseja sair da sua conta?')) {
+                   if(await FeedbackModal.confirm('Sair', 'Deseja sair da sua conta?')) {
                        try {
                            await authConsumer.logoutUser();
                        } catch (error) {

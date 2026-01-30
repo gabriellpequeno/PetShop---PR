@@ -2,6 +2,7 @@ import { AuthClient } from '../consumers/auth-client.js'
 import { UsersClient } from '../consumers/users-client.js'
 import { PetsClient } from '../consumers/pets-client.js'
 import { BookingsClient } from '../consumers/bookings-client.js'
+import { FeedbackModal } from '../components/feedback-modal.js'
 
 const authClient = new AuthClient()
 const usersClient = new UsersClient()
@@ -24,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   } catch (error) {
     console.error('Error loading profile page:', error)
-    alert('Erro ao carregar dados do perfil.')
+    await FeedbackModal.error('Erro ao carregar dados do perfil.')
   }
 })
 
@@ -272,10 +273,10 @@ function setupEditModal() {
       await usersClient.updateProfile(data)
       modal.classList.remove('active')
       await loadUserProfile() // Refresh UI
-      alert('Perfil atualizado com sucesso!')
+      await FeedbackModal.success('Perfil atualizado com sucesso!')
     } catch (error) {
       console.error(error)
-      alert('Erro ao atualizar perfil.')
+      await FeedbackModal.error('Erro ao atualizar perfil.')
     }
   })
 }

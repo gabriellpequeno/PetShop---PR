@@ -1,5 +1,6 @@
 import { AdminUsersClient } from '../consumers/admin-users-client.js'
 import type { User, Pet } from '../consumers/admin-users-client.js'
+import { FeedbackModal } from '../components/feedback-modal.js'
 
 declare const lucide: any;
 
@@ -421,10 +422,10 @@ class AdminUsersPage {
       this.closeEditModal()
 
       // Show success message
-      alert('Usuário atualizado com sucesso!')
+      await FeedbackModal.success('Usuário atualizado com sucesso!')
     } catch (error) {
       console.error('Failed to update user:', error)
-      alert('Erro ao atualizar usuário. Verifique os dados e tente novamente.')
+      await FeedbackModal.error('Erro ao atualizar usuário. Verifique os dados e tente novamente.')
     }
   }
 
@@ -451,10 +452,10 @@ class AdminUsersPage {
       await this.loadUsers()
 
       // Show success message
-      alert('Usuário excluído com sucesso!')
+      await FeedbackModal.success('Usuário excluído com sucesso!')
     } catch (error) {
       console.error('Failed to delete user:', error)
-      alert('Erro ao excluir usuário. Tente novamente.')
+      await FeedbackModal.error('Erro ao excluir usuário. Tente novamente.')
     }
   }
 
