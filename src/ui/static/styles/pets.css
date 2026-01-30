@@ -22,6 +22,8 @@ body {
   left: 0;
   top: 0;
   z-index: 100;
+  overflow-y: auto; /* allow internal scrolling if items overflow */
+  -webkit-overflow-scrolling: touch;
 }
 
 .sidebar-logo {
@@ -427,6 +429,16 @@ body {
   .sidebar {
     display: none;
     /* In real app, toggleable drawer */
+  }
+
+  /* For web component-based sidebar: keep the host fixed and full-height so internal scrolling works */
+  petshop-sidebar {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 110;
   }
 
   .main-content {

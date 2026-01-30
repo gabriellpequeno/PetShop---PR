@@ -1,4 +1,3 @@
-
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import { TranspileScriptMiddleware } from './middlewares/transpile-script-middleware'
@@ -15,6 +14,7 @@ import { usersRouter } from './modules/users/routers/users-router'
 import { petsRouter } from './modules/pets/routers/pets-router'
 import { homeRouter } from './modules/home/routers/home-router'
 import { jobsRouter } from "./modules/jobs/routers/jobs-router";
+import { jobsPageRouter } from './modules/jobs/routers/jobs-page-router'
 import { bookingRouter } from "./modules/bookings/routers/booking-router";
 
 const app = express();
@@ -28,6 +28,7 @@ app.get(/^\/scripts\/(.+)\.js$/, TranspileScriptMiddleware.handle);
 
 app.use(petsPageRouter)
 app.use(usersPageRouter)
+app.use(jobsPageRouter)
 
 app.use(authRouter)
 app.use(homeRouter)

@@ -180,6 +180,22 @@ async function loadSchedule() {
   }
 }
 
+function applyPhoneMask(value: string): string {
+  const numbers = value.replace(/\D/g, '')
+  
+  const limited = numbers.substring(0, 11)
+  
+  if (limited.length <= 2) {
+    return limited
+  } else if (limited.length <= 6) {
+    return `(${limited.substring(0, 2)}) ${limited.substring(2)}`
+  } else if (limited.length <= 10) {
+    return `(${limited.substring(0, 2)}) ${limited.substring(2, 6)}-${limited.substring(6)}`
+  } else {
+    return `(${limited.substring(0, 2)}) ${limited.substring(2, 7)}-${limited.substring(7)}`
+  }
+}
+
 function setupEditModal() {
   const modal = document.getElementById('editProfileModal')
   const openBtn = document.getElementById('editProfileBtn')
@@ -187,6 +203,23 @@ function setupEditModal() {
   const form = document.getElementById('editProfileForm') as HTMLFormElement
 
   if (!modal || !openBtn || !closeBtn || !form) return
+
+  const birthDateInput = document.getElementById('editBirthDate') as HTMLInputElement
+  if (birthDateInput) {
+    const todayParts = new Date().toISOString().split('T')
+    if (todayParts[0]) {
+      birthDateInput.setAttribute('max', todayParts[0])
+    }
+  }
+
+  // Apply phone mask
+  const phoneInput = document.getElementById('editPhone') as HTMLInputElement
+  if (phoneInput) {
+    phoneInput.addEventListener('input', (e) => {
+      const target = e.target as HTMLInputElement
+      target.value = applyPhoneMask(target.value)
+    })
+  }
 
   openBtn.addEventListener('click', async () => {
     const user = await usersClient.getProfile()
@@ -200,10 +233,14 @@ function setupEditModal() {
 
   closeBtn.addEventListener('click', () => {
     modal.classList.remove('active')
+    clearFormErrors()
   })
 
   window.addEventListener('click', (e) => {
-    if (e.target === modal) modal.classList.remove('active')
+    if (e.target === modal) {
+      modal.classList.remove('active')
+      clearFormErrors()
+    }
   })
 
   form.addEventListener('submit', async (e) => {
@@ -216,6 +253,20 @@ function setupEditModal() {
       location: formData.get('location') as string,
       birth_date: formData.get('birth_date') as string,
     }
+
+    // Validate phone
+    if (data.phone && !validatePhone(data.phone)) {
+      showFormError('editPhone', 'Formato de telefone inválido.')
+      return
+    }
+
+    // Validate birth date
+    if (data.birth_date && !validateBirthDate(data.birth_date)) {
+      showFormError('editBirthDate', 'Data de nascimento não pode ser no futuro')
+      return
+    }
+
+    clearFormErrors()
 
     try {
       await usersClient.updateProfile(data)
@@ -237,4 +288,43 @@ function setText(id: string, text: string) {
 function setInput(id: string, value: string) {
   const el = document.getElementById(id) as HTMLInputElement
   if (el) el.value = value
+}
+
+function validatePhone(phone: string): boolean {
+  const numbers = phone.replace(/\D/g, '')
+  return numbers.length === 10 || numbers.length === 11
+}
+
+function validateBirthDate(date: string): boolean {
+  const selectedDate = new Date(date)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return selectedDate <= today
+}
+
+function showFormError(inputId: string, message: string) {
+  const input = document.getElementById(inputId) as HTMLInputElement
+  if (!input) return
+
+  const existingError = input.parentElement?.querySelector('.form-error')
+  if (existingError) existingError.remove()
+
+  input.style.borderColor = '#ef4444'
+
+  const errorEl = document.createElement('span')
+  errorEl.className = 'form-error'
+  errorEl.textContent = message
+  errorEl.style.cssText = 'color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem; display: block;'
+  
+  input.parentElement?.appendChild(errorEl)
+}
+
+function clearFormErrors() {
+  const errors = document.querySelectorAll('.form-error')
+  errors.forEach(err => err.remove())
+  
+  const inputs = document.querySelectorAll('#editProfileForm input')
+  inputs.forEach((input: any) => {
+    input.style.borderColor = ''
+  })
 }
