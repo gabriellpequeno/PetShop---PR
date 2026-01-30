@@ -39,7 +39,9 @@ export class CreateBookingService {
         if (!pet) {
             throw new NotFoundError("Pet não encontrado.");
         }
-        if (pet.userId !== data.userId) {
+        if (data.userRole === "admin") {
+            data.userId = pet.userId;
+        } else if (pet.userId !== data.userId) {
             throw new BadRequestError("Este pet não pertence ao usuário.");
         }
 

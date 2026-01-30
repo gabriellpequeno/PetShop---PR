@@ -27,7 +27,7 @@ class AdminServicesPage {
   async init() {
     const user = this.authClient.getUser();
     if (!user) {
-      window.location.href = "/pages/login.html";
+      window.location.href = "/";
       return;
     }
 
@@ -54,7 +54,7 @@ class AdminServicesPage {
       emptyState.style.display = "none";
       gridContainer.style.display = "none";
 
-      this.services = await this.jobsClient.listServices();
+      this.services = await this.jobsClient.listJobs();
 
       loadingState.style.display = "none";
 
@@ -87,7 +87,7 @@ class AdminServicesPage {
     gridContainer.style.display = "block";
 
     servicesGrid.innerHTML = this.services
-      .map((service, index) => this.createServiceCard(service, index))
+      .map((service, index) => this.createJobCard(service, index))
       .join("");
 
     this.attachCardEventListeners();
@@ -95,7 +95,7 @@ class AdminServicesPage {
 
 
 
-  createServiceCard(service: Service, index: number): string {
+  createJobCard(service: Service, index: number): string {
     return `
       <div class="service-card" data-id="${service.id}" style="animation-delay: ${index * 100}ms">
         <div class="service-card-header">
@@ -276,9 +276,9 @@ class AdminServicesPage {
         submitBtn.textContent = "Salvando...";
 
         if (this.editingServiceId) {
-          await this.jobsClient.updateService(this.editingServiceId, data);
+          await this.jobsClient.updateJob(this.editingServiceId, data);
         } else {
-          await this.jobsClient.createService(data);
+          await this.jobsClient.createJob(data);
         }
 
         this.closeModal();
@@ -327,7 +327,7 @@ class AdminServicesPage {
     if (!service) return;
 
     const modal = document.getElementById("deleteModal");
-    const serviceName = document.getElementById("deleteServiceName");
+    const serviceName = document.getElementById("deleteJobName");
 
     if (!modal || !serviceName) return;
 
@@ -354,7 +354,7 @@ class AdminServicesPage {
       confirmBtn.disabled = true;
       confirmBtn.textContent = "Excluindo...";
 
-      await this.jobsClient.deleteService(this.deletingServiceId);
+      await this.jobsClient.deleteJob(this.deletingServiceId);
 
       this.closeDeleteModal();
       await this.loadServices();

@@ -1,0 +1,58 @@
+@baseUrl = http://localhost:3333
+@authToken = {{login.response.body.token}}
+
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "123456"
+}
+
+###
+
+# Create Pet
+# @name createPet
+POST {{baseUrl}}/api/pets
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Rex",
+  "species": "Cachorro",
+  "breed": "Golden Retriever",
+  "age": 3,
+  "weight": 25.5
+}
+
+###
+
+# List Pets
+# @name listPets
+GET {{baseUrl}}/api/pets
+Authorization: Bearer {{authToken}}
+
+###
+
+# Get Pet ID from the list to test update and delete
+@petId = {{listPets.response.body[0].id}}
+
+# Update Pet
+PUT {{baseUrl}}/api/pets/{{petId}}
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Rex Editado",
+  "species": "Cachorro",
+  "breed": "Golden Retriever",
+  "age": 4,
+  "weight": 26.0
+}
+
+###
+
+# Delete Pet
+DELETE {{baseUrl}}/api/pets/{{petId}}
+Authorization: Bearer {{authToken}}

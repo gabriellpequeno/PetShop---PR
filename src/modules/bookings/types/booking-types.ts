@@ -12,6 +12,7 @@ export interface IBooking {
 
 export interface IBookingCreate {
     userId: string;
+    userRole: string;
     petId: string;
     jobId: string;
     bookingDate: string;

@@ -1,5 +1,15 @@
 import { ApiConsumer } from './api-consumer';
 
+export interface Pet {
+  id: string
+  name: string
+  species: string
+  breed: string
+  age: number
+  weight?: number
+  userId: string
+}
+
 export class PetsClient extends ApiConsumer {
   async listPets() {
     const response = await fetch(`${ApiConsumer.BASE_URL}/pets`, {

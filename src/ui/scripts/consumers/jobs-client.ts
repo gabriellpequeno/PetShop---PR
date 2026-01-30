@@ -1,7 +1,7 @@
 export class JobsClient {
   private baseUrl = '/api/jobs';
 
-  async listServices() {
+  async listJobs() {
     const response = await fetch(this.baseUrl, {
       method: 'GET',
       credentials: 'include',
@@ -14,7 +14,7 @@ export class JobsClient {
     return response.json();
   }
 
-  async createService(data: {
+  async createJob(data: {
     name: string;
     description: string;
     priceP: number;
@@ -38,7 +38,7 @@ export class JobsClient {
     return response.json();
   }
 
-  async updateService(
+  async updateJob(
     id: string,
     data: {
       name?: string;
@@ -65,7 +65,7 @@ export class JobsClient {
     return response.json();
   }
 
-  async deleteService(id: string) {
+  async deleteJob(id: string) {
     const response = await fetch(`${this.baseUrl}/${id}`, {
       method: 'DELETE',
       credentials: 'include',
