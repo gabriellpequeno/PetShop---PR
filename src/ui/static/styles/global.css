@@ -462,7 +462,28 @@ button {
   opacity: 0.6;
 }
 
-/* Animations */
+input.has-error,
+textarea.has-error,
+select.has-error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.06);
+}
+
+.form-error {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.form-error::before {
+  content: "⚠️";
+  margin-right: 0.5rem;
+  display: inline-block;
+  transform: translateY(-1px);
+  font-size: 0.9rem;
+}
+
 @keyframes fade-in-up {
   from {
     opacity: 0;
