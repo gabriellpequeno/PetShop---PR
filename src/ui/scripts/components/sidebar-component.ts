@@ -18,7 +18,7 @@ interface NavigationItem {
 const CUSTOMER_NAV_ITEMS: NavigationItem[] = [
   { slug: 'profile', label: 'Perfil', icon: 'user', href: '/pages/profile.html' },
   { slug: 'pets', label: 'Meus Pets', icon: 'dog', href: '/pages/pets.html' },
-  { slug: 'agenda', label: 'Agenda', icon: 'calendar', href: '#' },
+  { slug: 'agenda', label: 'Agenda', icon: 'calendar', href: '/pages/booking.html' },
 ]
 
 const ADMIN_NAV_ITEMS: NavigationItem[] = [
