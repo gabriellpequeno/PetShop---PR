@@ -19,19 +19,19 @@
     <!-- Styles -->
     <link rel="stylesheet" href="../styles/global.css" />
     <link rel="stylesheet" href="../styles/pets.css" />
-    <link rel="stylesheet" href="../styles/admin-services.css" />
+    <link rel="stylesheet" href="../styles/jobs.css" />
 
     <!-- Scripts -->
     <script
-      src="/scripts/components/admin-sidebar-component.js"
+      src="/scripts/components/sidebar-component.js"
       type="module"
     ></script>
-    <script src="/scripts/pages/admin-services.js" type="module"></script>
+    <script src="/scripts/pages/jobs-page.js" type="module"></script>
   </head>
   <body>
     <div class="dashboard-container">
       <!-- Admin Sidebar Component -->
-      <admin-sidebar active="services"></admin-sidebar>
+      <petshop-sidebar active="services"></petshop-sidebar>
 
       <!-- Main Content -->
       <main class="main-content">
@@ -135,6 +135,7 @@
               placeholder="Descreva o serviço oferecido..."
               rows="3"
               maxlength="500"
+              style="resize: vertical;"
             ></textarea>
           </div>
 
