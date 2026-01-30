@@ -118,6 +118,17 @@
           </div>
         </div>
 
+        <div class="row" style="display: flex; gap: 1rem;">
+          <div class="form-group" style="flex: 1;">
+            <label>Porte</label>
+            <select name="size" required>
+              <option value="P">Pequeno (P)</option>
+              <option value="M" selected>Médio (M)</option>
+              <option value="G">Grande (G)</option>
+            </select>
+          </div>
+        </div>
+
         <button type="submit" class="btn btn-primary btn-block" style="margin-top: 1rem;">Salvar Pet</button>
       </form>
     </div>
@@ -157,6 +168,12 @@
               style="font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 0.25rem; opacity: 0.7;">
               Idade</p>
             <p id="detailPetAge" style="font-weight: 700; color: #1e293b; font-size: 1.1rem;">5 anos</p>
+          </div>
+          <div>
+            <p
+              style="font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 0.25rem; opacity: 0.7;">
+              Porte</p>
+            <p id="detailPetSize" style="font-weight: 700; color: #1e293b; font-size: 1.1rem;">Médio</p>
           </div>
         </div>
       </div>

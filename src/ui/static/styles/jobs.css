@@ -253,6 +253,28 @@
   box-shadow: 0 0 0 3px rgba(12, 78, 90, 0.05); /* Using secondary color trace */
 }
 
+/* Input with icon */
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon .input-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon input,
+.input-with-icon select {
+  padding-left: 2.5rem;
+}
+
 /* Buttons */
 .btn {
   border-radius: 0.5rem;
@@ -276,6 +298,114 @@
 
 .btn-lg {
   padding: 0.75rem 1.5rem;
+}
+
+/* Availability Grid */
+.availability-grid {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+}
+
+.availability-header {
+  display: grid;
+  grid-template-columns: 120px 1fr 1fr 40px;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 0.5rem;
+}
+
+.avail-day-label,
+.avail-time-label,
+.avail-action-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.availability-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 1fr 40px;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  transition: all 0.2s;
+}
+
+.availability-row:last-child {
+  border-bottom: none;
+}
+
+.availability-row:hover {
+  background: white;
+  margin: 0 -0.5rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.avail-day {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--secondary);
+}
+
+.avail-day input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.avail-day span {
+  font-size: 0.9375rem;
+}
+
+.avail-time-input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--secondary);
+  background: white;
+  transition: all 0.2s;
+}
+
+.avail-time-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.15);
+}
+
+.avail-time-input:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.availability-row:has(input[type="checkbox"]:not(:checked)) .avail-time-input {
+  opacity: 0.5;
+}
+
+.avail-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  transition: all 0.2s;
+}
+
+.availability-row:has(input[type="checkbox"]:checked) .avail-status {
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
 /* Responsive */
@@ -305,6 +435,32 @@
     width: 100%;
     justify-content: center;
     padding: 0.875rem;
+  }
+
+  .availability-grid {
+    padding: 0.75rem;
+  }
+
+  .availability-header {
+    display: none;
+  }
+
+  .availability-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    border: 1px solid #e2e8f0;
+  }
+
+  .availability-row:hover {
+    margin: 0 0 0.5rem 0;
+  }
+
+  .avail-day {
+    justify-content: space-between;
   }
 }
 
