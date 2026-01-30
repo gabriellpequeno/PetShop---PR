@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meu Painel | Little's Petshop</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/customer-dashboard.css" />
+
+  <!-- Scripts -->
+  <script src="/scripts/components/sidebar-component.js" type="module"></script>
+  <script src="/scripts/pages/customer-dashboard-page.js" type="module"></script>
+</head>
+
+<body>
+
+  <div class="dashboard-container">
+    <petshop-sidebar active="dashboard"></petshop-sidebar>
+
+    <main class="main-content">
+      <!-- Header -->
+      <header class="dashboard-header">
+        <div class="header-content">
+          <h1 class="page-title">Olá, <span id="userName">Visitante</span>! 👋</h1>
+          <p class="page-subtitle" id="currentDateTime">Carregando...</p>
+        </div>
+      </header>
+
+      <!-- Dashboard Cards Grid -->
+      <div class="cards-grid">
+
+        <!-- Meus Pets Card -->
+        <section class="dashboard-card pets-card">
+          <div class="card-header">
+            <div class="card-icon pets">
+              <i data-lucide="dog"></i>
+            </div>
+            <div class="card-title-area">
+              <h2 class="card-title">Meus Pets</h2>
+              <span class="card-count" id="petsCount">0 pets</span>
+            </div>
+          </div>
+
+          <div class="card-body" id="petsCardBody">
+            <div class="loading-state">
+              <i data-lucide="loader-2" class="animate-spin"></i>
+              <span>Carregando pets...</span>
+            </div>
+          </div>
+
+          <a href="/pages/pets.html" class="card-link">
+            <span>Ver todos os pets</span>
+            <i data-lucide="arrow-right"></i>
+          </a>
+        </section>
+
+        <!-- Minha Agenda Card -->
+        <section class="dashboard-card agenda-card">
+          <div class="card-header">
+            <div class="card-icon agenda">
+              <i data-lucide="calendar"></i>
+            </div>
+            <div class="card-title-area">
+              <h2 class="card-title">Minha Agenda</h2>
+              <span class="card-count" id="bookingsCount">0 agendamentos</span>
+            </div>
+          </div>
+
+          <div class="card-body" id="agendaCardBody">
+            <div class="loading-state">
+              <i data-lucide="loader-2" class="animate-spin"></i>
+              <span>Carregando agendamentos...</span>
+            </div>
+          </div>
+
+          <a href="/pages/booking.html" class="card-link">
+            <span>Ver agenda completa</span>
+            <i data-lucide="arrow-right"></i>
+          </a>
+        </section>
+
+        <!-- Serviços Disponíveis Card -->
+        <section class="dashboard-card services-card">
+          <div class="card-header">
+            <div class="card-icon services">
+              <i data-lucide="sparkles"></i>
+            </div>
+            <div class="card-title-area">
+              <h2 class="card-title">Serviços Disponíveis</h2>
+              <span class="card-count" id="servicesCount">0 serviços</span>
+            </div>
+          </div>
+
+          <div class="card-body" id="servicesCardBody">
+            <div class="loading-state">
+              <i data-lucide="loader-2" class="animate-spin"></i>
+              <span>Carregando serviços...</span>
+            </div>
+          </div>
+
+          <a href="/pages/booking.html" class="card-link">
+            <span>Agendar serviço</span>
+            <i data-lucide="arrow-right"></i>
+          </a>
+        </section>
+
+      </div>
+
+      <!-- Quick Actions -->
+      <section class="quick-actions">
+        <h3 class="section-title">Ações Rápidas</h3>
+        <div class="actions-grid">
+          <a href="/pages/pets.html" class="action-btn">
+            <i data-lucide="plus-circle"></i>
+            <span>Cadastrar Pet</span>
+          </a>
+          <a href="/pages/booking.html" class="action-btn">
+            <i data-lucide="calendar-plus"></i>
+            <span>Novo Agendamento</span>
+          </a>
+          <a href="/pages/profile.html" class="action-btn">
+            <i data-lucide="user-cog"></i>
+            <span>Editar Perfil</span>
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+
+</html>
