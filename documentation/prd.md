@@ -1,8 +1,8 @@
-# Product Requirements Document (PRD) — Little Pets
+# Product Requirements Document (PRD) — Little's Petshop
 
 ## 1. Introdução e Objetivo
 
-O **Little Pets** é um sistema gerenciador de informações para um PetShop. O objetivo é fornecer uma plataforma onde clientes podem cadastrar seus pets e agendar serviços (banho, tosa, etc.), enquanto a administração gerencia o catálogo de serviços e o fluxo de atendimentos.
+O **Little's Petshop** é um sistema gerenciador de informações para um PetShop. O objetivo é fornecer uma plataforma onde clientes podem cadastrar seus pets e agendar serviços (banho, tosa, etc.), enquanto a administração gerencia o catálogo de serviços e o fluxo de atendimentos.
 O projeto consiste em uma **API REST** (Back-end) e uma interface web simples (Front-end).
 
 ## 2. Escopo do Projeto
@@ -85,7 +85,7 @@ O sistema possui dois níveis de acesso baseados em roles (funções).
 ### 4.4. Módulo de Serviços (Services)
 
 * 
-**RF07 - Gestão de Serviços:** O Administrador deve cadastrar serviços contendo: Título, Descrição, Preço, Duração Estimada e Capacidade Máxima.
+**RF07 - Gestão de Serviços:** O Administrador deve cadastrar serviços contendo: Título, Descrição, Preços por porte (P/M/G), Duração Estimada e Disponibilidade semanal (dias/horários).
 
 
 * 
@@ -104,8 +104,7 @@ O sistema possui dois níveis de acesso baseados em roles (funções).
 
 
 * 
-**RF11 - Controle de Vagas:** O sistema deve impedir agendamento se a capacidade máxima do serviço for atingida.
-
+**RF11 - Controle de Disponibilidade:** O sistema deve impedir agendamento fora dos períodos disponíveis (validados por `job_availability`) e prevenir duplicidade de agendamento por pet/serviço/horário.
 
 * 
 **RF12 - Registro de Execução:** O Administrador deve registrar a data/hora real de início e término do serviço prestado.
@@ -150,7 +149,7 @@ O sistema possui dois níveis de acesso baseados em roles (funções).
 
 
 * 
-**Testes:** Testes unitários cobrindo regras de negócio críticas usando Mocha e Chai (ou similar).
+**Testes:** Testes unitários cobrindo regras de negócio críticas usando **Vitest**.
 
 
 * 
@@ -163,30 +162,33 @@ O sistema possui dois níveis de acesso baseados em roles (funções).
 
 ---
 
-## 7. Modelo de Dados Sugerido (Schema SQLite)
+## 7. Modelo de Dados Atual (SQLite)
 
-Para atender ao requisito de banco de dados relacional e ao contexto de PetShop:
+O schema atual usado no projeto corresponde às tabelas criadas em `src/database/tables.ts`:
 
-* **Users:** `id, name, email, password, role ('admin'|'customer')`
-* **Pets:** `id, user_id (FK), name, species, breed, age, weight`
-* **Services:** `id, name, description, price, duration_min, max_capacity`
-* **Bookings:** `id, user_id (FK), pet_id (FK), service_id (FK), scheduled_date, status ('agendado'|'concluido'|'cancelado'), real_start_time, real_end_time`
+* **users:** `id TEXT PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL, password TEXT NOT NULL, role TEXT NOT NULL, phone TEXT, location TEXT, birth_date TEXT`
+* **pets:** `id TEXT PRIMARY KEY, userId TEXT NOT NULL, name TEXT NOT NULL, species TEXT NOT NULL, breed TEXT NOT NULL, age INTEGER NOT NULL, weight REAL NOT NULL, size TEXT NOT NULL DEFAULT 'M'`  (FK: `userId` → `users.id`)
+* **jobs (serviços):** `id TEXT PRIMARY KEY, name TEXT NOT NULL, description TEXT, priceP REAL NOT NULL, priceM REAL NOT NULL, priceG REAL NOT NULL, duration INTEGER NOT NULL` — preços por porte (P/M/G) e duração em minutos
+* **job_availability:** `id TEXT PRIMARY KEY, jobId TEXT NOT NULL, dayOfWeek INTEGER NOT NULL, startTime TEXT NOT NULL, endTime TEXT NOT NULL` — disponibilidade semanal por serviço
+* **bookings:** `id TEXT PRIMARY KEY, userId TEXT NOT NULL, petId TEXT NOT NULL, jobId TEXT NOT NULL, bookingDate TEXT NOT NULL, bookingTime TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'agendado', price REAL NOT NULL DEFAULT 0, realStartTime TEXT, realEndTime TEXT, createdAt TEXT NOT NULL`
 
 ---
 
-## 8. Definição de Rotas da API (Sugestão Inicial)
+## 8. Definição de Rotas da API 
 
 ### Auth
 
 * `POST /api/auth/register` - Cria conta
-* `POST /api/auth/login` - Gera Token
+* `POST /api/auth/login` - Gera Token (retorna token e seta cookie `token`)
+* `POST /api/auth/logout` - Logout e limpeza de cookie
 
-### Services (Protegido: Admin escreve, Todos leem)
+### Jobs / Services (Protegido: Admin escreve, Todos leem)
 
-* `GET /api/services` - Lista serviços
-* `POST /api/services` - Cria serviço (Admin)
-* `PUT /api/services/:id` - Edita serviço (Admin)
-* `DELETE /api/services/:id` - Remove serviço (Admin)
+* `GET /api/jobs` - Lista todos os serviços
+* `GET /api/jobs/available` - Lista serviços disponíveis (por usuário/rota que requer autenticação)
+* `POST /api/jobs` - Cria serviço (Admin)
+* `PUT /api/jobs/:id` - Edita serviço (Admin)
+* `DELETE /api/jobs/:id` - Remove serviço (Admin)
 
 ### Pets (Protegido: Dono gerencia os seus)
 
@@ -197,11 +199,11 @@ Para atender ao requisito de banco de dados relacional e ao contexto de PetShop:
 
 ### Bookings (Protegido)
 
-* `POST /api/bookings` - Agenda serviço (Valida vaga e token)
-* `GET /api/bookings` - Lista meus agendamentos (Admin vê todos)
+* `POST /api/bookings` - Agenda serviço (valida disponibilidade e duplicidade)
+* `GET /api/bookings` - Lista agendamentos (Admin vê todos; usuário vê os seus)
+* `GET /api/bookings/occupied-slots` - Retorna slots ocupados para uma data
 * `PATCH /api/bookings/:id/cancel` - Cancela (User/Admin)
-* 
-`PATCH /api/bookings/:id/complete` - Registra horários reais (Admin) 
+* `PATCH /api/bookings/:id/complete` - Registra horários reais (Admin)
 
 ---
 

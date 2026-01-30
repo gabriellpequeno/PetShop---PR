@@ -2,9 +2,9 @@
 
 ## 1. Visão Geral
 
-O projeto **PetShop** é uma aplicação web full-stack desenvolvida com foco em simplicidade, performance e modularidade. A arquitetura segue uma abordagem de **Monólito Modular**, onde o backend e o frontend coexistem no mesmo repositório e compartilham a infraestrutura de execução, mas mantêm uma separação clara de responsabilidades por domínios de negócio.
+O projeto **PetShop** é uma aplicação web full-stack desenvolvida com foco em simplicidade, performance e modularidade. A arquitetura segue uma abordagem de **Monólito Modular**, onde o backend e o frontend coexistem no mesmo repositório e compartilham a infraestrutura de execução, mas mantêm uma separação clara de responsabilidades por domínios de negócio. O `package.json` declara workspaces (`backend`, `frontend`) que facilitam a separação futura em um monorepo; no estado atual do repositório o código está organizado principalmente em um único package sob `src/`.
 
-A aplicação utiliza **Node.js** com **Express** para o servidor backend e **SQLite** como banco de dados. O frontend é construído com **HTML/CSS** e **TypeScript** vanilla, utilizando um middleware customizado para transpilação on-the-fly de assets, eliminando a necessidade de um passo de build complexo separado para o frontend durante o desenvolvimento.
+A aplicação utiliza **Node.js** com **Express** para o servidor backend e **SQLite** como banco de dados. O frontend é construído com **HTML/CSS** e **TypeScript** vanilla, utilizando um middleware customizado para transpilação on-the-fly de assets, eliminando a necessidade de um passo de build complexo separado para o frontend durante o desenvolvimento. As datas e timestamps são tratados em formato ISO 8601 (UTC) internamente; conversões para timezone local (ex.: America/Sao_Paulo) são feitas no momento da exibição quando necessário.
 
 ## 2. Tecnologias
 
@@ -164,4 +164,3 @@ A qualidade é garantida principalmente através de testes unitários focados na
     - **Testes de Integração:** (Opcional/Futuro) Para rotas e comunicação real com banco de dados.
 
 ---
-*Documentação gerada automaticamente por Antigravity (AI Architect Agent) em 27/01/2026.*
