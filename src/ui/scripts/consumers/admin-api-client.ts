@@ -19,6 +19,8 @@ export interface UserListItem {
     name: string
     nextService: string | null
     nextServiceTime: string | null
+    nextPetName: string | null
+    nextPetSpecies: string | null
     petsCount: number
 }
 
@@ -36,6 +38,7 @@ export interface BookingListItem {
     petName: string
     tutorName: string
     bookingDate: string
+    status: string
 }
 
 export type DashboardPeriod = 'today' | 'week' | 'month'
@@ -67,8 +70,8 @@ export class AdminApiClient extends ApiConsumer {
         return response.json()
     }
 
-    async getUsersList(): Promise<UserListItem[]> {
-        const response = await fetch(`${ApiConsumer.BASE_URL}/admin/users-list`, {
+    async getUsersList(hasService: 'all' | 'with_service' = 'all'): Promise<UserListItem[]> {
+        const response = await fetch(`${ApiConsumer.BASE_URL}/admin/users-list?hasService=${hasService}`, {
             method: 'GET',
             headers: this.getHeaders()
         })
@@ -80,8 +83,8 @@ export class AdminApiClient extends ApiConsumer {
         return response.json()
     }
 
-    async getPetsList(): Promise<PetListItem[]> {
-        const response = await fetch(`${ApiConsumer.BASE_URL}/admin/pets-list`, {
+    async getPetsList(hasService: 'all' | 'with_service' = 'all'): Promise<PetListItem[]> {
+        const response = await fetch(`${ApiConsumer.BASE_URL}/admin/pets-list?hasService=${hasService}`, {
             method: 'GET',
             headers: this.getHeaders()
         })
@@ -93,8 +96,8 @@ export class AdminApiClient extends ApiConsumer {
         return response.json()
     }
 
-    async getBookingsList(): Promise<BookingListItem[]> {
-        const response = await fetch(`${ApiConsumer.BASE_URL}/admin/bookings-list`, {
+    async getBookingsList(filter: 'upcoming' | 'completed' = 'upcoming', status: 'all' | 'active' | 'cancelled' = 'all'): Promise<BookingListItem[]> {
+        const response = await fetch(`${ApiConsumer.BASE_URL}/admin/bookings-list?filter=${filter}&status=${status}`, {
             method: 'GET',
             headers: this.getHeaders()
         })
