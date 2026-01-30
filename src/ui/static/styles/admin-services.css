@@ -21,7 +21,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Empty State */
@@ -336,7 +338,9 @@
   border-radius: 0.75rem;
   font-family: var(--font-body);
   font-size: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .form-group textarea {
@@ -384,6 +388,15 @@
 }
 
 /* Responsive */
+
+/* Tablet e Desktop Pequeno */
+@media (max-width: 1024px) {
+  .main-content {
+    margin-left: 220px;
+  }
+}
+
+/* Tablet */
 @media (max-width: 900px) {
   .services-grid {
     grid-template-columns: 1fr;
@@ -403,13 +416,46 @@
   }
 
   .service-card-prices {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
+/* Mobile */
 @media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding: 5rem 1.5rem 1.5rem;
+    width: 100%;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .page-header .btn {
+    width: 100%;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .toggle-group {
+    width: 100%;
+    display: flex;
+  }
+
+  .toggle-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
   .modal-content {
     padding: 1.5rem;
+    width: 95%;
+    max-height: 85vh;
   }
 
   .service-card-header {
@@ -420,5 +466,85 @@
   .service-card-actions {
     width: 100%;
     justify-content: flex-end;
+  }
+
+  .service-card-prices {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .loading-container,
+  .empty-state {
+    padding: 3rem 1.5rem;
+  }
+}
+
+/* Mobile Pequeno */
+@media (max-width: 600px) {
+  .service-card-prices {
+    grid-template-columns: 1fr;
+  }
+
+  .service-list-prices .price-badge {
+    flex: 1;
+    min-width: 80px;
+  }
+}
+
+/* Mobile Extra Pequeno */
+@media (max-width: 480px) {
+  .main-content {
+    padding: 4.5rem 1rem 1rem;
+  }
+
+  .page-title {
+    font-size: 1.25rem;
+  }
+
+  .service-card {
+    padding: 1.25rem;
+    border-radius: 1rem;
+  }
+
+  .service-card-title {
+    font-size: 1.125rem;
+  }
+
+  .modal-content {
+    padding: 1.25rem;
+    border-radius: 1rem;
+  }
+
+  .modal-content h2 {
+    font-size: 1.25rem;
+    padding-right: 2rem;
+  }
+
+  .price-badge {
+    padding: 0.5rem;
+  }
+
+  .price-badge-value {
+    font-size: 1rem;
+  }
+
+  .price-row {
+    gap: 0.75rem;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.9375rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .icon-btn {
+    width: 40px;
+    height: 40px;
   }
 }
