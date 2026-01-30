@@ -183,9 +183,18 @@ class AdminPetsPage {
     });
   }
 
+
   private async loadPets() {
-    const search = this.searchInput?.value || "";
+    let search = this.searchInput?.value || "";
     const userId = this.userFilter?.value || "";
+
+    // Map Portuguese terms to English species
+    const lowerSearch = search.toLowerCase().trim();
+    if (['gato', 'gatos'].includes(lowerSearch)) {
+      search = 'cat';
+    } else if (['cachorro', 'cachorros'].includes(lowerSearch)) {
+      search = 'dog';
+    }
 
     const params = new URLSearchParams();
     if (search) params.append("search", search);
