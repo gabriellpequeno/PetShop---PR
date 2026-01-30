@@ -7,6 +7,7 @@ export interface PetWithOwner {
   breed: string | null
   age: number | null
   weight: number | null
+  size: 'P' | 'M' | 'G'
   userId: string
   ownerName: string
   ownerEmail: string
@@ -33,6 +34,7 @@ export class AdminPetsRepository {
         p.breed,
         p.age,
         p.weight,
+        p.size,
         p.userId,
         u.name as ownerName,
         u.email as ownerEmail

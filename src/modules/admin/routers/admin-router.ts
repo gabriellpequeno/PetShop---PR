@@ -3,6 +3,7 @@ import { EnsureAuthenticationMiddleware } from '@/middlewares/ensure-authenticat
 import { EnsureAdminMiddleware } from '@/middlewares/ensure-admin-middleware'
 import { RenderAdminDashboardController } from '../controllers/render-admin-dashboard-controller'
 import { RenderAdminPetsController } from '../controllers/render-admin-pets-controller'
+import { RenderAdminBookingsController } from '../controllers/render-admin-bookings-controller'
 import { DashboardSummaryController } from '../controllers/dashboard-summary-controller'
 import { UsersSummaryController } from '../controllers/users-summary-controller'
 import { UsersListController } from '../controllers/users-list-controller'
@@ -19,6 +20,7 @@ adminRouter.use(EnsureAdminMiddleware.handle)
 // Páginas do Admin
 adminRouter.get('/admin/dashboard', RenderAdminDashboardController.handle)
 adminRouter.get('/admin/pets', RenderAdminPetsController.handle)
+adminRouter.get('/admin/bookings', RenderAdminBookingsController.handle)
 
 // API endpoints - Dashboard
 adminRouter.get('/api/admin/dashboard-summary', DashboardSummaryController.handle)

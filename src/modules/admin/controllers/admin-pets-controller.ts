@@ -29,7 +29,7 @@ export class AdminPetsController {
 
   static async update(request: Request, response: Response) {
     const id = request.params.id as string
-    const { name, species, breed, age, weight } = request.body
+    const { name, species, breed, age, weight, size } = request.body
 
     if (!id) {
       throw new BadRequestError('ID do pet é obrigatório')
@@ -47,7 +47,8 @@ export class AdminPetsController {
       species: species ?? existingPet.species,
       breed: breed ?? existingPet.breed,
       age: age ?? existingPet.age,
-      weight: weight ?? existingPet.weight
+      weight: weight ?? existingPet.weight,
+      size: size ?? existingPet.size
     })
 
     return response.json({ message: 'Pet atualizado com sucesso' })
