@@ -9,7 +9,7 @@ interface Pet {
   breed: string;
   age: number;
   weight: number;
-  size: 'P' | 'M' | 'G';
+  size: "P" | "M" | "G";
 }
 
 class PetsPage {
@@ -24,7 +24,7 @@ class PetsPage {
     this.init();
   }
 
-  private currentFilter: 'Mensal' | 'Diário' = 'Mensal';
+  private currentFilter: "Mensal" | "Diário" = "Mensal";
   private bookingToCancel: string | null = null;
 
   async init() {
@@ -57,18 +57,18 @@ class PetsPage {
   }
 
   setupFilters() {
-    const toggles = document.querySelectorAll('.toggle-btn');
-    toggles.forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    const toggles = document.querySelectorAll(".toggle-btn");
+    toggles.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
         // Remove active class from all
-        toggles.forEach(t => t.classList.remove('active'));
+        toggles.forEach((t) => t.classList.remove("active"));
 
         // Add to clicked
         const target = e.target as HTMLElement;
-        target.classList.add('active');
+        target.classList.add("active");
 
         // Update state
-        this.currentFilter = target.textContent?.trim() as 'Mensal' | 'Diário';
+        this.currentFilter = target.textContent?.trim() as "Mensal" | "Diário";
 
         // Reload schedule
         this.loadSchedule();
@@ -82,40 +82,54 @@ class PetsPage {
 
     try {
       const bookings = await this.bookingsClient.listUserBookings();
-      scheduleContainer.innerHTML = ''; // Safe clear
+      scheduleContainer.innerHTML = ""; // Safe clear
 
       // Filter bookings based on currentFilter
       const now = new Date();
       const filteredBookings = bookings.filter((booking: any) => {
-        const date = new Date(booking.bookingDate);
+        // Parse YYYY-MM-DD format properly to avoid timezone issues
+        const parts = booking.bookingDate.split("-");
+        const bookingYear = parseInt(parts[0], 10);
+        const bookingMonth = parseInt(parts[1], 10) - 1; // 0-indexed
+        const bookingDay = parseInt(parts[2], 10);
 
-        if (this.currentFilter === 'Diário') {
-          return date.getDate() === now.getDate() &&
-            date.getMonth() === now.getMonth() &&
-            date.getFullYear() === now.getFullYear();
+        if (this.currentFilter === "Diário") {
+          return (
+            bookingDay === now.getDate() &&
+            bookingMonth === now.getMonth() &&
+            bookingYear === now.getFullYear()
+          );
         } else {
           // Mensal (current month)
-          return date.getMonth() === now.getMonth() &&
-            date.getFullYear() === now.getFullYear();
+          return (
+            bookingMonth === now.getMonth() && bookingYear === now.getFullYear()
+          );
         }
       });
 
-      // Sort bookings by date
-      filteredBookings.sort((a: any, b: any) => new Date(a.bookingDate).getTime() - new Date(b.bookingDate).getTime());
+      // Sort bookings by date and time
+      filteredBookings.sort((a: any, b: any) => {
+        const dateCompare = a.bookingDate.localeCompare(b.bookingDate);
+        if (dateCompare !== 0) return dateCompare;
+        // If same date, sort by time
+        return (a.bookingTime || "00:00").localeCompare(
+          b.bookingTime || "00:00",
+        );
+      });
 
       if (filteredBookings.length === 0) {
-        const emptyDiv = document.createElement('div');
-        emptyDiv.className = 'empty-schedule';
+        const emptyDiv = document.createElement("div");
+        emptyDiv.className = "empty-schedule";
 
-        const i = document.createElement('i');
-        i.setAttribute('data-lucide', 'calendar');
-        i.style.width = '32px';
-        i.style.height = '32px';
-        i.style.opacity = '0.5';
+        const i = document.createElement("i");
+        i.setAttribute("data-lucide", "calendar");
+        i.style.width = "32px";
+        i.style.height = "32px";
+        i.style.opacity = "0.5";
 
-        const p = document.createElement('p');
+        const p = document.createElement("p");
         p.textContent = `Sem agendamentos (${this.currentFilter.toLowerCase()})`;
-        p.style.fontWeight = '500';
+        p.style.fontWeight = "500";
 
         emptyDiv.append(i, p);
         scheduleContainer.appendChild(emptyDiv);
@@ -128,40 +142,60 @@ class PetsPage {
       const fragment = document.createDocumentFragment();
 
       filteredBookings.forEach((booking: any) => {
-        const date = new Date(booking.bookingDate);
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = date.toLocaleString('pt-BR', { month: 'short' }).toUpperCase().replace('.', '');
-        const time = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        // Parse bookingDate (format: YYYY-MM-DD)
+        const dateParts = booking.bookingDate.split("-");
+        const year = parseInt(dateParts[0], 10);
+        const monthIndex = parseInt(dateParts[1], 10) - 1; // 0-indexed
+        const dayNum = parseInt(dateParts[2], 10);
 
-        // Calculate end time (assume 1h 30m)
-        let endTime = '';
+        const date = new Date(year, monthIndex, dayNum);
+        const day = dayNum.toString().padStart(2, "0");
+        const month = date
+          .toLocaleString("pt-BR", { month: "short" })
+          .toUpperCase()
+          .replace(".", "");
+
+        // Use bookingTime directly (format: HH:MM)
+        const time = booking.bookingTime || "00:00";
+
+        // Calculate end time using jobDuration (in minutes) or default 90 min
+        let endTime = "";
         if (booking.realEndTime) {
-          endTime = new Date(booking.realEndTime).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+          const realEnd = new Date(booking.realEndTime);
+          endTime = realEnd.toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
         } else {
-          const end = new Date(date.getTime() + 90 * 60000);
-          endTime = end.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+          const [hours, minutes] = time.split(":").map(Number);
+          const duration = booking.jobDuration || 90; // Use job duration or default 90 min
+          const startMinutes = hours * 60 + minutes;
+          const endMinutes = startMinutes + duration;
+          const endHours = Math.floor(endMinutes / 60) % 24;
+          const endMins = endMinutes % 60;
+          endTime = `${endHours.toString().padStart(2, "0")}:${endMins.toString().padStart(2, "0")}`;
         }
 
-        const item = document.createElement('div');
-        item.className = 'schedule-item';
-        item.style.position = 'relative'; // For absolute positioning of cancel button
+        const item = document.createElement("div");
+        item.className = "schedule-item";
+        item.style.position = "relative"; // For absolute positioning of cancel button
 
         // Cancel Button (X)
-        if (booking.status === 'agendado') {
-          const cancelBtn = document.createElement('button');
-          cancelBtn.innerHTML = '&times;';
-          cancelBtn.style.position = 'absolute';
-          cancelBtn.style.top = '0.5rem';
-          cancelBtn.style.right = '0.5rem';
-          cancelBtn.style.background = 'transparent';
-          cancelBtn.style.border = 'none';
-          cancelBtn.style.fontSize = '1.25rem';
-          cancelBtn.style.color = '#999';
-          cancelBtn.style.cursor = 'pointer';
-          cancelBtn.style.lineHeight = '1';
-          cancelBtn.title = 'Cancelar agendamento';
+        if (booking.status === "agendado") {
+          const cancelBtn = document.createElement("button");
+          cancelBtn.innerHTML = "&times;";
+          cancelBtn.style.position = "absolute";
+          cancelBtn.style.top = "0.5rem";
+          cancelBtn.style.right = "0.5rem";
+          cancelBtn.style.background = "transparent";
+          cancelBtn.style.border = "none";
+          cancelBtn.style.fontSize = "1.25rem";
+          cancelBtn.style.color = "#999";
+          cancelBtn.style.cursor = "pointer";
+          cancelBtn.style.lineHeight = "1";
+          cancelBtn.title = "Cancelar agendamento";
 
-          cancelBtn.addEventListener('click', (e) => {
+          cancelBtn.addEventListener("click", (e) => {
             e.stopPropagation();
             this.openCancelModal(booking.id);
           });
@@ -169,41 +203,41 @@ class PetsPage {
           item.appendChild(cancelBtn);
         }
 
-        const dateBox = document.createElement('div');
-        dateBox.className = 'date-box';
+        const dateBox = document.createElement("div");
+        dateBox.className = "date-box";
 
-        const monthSpan = document.createElement('span');
-        monthSpan.className = 'month';
+        const monthSpan = document.createElement("span");
+        monthSpan.className = "month";
         monthSpan.textContent = month;
 
-        const daySpan = document.createElement('span');
-        daySpan.className = 'day';
+        const daySpan = document.createElement("span");
+        daySpan.className = "day";
         daySpan.textContent = day;
 
         dateBox.append(monthSpan, daySpan);
 
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'schedule-info';
+        const infoDiv = document.createElement("div");
+        infoDiv.className = "schedule-info";
 
-        const h4 = document.createElement('h4');
-        h4.textContent = booking.jobName || 'Tosa Higiênica';
+        const h4 = document.createElement("h4");
+        h4.textContent = booking.jobName || "Tosa Higiênica";
 
-        const p = document.createElement('p');
+        const p = document.createElement("p");
 
-        const clockIcon = document.createElement('i');
-        clockIcon.setAttribute('data-lucide', 'clock');
-        clockIcon.style.width = '14px';
-        clockIcon.style.height = '14px';
+        const clockIcon = document.createElement("i");
+        clockIcon.setAttribute("data-lucide", "clock");
+        clockIcon.style.width = "14px";
+        clockIcon.style.height = "14px";
 
         // Using text content safely
-        const textSpan = document.createElement('span');
-        textSpan.textContent = ` ${time} - ${endTime} • Pet: ${booking.petName || 'Pet'}`;
+        const textSpan = document.createElement("span");
+        textSpan.textContent = ` ${time} - ${endTime} • Pet: ${booking.petName || "Pet"}`;
 
         p.append(clockIcon, textSpan);
         infoDiv.append(h4, p);
 
-        const statusSpan = document.createElement('span');
-        statusSpan.className = `status-badge ${booking.status === 'agendado' ? 'confirmed' : ''}`;
+        const statusSpan = document.createElement("span");
+        statusSpan.className = `status-badge ${booking.status === "agendado" ? "confirmed" : ""}`;
         statusSpan.textContent = booking.status;
 
         item.append(dateBox, infoDiv, statusSpan);
@@ -214,10 +248,10 @@ class PetsPage {
 
       // @ts-ignore
       if (window.lucide) window.lucide.createIcons();
-
     } catch (error) {
       console.error("Error loading schedule:", error);
-      scheduleContainer.innerHTML = '<p style="color:red">Erro ao carregar agendamentos</p>';
+      scheduleContainer.innerHTML =
+        '<p style="color:red">Erro ao carregar agendamentos</p>';
     }
   }
 
@@ -272,12 +306,13 @@ class PetsPage {
       const pets = await this.petsClient.listPets();
 
       // Clear existing pets (keep the "Add New" button if possible, but simpler to rebuild)
-      petsGrid.innerHTML = '';
+      petsGrid.innerHTML = "";
 
       // Re-add "Add New" button
       const addBtn = document.createElement("button");
       addBtn.className = "add-pet-card";
-      addBtn.onclick = () => document.getElementById("petModal")?.classList.add("fixed");
+      addBtn.onclick = () =>
+        document.getElementById("petModal")?.classList.add("fixed");
       addBtn.innerHTML = `
         <div style="background: #e0f2f1; padding: 1rem; border-radius: 50%; margin-bottom: 0.5rem; color: var(--secondary);">
           <i data-lucide="plus"></i>
@@ -295,7 +330,6 @@ class PetsPage {
       // Refresh icons
       // @ts-ignore
       if (window.lucide) window.lucide.createIcons();
-
     } catch (error) {
       console.error("Error loading pets:", error);
       alert("Erro ao carregar pets.");
@@ -307,9 +341,10 @@ class PetsPage {
     div.className = "pet-card";
 
     // Random image based on species for demo purposes, since we don't have image upload yet
-    const imgUrl = pet.species === 'cat'
-      ? `https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop`
-      : `https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200&h=200&fit=crop`; // Dog default
+    const imgUrl =
+      pet.species === "cat"
+        ? `https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop`
+        : `https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200&h=200&fit=crop`; // Dog default
 
     div.innerHTML = `
       <div class="pet-image-wrapper">
@@ -325,7 +360,7 @@ class PetsPage {
     `;
 
     // Add click event to open details
-    div.addEventListener('click', () => this.openDetails(pet));
+    div.addEventListener("click", () => this.openDetails(pet));
 
     return div;
   }
@@ -335,7 +370,9 @@ class PetsPage {
     if (!modal) return;
 
     // Populate Data
-    const imgDiv = document.getElementById("detailPetImage") as HTMLImageElement;
+    const imgDiv = document.getElementById(
+      "detailPetImage",
+    ) as HTMLImageElement;
     const nameEl = document.getElementById("detailPetName");
     const breedEl = document.getElementById("detailPetBreed");
     const speciesEl = document.getElementById("detailPetSpecies");
@@ -350,12 +387,17 @@ class PetsPage {
     }
 
     // Determine Image
-    const imgUrl = pet.species === 'cat'
-      ? `https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop`
-      : `https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200&h=200&fit=crop`;
+    const imgUrl =
+      pet.species === "cat"
+        ? `https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop`
+        : `https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200&h=200&fit=crop`;
 
     // Map size to display text
-    const sizeMap: Record<string, string> = { 'P': 'Pequeno', 'M': 'Médio', 'G': 'Grande' };
+    const sizeMap: Record<string, string> = {
+      P: "Pequeno",
+      M: "Médio",
+      G: "Grande",
+    };
 
     if (imgDiv) imgDiv.src = imgUrl;
     if (nameEl) nameEl.textContent = pet.name;
@@ -369,7 +411,11 @@ class PetsPage {
   }
 
   async handleDelete(id: string) {
-    if (!confirm("Tem certeza que deseja excluir este pet? Esta ação não pode ser desfeita.")) {
+    if (
+      !confirm(
+        "Tem certeza que deseja excluir este pet? Esta ação não pode ser desfeita.",
+      )
+    ) {
       return;
     }
 
@@ -442,7 +488,7 @@ class PetsPage {
         breed: formData.get("breed") as string,
         age: Number(formData.get("age")),
         weight: Number(formData.get("weight")),
-        size: formData.get("size") as 'P' | 'M' | 'G'
+        size: formData.get("size") as "P" | "M" | "G",
       };
 
       try {
@@ -454,7 +500,6 @@ class PetsPage {
 
         // Reload list
         await this.loadPets();
-
       } catch (error) {
         console.error("Error creating pet:", error);
         alert("Erro ao criar pet. Verifique os dados.");
