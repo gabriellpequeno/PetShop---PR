@@ -228,6 +228,17 @@
   margin-top: 1rem;
 }
 
+.status-message {
+  margin-top: 0.5rem;
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
 /* Admin Event Card Enhancement */
 .calendar-event.admin-event {
   cursor: pointer;

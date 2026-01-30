@@ -112,8 +112,8 @@ export class BookingsRepository {
 
   async complete(
     id: string,
-    realStartTime: string,
-    realEndTime: string,
+    realStartTime: string | null,
+    realEndTime: string | null,
   ): Promise<void> {
     await db.run(
       `UPDATE bookings 
