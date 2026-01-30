@@ -1,196 +1,215 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerenciar Pets - Admin | Little's Petshop</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gerenciar Pets - Admin | Little's Petshop</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
-    rel="stylesheet" />
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="../styles/global.css" />
+    <link rel="stylesheet" href="../styles/admin-pets.css" />
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="../styles/global.css" />
-  <link rel="stylesheet" href="../styles/admin-pets.css" />
+    <!-- Scripts -->
+    <script
+      src="/scripts/components/sidebar-component.js"
+      type="module"
+    ></script>
+    <script src="/scripts/pages/admin-pets-page.js" type="module"></script>
+  </head>
 
-  <!-- Scripts -->
-  <script src="/scripts/components/sidebar-component.js" type="module"></script>
-  <script src="/scripts/pages/admin-pets-page.js" type="module"></script>
-</head>
+  <body>
+    <div class="dashboard-container">
+      <petshop-sidebar mode="admin" active="pets"></petshop-sidebar>
 
-<body>
+      <main class="main-content">
+        <!-- Header -->
+        <header class="page-header">
+          <div class="header-content">
+            <h1 class="page-title">Gerenciar Pets</h1>
+            <p class="page-subtitle">
+              Visualize, edite ou exclua os pets cadastrados
+            </p>
+          </div>
+        </header>
 
-  <div class="dashboard-container">
-    <petshop-sidebar mode="admin" active="pets"></petshop-sidebar>
+        <!-- Filters Section -->
+        <section class="filters-section">
+          <div class="search-box">
+            <i data-lucide="search"></i>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Buscar por nome, espécie ou raça..."
+              autocomplete="off"
+            />
+            <button
+              type="button"
+              id="clearSearch"
+              class="clear-btn"
+              style="display: none"
+            >
+              <i data-lucide="x"></i>
+            </button>
+          </div>
 
-    <main class="main-content">
-      <!-- Header -->
-      <header class="page-header">
-        <div class="header-content">
-          <h1 class="page-title">Gerenciar Pets</h1>
-          <p class="page-subtitle">Visualize, edite ou exclua os pets cadastrados</p>
-        </div>
-      </header>
+          <div class="filter-group">
+            <label for="userFilter">Filtrar por tutor:</label>
+            <select id="userFilter">
+              <option value="">Todos os tutores</option>
+            </select>
+          </div>
 
-      <!-- Filters Section -->
-      <section class="filters-section">
-        <div class="search-box">
-          <i data-lucide="search"></i>
-          <input 
-            type="text" 
-            id="searchInput" 
-            placeholder="Buscar por nome, espécie ou raça..." 
-            autocomplete="off"
-          />
-          <button type="button" id="clearSearch" class="clear-btn" style="display: none;">
+          <div class="results-count">
+            <span id="resultsCount">0 pets encontrados</span>
+          </div>
+        </section>
+
+        <!-- Pets Table -->
+        <section class="table-section">
+          <div class="table-container">
+            <table class="pets-table">
+              <thead>
+                <tr>
+                  <th>Pet</th>
+                  <th>Espécie</th>
+                  <th>Raça</th>
+                  <th>Idade</th>
+                  <th>Peso</th>
+                  <th>Porte</th>
+                  <th>Tutor</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="petsTableBody">
+                <tr>
+                  <td colspan="8">
+                    <div class="loading-state">
+                      <i data-lucide="loader-2" class="animate-spin"></i>
+                      <span>Carregando pets...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Editar Pet</h2>
+          <button type="button" class="modal-close" id="closeModal">
             <i data-lucide="x"></i>
           </button>
         </div>
 
-        <div class="filter-group">
-          <label for="userFilter">Filtrar por tutor:</label>
-          <select id="userFilter">
-            <option value="">Todos os tutores</option>
-          </select>
-        </div>
+        <form id="editPetForm" class="modal-form">
+          <input type="hidden" id="editPetId" />
 
-        <div class="results-count">
-          <span id="resultsCount">0 pets encontrados</span>
-        </div>
-      </section>
+          <div class="form-group">
+            <label for="editPetName">Nome</label>
+            <input type="text" id="editPetName" required />
+          </div>
 
-      <!-- Pets Table -->
-      <section class="table-section">
-        <div class="table-container">
-          <table class="pets-table">
-            <thead>
-              <tr>
-                <th>Pet</th>
-                <th>Espécie</th>
-                <th>Raça</th>
-                <th>Idade</th>
-                <th>Peso</th>
-                <th>Porte</th>
-                <th>Tutor</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="petsTableBody">
-              <tr>
-                <td colspan="8">
-                  <div class="loading-state">
-                    <i data-lucide="loader-2" class="animate-spin"></i>
-                    <span>Carregando pets...</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editPetSpecies">Espécie</label>
+              <select id="editPetSpecies" required>
+                <option value="Dog">Canino (Dog)</option>
+                <option value="Cat">Felino (Cat)</option>
+              </select>
+            </div>
 
-    </main>
-  </div>
+            <div class="form-group">
+              <label for="editPetBreed">Raça</label>
+              <input type="text" id="editPetBreed" />
+            </div>
+          </div>
 
-  <!-- Edit Modal -->
-  <div class="modal-overlay" id="editModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Editar Pet</h2>
-        <button type="button" class="modal-close" id="closeModal">
-          <i data-lucide="x"></i>
-        </button>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editPetAge">Idade (anos)</label>
+              <input type="number" id="editPetAge" min="0" />
+            </div>
+
+            <div class="form-group">
+              <label for="editPetWeight">Peso (kg)</label>
+              <input type="number" id="editPetWeight" min="0" step="0.1" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="editPetSize">Porte</label>
+            <select id="editPetSize" required>
+              <option value="P">Pequeno (P)</option>
+              <option value="M">Médio (M)</option>
+              <option value="G">Grande (G)</option>
+            </select>
+          </div>
+
+          <div class="form-group owner-info">
+            <label>Tutor</label>
+            <span id="editPetOwner" class="owner-name"></span>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-cancel" id="cancelEdit">
+              Cancelar
+            </button>
+            <button type="submit" class="btn-save">Salvar Alterações</button>
+          </div>
+        </form>
       </div>
-      
-      <form id="editPetForm" class="modal-form">
-        <input type="hidden" id="editPetId" />
-        
-        <div class="form-group">
-          <label for="editPetName">Nome</label>
-          <input type="text" id="editPetName" required />
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+      <div class="modal-content modal-small">
+        <div class="modal-header">
+          <h2 class="modal-title">Confirmar Exclusão</h2>
+          <button type="button" class="modal-close" id="closeDeleteModal">
+            <i data-lucide="x"></i>
+          </button>
         </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label for="editPetSpecies">Espécie</label>
-            <input type="text" id="editPetSpecies" required />
-          </div>
-          
-          <div class="form-group">
-            <label for="editPetBreed">Raça</label>
-            <input type="text" id="editPetBreed" />
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label for="editPetAge">Idade (anos)</label>
-            <input type="number" id="editPetAge" min="0" />
-          </div>
-          
-          <div class="form-group">
-            <label for="editPetWeight">Peso (kg)</label>
-            <input type="number" id="editPetWeight" min="0" step="0.1" />
+
+        <div class="modal-body">
+          <div class="delete-warning">
+            <i data-lucide="alert-triangle"></i>
+            <p>
+              Tem certeza que deseja excluir o pet
+              <strong id="deletePetName"></strong>?
+            </p>
+            <p class="warning-text">Esta ação não pode ser desfeita.</p>
           </div>
         </div>
-        
-        <div class="form-group">
-          <label for="editPetSize">Porte</label>
-          <select id="editPetSize" required>
-            <option value="P">Pequeno (P)</option>
-            <option value="M">Médio (M)</option>
-            <option value="G">Grande (G)</option>
-          </select>
-        </div>
-        
-        <div class="form-group owner-info">
-          <label>Tutor</label>
-          <span id="editPetOwner" class="owner-name"></span>
-        </div>
-        
+
         <div class="modal-actions">
-          <button type="button" class="btn-cancel" id="cancelEdit">Cancelar</button>
-          <button type="submit" class="btn-save">Salvar Alterações</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Delete Confirmation Modal -->
-  <div class="modal-overlay" id="deleteModal">
-    <div class="modal-content modal-small">
-      <div class="modal-header">
-        <h2 class="modal-title">Confirmar Exclusão</h2>
-        <button type="button" class="modal-close" id="closeDeleteModal">
-          <i data-lucide="x"></i>
-        </button>
-      </div>
-      
-      <div class="modal-body">
-        <div class="delete-warning">
-          <i data-lucide="alert-triangle"></i>
-          <p>Tem certeza que deseja excluir o pet <strong id="deletePetName"></strong>?</p>
-          <p class="warning-text">Esta ação não pode ser desfeita.</p>
+          <button type="button" class="btn-cancel" id="cancelDelete">
+            Cancelar
+          </button>
+          <button type="button" class="btn-delete" id="confirmDelete">
+            Excluir Pet
+          </button>
         </div>
       </div>
-      
-      <div class="modal-actions">
-        <button type="button" class="btn-cancel" id="cancelDelete">Cancelar</button>
-        <button type="button" class="btn-delete" id="confirmDelete">Excluir Pet</button>
-      </div>
     </div>
-  </div>
 
-  <script>
-    lucide.createIcons();
-  </script>
-</body>
-
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
 </html>
