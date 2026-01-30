@@ -6,10 +6,11 @@ export class ListBookingsController {
     static async handle(request: Request, response: Response) {
         const userId = request.user.id;
         const userRole = request.user.role;
+        const targetUserId = request.query.userId as string | undefined;
 
         const repository = new BookingsRepository();
         const service = new ListBookingsService(repository);
-        const bookings = await service.execute({ userId, userRole });
+        const bookings = await service.execute({ userId, userRole, targetUserId });
 
         return response.json(bookings);
     }

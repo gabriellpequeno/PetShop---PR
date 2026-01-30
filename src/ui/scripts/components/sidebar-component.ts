@@ -16,9 +16,9 @@ interface NavigationItem {
 }
 
 const CUSTOMER_NAV_ITEMS: NavigationItem[] = [
-  { slug: 'profile', label: 'Perfil', icon: 'user', href: '/pages/profile.html' },
   { slug: 'pets', label: 'Meus Pets', icon: 'dog', href: '/pages/pets.html' },
   { slug: 'agenda', label: 'Agenda', icon: 'calendar', href: '/pages/booking.html' },
+  { slug: 'profile', label: 'Perfil', icon: 'user', href: '/pages/profile.html' },
 ]
 
 const ADMIN_NAV_ITEMS: NavigationItem[] = [
@@ -28,7 +28,7 @@ const ADMIN_NAV_ITEMS: NavigationItem[] = [
     icon: 'layout-dashboard',
     href: '/admin/dashboard',
   },
-  { slug: 'users', label: 'Usuários', icon: 'users', href: '/admin/users' },
+  { slug: 'users', label: 'Usuários', icon: 'users', href: '/pages/admin/users.html' },
   {
     slug: 'services',
     label: 'Serviços',

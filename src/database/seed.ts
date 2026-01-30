@@ -36,7 +36,7 @@ async function seed() {
 
   for (const user of allUsers) {
     const hashedPassword = await cryptoProvider.generateHash(user.password)
-    
+
     await db.run(
       `INSERT INTO users (id, name, email, password, role) VALUES (?, ?, ?, ?, ?)`,
       [user.id, user.name, user.email, hashedPassword, user.role]
