@@ -60,3 +60,4 @@ frontend/dist/
 backend/dist/
 
 prompt.md
+sqlite.db
