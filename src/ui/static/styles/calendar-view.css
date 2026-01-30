@@ -832,23 +832,34 @@ body {
 }
 
 .service-filter select {
-  padding: 0.5rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  color: var(--secondary);
-  background: white;
+  padding: 0.6rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: #000;
+  background: linear-gradient(90deg, var(--primary), #ffb84d);
   cursor: pointer;
-  min-width: 180px;
+  min-width: 200px;
+  box-shadow: 0 6px 18px rgba(255,165,0,0.12);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.service-filter select:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(255,165,0,0.16);
 }
 
 .service-filter select:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.1);
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: 0 0 0 4px rgba(255,165,0,0.12);
 }
 
-/* Hour Slot States */
+.service-filter select option {
+  color: #000;
+  background: #fff;
+}
+
 .hour-slot.available-slot {
   background: rgba(16, 185, 129, 0.08);
   cursor: pointer;
