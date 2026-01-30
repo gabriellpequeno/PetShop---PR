@@ -1,3 +1,11 @@
+export interface JobAvailability {
+    id: string;
+    jobId: string;
+    dayOfWeek: number; // 0=Domingo, 1=Segunda, ..., 6=Sábado
+    startTime: string; // Formato HH:MM
+    endTime: string;   // Formato HH:MM
+}
+
 export interface Job {
     id: string;
     name: string;
@@ -6,6 +14,7 @@ export interface Job {
     priceM: number;
     priceG: number;
     duration: number;
+    availability?: JobAvailability[];
 }
 
 export interface CreateJobData {
@@ -15,6 +24,7 @@ export interface CreateJobData {
     priceM: number;
     priceG: number;
     duration: number;
+    availability?: Omit<JobAvailability, 'id' | 'jobId'>[];
 }
 
 export interface UpdateJobData {
@@ -24,4 +34,5 @@ export interface UpdateJobData {
     priceM?: number;
     priceG?: number;
     duration?: number;
+    availability?: Omit<JobAvailability, 'id' | 'jobId'>[];
 }

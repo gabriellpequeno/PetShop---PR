@@ -11,7 +11,7 @@ export class UpdateJobController {
             throw new BadRequestError("ID inválido");
         }
 
-        const { name, description, priceP, priceM, priceG, duration } = request.body;
+        const { name, description, priceP, priceM, priceG, duration, availability } = request.body;
 
         const repository = new JobsRepository();
         const service = new UpdateJobService(repository);
@@ -23,6 +23,7 @@ export class UpdateJobController {
             priceM,
             priceG,
             duration,
+            availability,
         });
 
         return response.json(job);

@@ -4,7 +4,7 @@ import { JobsRepository } from "../repositories/jobs-repository";
 
 export class CreateJobController {
     static async handle(request: Request, response: Response) {
-        const { name, description, priceP, priceM, priceG, duration } = request.body;
+        const { name, description, priceP, priceM, priceG, duration, availability } = request.body;
 
         const repository = new JobsRepository();
         const service = new CreateJobService(repository);
@@ -15,6 +15,7 @@ export class CreateJobController {
             priceM,
             priceG,
             duration,
+            availability,
         });
 
         return response.status(201).json(job);
