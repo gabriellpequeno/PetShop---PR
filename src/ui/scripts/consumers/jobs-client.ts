@@ -1,3 +1,22 @@
+export interface JobAvailability {
+  id?: string;
+  jobId?: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+}
+
+export interface Job {
+  id: string;
+  name: string;
+  description: string;
+  priceP: number;
+  priceM: number;
+  priceG: number;
+  duration: number;
+  availability?: JobAvailability[];
+}
+
 export class JobsClient {
   private baseUrl = '/api/jobs';
 
@@ -21,6 +40,7 @@ export class JobsClient {
     priceM: number;
     priceG: number;
     duration: number;
+    availability?: JobAvailability[];
   }) {
     const response = await fetch(this.baseUrl, {
       method: 'POST',
@@ -47,6 +67,7 @@ export class JobsClient {
       priceM?: number;
       priceG?: number;
       duration?: number;
+      availability?: JobAvailability[];
     }
   ) {
     const response = await fetch(`${this.baseUrl}/${id}`, {
@@ -65,6 +86,32 @@ export class JobsClient {
     return response.json();
   }
 
+  async getJob(id: string) {
+    const response = await fetch(`${this.baseUrl}/${id}`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch service');
+    }
+
+    return response.json();
+  }
+
+  async getAvailableJobsForDateTime(date: string, time: string) {
+    const response = await fetch(`${this.baseUrl}/available?date=${date}&time=${time}`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch available services');
+    }
+
+    return response.json();
+  }
+
   async deleteJob(id: string) {
     const response = await fetch(`${this.baseUrl}/${id}`, {
       method: 'DELETE',
@@ -75,7 +122,6 @@ export class JobsClient {
       throw new Error('Failed to delete service');
     }
 
-    // DELETE usually returns 204 No Content
     if (response.status === 204) {
       return;
     }

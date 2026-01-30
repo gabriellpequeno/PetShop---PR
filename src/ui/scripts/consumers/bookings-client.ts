@@ -6,6 +6,7 @@ export interface Booking {
   petId: string
   jobId: string
   bookingDate: string
+  bookingTime?: string
   status: string
 }
 
@@ -13,6 +14,7 @@ export interface BookingCreateDTO {
   petId: string
   jobId: string
   bookingDate: string
+  bookingTime?: string
 }
 
 export class BookingsClient extends ApiConsumer {
@@ -41,6 +43,20 @@ export class BookingsClient extends ApiConsumer {
 
     if (!response.ok) {
       throw new Error('Falha ao carregar agendamentos')
+    }
+
+    return response.json()
+  }
+
+  async listOccupiedSlots(startDate: string, endDate: string): Promise<{ bookingDate: string; bookingTime: string; jobId: string }[]> {
+    const response = await fetch(`${ApiConsumer.BASE_URL}/bookings/occupied-slots?startDate=${startDate}&endDate=${endDate}`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      throw new Error('Falha ao carregar slots ocupados')
     }
 
     return response.json()

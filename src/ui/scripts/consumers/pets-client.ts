@@ -7,6 +7,7 @@ export interface Pet {
   breed: string
   age: number
   weight?: number
+  size: 'P' | 'M' | 'G'
   userId: string
 }
 
