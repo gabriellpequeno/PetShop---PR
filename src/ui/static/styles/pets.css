@@ -391,6 +391,8 @@ body {
   border-radius: 1.5rem;
   width: 90%;
   max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
   position: relative;
   animation: fade-in-up 0.3s ease-out;
 }
