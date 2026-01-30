@@ -451,6 +451,12 @@ class PetsPage {
     const modal = document.getElementById("petModal");
     const openBtn = document.getElementById("newPetBtn");
     const closeBtn = document.getElementById("closeModal");
+    const speciesSelect = document.getElementById(
+      "speciesSelect",
+    ) as HTMLSelectElement;
+    const sizeSelect = document.getElementById(
+      "sizeSelect",
+    ) as HTMLSelectElement;
 
     if (openBtn && modal) {
       openBtn.addEventListener("click", () => {
@@ -461,6 +467,27 @@ class PetsPage {
     if (closeBtn && modal) {
       closeBtn.addEventListener("click", () => {
         modal.classList.remove("fixed");
+      });
+    }
+
+    // Update size options based on species
+    if (speciesSelect && sizeSelect) {
+      speciesSelect.addEventListener("change", () => {
+        const species = speciesSelect.value;
+
+        if (species === "cat") {
+          // Felinos: only Pequeno (P)
+          sizeSelect.innerHTML = `
+            <option value="P" selected>Pequeno (P)</option>
+          `;
+        } else {
+          // Caninos: all sizes available
+          sizeSelect.innerHTML = `
+            <option value="P">Pequeno (P)</option>
+            <option value="M" selected>Médio (M)</option>
+            <option value="G">Grande (G)</option>
+          `;
+        }
       });
     }
 
