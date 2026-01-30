@@ -1,11 +1,14 @@
-import { AdminApiClient, type DashboardPeriod, type UserListItem, type PetListItem, type BookingListItem } from '../consumers/admin-api-client'
+import { AdminApiClient, type UserListItem, type PetListItem, type BookingListItem } from '../consumers/admin-api-client'
 
 type ViewType = 'users' | 'pets' | 'bookings'
 
 class AdminDashboardPage {
     private adminApi: AdminApiClient
-    private currentPeriod: DashboardPeriod = 'month'
     private currentView: ViewType = 'users'
+    private currentBookingsFilter: 'upcoming' | 'completed' = 'upcoming'
+    private currentBookingsStatus: 'all' | 'active' | 'cancelled' = 'all'
+    private currentUsersFilter: 'all' | 'with_service' = 'all'
+    private currentPetsFilter: 'all' | 'with_service' = 'all'
 
     constructor() {
         this.adminApi = new AdminApiClient()
@@ -16,22 +19,12 @@ class AdminDashboardPage {
         this.setupEventListeners()
         this.updateDateTime()
         this.startDateTimeUpdate()
+        this.setupFilterForView(this.currentView)
         await this.loadDashboardData()
         await this.loadCurrentView()
     }
 
     private setupEventListeners() {
-        const periodButtons = document.querySelectorAll('.period-btn')
-        periodButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const target = e.currentTarget as HTMLButtonElement
-                const period = target.dataset.period as DashboardPeriod
-                if (period) {
-                    this.handlePeriodChange(period)
-                }
-            })
-        })
-
         // Metric card click handlers
         const metricCards = document.querySelectorAll('.metric-card[data-view]')
         metricCards.forEach(card => {
@@ -43,21 +36,21 @@ class AdminDashboardPage {
                 }
             })
         })
+
+        // Set initial active state on users card (default view)
+        this.setInitialActiveCard()
     }
 
-    private async handlePeriodChange(period: DashboardPeriod) {
-        this.currentPeriod = period
-
-        const periodButtons = document.querySelectorAll('.period-btn')
-        periodButtons.forEach(btn => {
-            btn.classList.remove('active')
-            if ((btn as HTMLButtonElement).dataset.period === period) {
-                btn.classList.add('active')
+    private setInitialActiveCard() {
+        const metricCards = document.querySelectorAll('.metric-card[data-view]')
+        metricCards.forEach(card => {
+            if ((card as HTMLElement).dataset.view === this.currentView) {
+                card.classList.add('active')
             }
         })
-
-        await this.loadDashboardData()
     }
+
+
 
     private async handleViewChange(view: ViewType) {
         this.currentView = view
@@ -71,7 +64,111 @@ class AdminDashboardPage {
             }
         })
 
+        // Setup filters based on view
+        this.setupFilterForView(view)
+
         await this.loadCurrentView()
+    }
+
+    private setupFilterForView(view: ViewType) {
+        const filterContainer = document.getElementById('tableFilter')
+        if (!filterContainer) return
+
+        // Clear existing filters
+        filterContainer.innerHTML = ''
+
+        if (view === 'bookings') {
+            // Show bookings filters (time + status)
+            filterContainer.style.display = 'flex'
+            filterContainer.style.gap = '1rem'
+            filterContainer.innerHTML = `
+                <div class="filter-group">
+                    <button class="filter-btn ${this.currentBookingsFilter === 'upcoming' ? 'active' : ''}" data-filter="upcoming">Futuros</button>
+                    <button class="filter-btn ${this.currentBookingsFilter === 'completed' ? 'active' : ''}" data-filter="completed">Concluídos</button>
+                </div>
+                <div class="filter-group">
+                    <button class="filter-btn ${this.currentBookingsStatus === 'all' ? 'active' : ''}" data-status="all">Todos</button>
+                    <button class="filter-btn ${this.currentBookingsStatus === 'active' ? 'active' : ''}" data-status="active">Ativos</button>
+                    <button class="filter-btn ${this.currentBookingsStatus === 'cancelled' ? 'active' : ''}" data-status="cancelled">Cancelados</button>
+                </div>
+            `
+            
+            // Add event listeners for time filter
+            filterContainer.querySelectorAll('[data-filter]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const filter = (e.currentTarget as HTMLElement).dataset.filter as 'upcoming' | 'completed'
+                    if (filter) {
+                        this.handleBookingsTimeFilterChange(filter)
+                    }
+                })
+            })
+            
+            // Add event listeners for status filter
+            filterContainer.querySelectorAll('[data-status]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const status = (e.currentTarget as HTMLElement).dataset.status as 'all' | 'active' | 'cancelled'
+                    if (status) {
+                        this.handleBookingsStatusFilterChange(status)
+                    }
+                })
+            })
+        } else if (view === 'users') {
+            // Show users filter
+            filterContainer.style.display = 'flex'
+            filterContainer.innerHTML = `
+                <button class="filter-btn ${this.currentUsersFilter === 'all' ? 'active' : ''}" data-filter="all">Todos</button>
+                <button class="filter-btn ${this.currentUsersFilter === 'with_service' ? 'active' : ''}" data-filter="with_service">Com Agendamento</button>
+            `
+            
+            filterContainer.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const filter = (e.currentTarget as HTMLElement).dataset.filter as 'all' | 'with_service'
+                    if (filter) {
+                        this.handleUsersFilterChange(filter)
+                    }
+                })
+            })
+        } else if (view === 'pets') {
+            // Show pets filter
+            filterContainer.style.display = 'flex'
+            filterContainer.innerHTML = `
+                <button class="filter-btn ${this.currentPetsFilter === 'all' ? 'active' : ''}" data-filter="all">Todos</button>
+                <button class="filter-btn ${this.currentPetsFilter === 'with_service' ? 'active' : ''}" data-filter="with_service">Com Agendamento</button>
+            `
+            
+            filterContainer.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const filter = (e.currentTarget as HTMLElement).dataset.filter as 'all' | 'with_service'
+                    if (filter) {
+                        this.handlePetsFilterChange(filter)
+                    }
+                })
+            })
+        }
+    }
+
+    private async handleBookingsTimeFilterChange(filter: 'upcoming' | 'completed') {
+        this.currentBookingsFilter = filter
+        this.setupFilterForView('bookings')
+        await this.loadBookingsList()
+    }
+
+    private async handleBookingsStatusFilterChange(status: 'all' | 'active' | 'cancelled') {
+        this.currentBookingsStatus = status
+        this.setupFilterForView('bookings')
+        await this.loadBookingsList()
+    }
+
+    private async handleUsersFilterChange(filter: 'all' | 'with_service') {
+        this.currentUsersFilter = filter
+        this.setupFilterForView('users')
+        await this.loadUsersList()
+    }
+
+    private async handlePetsFilterChange(filter: 'all' | 'with_service') {
+        this.currentPetsFilter = filter
+        this.setupFilterForView('pets')
+        await this.loadPetsList()
     }
 
     private async loadCurrentView() {
@@ -90,7 +187,7 @@ class AdminDashboardPage {
 
     private async loadDashboardData() {
         try {
-            const summary = await this.adminApi.getDashboardSummary(this.currentPeriod)
+            const summary = await this.adminApi.getDashboardSummary()
             this.updateMetrics(summary)
         } catch (error) {
             console.error('Erro ao carregar métricas:', error)
@@ -123,7 +220,7 @@ class AdminDashboardPage {
         this.updateTableHeader('Usuários', ['Nome', 'Próximo Serviço', 'Total de Pets'])
 
         try {
-            const users = await this.adminApi.getUsersList()
+            const users = await this.adminApi.getUsersList(this.currentUsersFilter)
             this.renderUsersList(users)
         } catch (error) {
             console.error('Erro ao carregar usuários:', error)
@@ -154,7 +251,19 @@ class AdminDashboardPage {
             if (user.nextService && user.nextServiceTime) {
                 const date = new Date(user.nextServiceTime)
                 const formatted = this.formatDateTime(date)
-                serviceCell.innerHTML = `<span>${user.nextService}</span><br><small style="color: #6b7280">${formatted}</small>`
+                
+                // Build pet display: "Pet Name (Species)" or just "Pet Name"
+                let petDisplay = ''
+                if (user.nextPetName) {
+                    petDisplay = user.nextPetSpecies 
+                        ? `${user.nextPetName} (${user.nextPetSpecies})` 
+                        : user.nextPetName
+                }
+                
+                const serviceName = petDisplay 
+                    ? `${user.nextService} - ${petDisplay}` 
+                    : user.nextService
+                serviceCell.innerHTML = `<span>${serviceName}</span><br><small style="color: #6b7280">${formatted}</small>`
             } else {
                 serviceCell.innerHTML = '<span style="color: #9ca3af">Sem agendamento</span>'
             }
@@ -176,7 +285,7 @@ class AdminDashboardPage {
         this.updateTableHeader('Pets', ['Nome', 'Próximo Serviço', 'Nome do Tutor'])
 
         try {
-            const pets = await this.adminApi.getPetsList()
+            const pets = await this.adminApi.getPetsList(this.currentPetsFilter)
             this.renderPetsList(pets)
         } catch (error) {
             console.error('Erro ao carregar pets:', error)
@@ -226,10 +335,10 @@ class AdminDashboardPage {
 
     // ========== BOOKINGS LIST ==========
     private async loadBookingsList() {
-        this.updateTableHeader('Próximos Agendamentos', ['Nome Serviço', 'Nome do Pet', 'Nome do Tutor'])
+        this.updateTableHeader('Agendamentos', ['Nome Serviço', 'Nome do Pet', 'Nome do Tutor', 'Status'])
 
         try {
-            const bookings = await this.adminApi.getBookingsList()
+            const bookings = await this.adminApi.getBookingsList(this.currentBookingsFilter, this.currentBookingsStatus)
             this.renderBookingsList(bookings)
         } catch (error) {
             console.error('Erro ao carregar agendamentos:', error)
@@ -244,7 +353,7 @@ class AdminDashboardPage {
         this.clearElement(tbody)
 
         if (bookings.length === 0) {
-            const emptyRow = this.createEmptyStateRow('Nenhum agendamento próximo', 'calendar')
+            const emptyRow = this.createEmptyStateRow('Nenhum agendamento encontrado', 'calendar')
             tbody.appendChild(emptyRow)
             this.refreshIcons()
             return
@@ -264,9 +373,14 @@ class AdminDashboardPage {
             const tutorCell = document.createElement('td')
             tutorCell.innerHTML = `<span>${booking.tutorName}</span>`
 
+            const statusCell = document.createElement('td')
+            const statusBadge = this.createStatusBadge(booking.status)
+            statusCell.appendChild(statusBadge)
+
             row.appendChild(serviceCell)
             row.appendChild(petCell)
             row.appendChild(tutorCell)
+            row.appendChild(statusCell)
             tbody.appendChild(row)
         })
 
@@ -326,10 +440,29 @@ class AdminDashboardPage {
         this.refreshIcons()
     }
 
+
     private clearElement(element: HTMLElement) {
         while (element.firstChild) {
             element.removeChild(element.firstChild)
         }
+    }
+
+    private createStatusBadge(status: string): HTMLSpanElement {
+        const badge = document.createElement('span')
+        badge.className = 'badge'
+        
+        if (status === 'agendado') {
+            badge.classList.add('badge-success')
+            badge.innerHTML = '<i data-lucide="check-circle"></i> Agendado'
+        } else if (status === 'cancelado') {
+            badge.classList.add('badge-danger')
+            badge.innerHTML = '<i data-lucide="x-circle"></i> Cancelado'
+        } else {
+            badge.classList.add('badge-secondary')
+            badge.textContent = status
+        }
+        
+        return badge
     }
 
     private refreshIcons() {
