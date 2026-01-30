@@ -42,6 +42,7 @@ describe("CreateBookingService", () => {
             breed: null,
             age: null,
             weight: null,
+            size: "M",
         });
         vi.spyOn(jobsRepositoryMock, "findById").mockResolvedValueOnce({
             id: "job-123",
@@ -51,6 +52,9 @@ describe("CreateBookingService", () => {
             priceM: 60,
             priceG: 70,
             duration: 30,
+            availability: [
+                { id: "av1", jobId: "job-123", dayOfWeek: 0, startTime: "09:00", endTime: "18:00" }
+            ]
         });
         vi.spyOn(bookingsRepositoryMock, "findDuplicate").mockResolvedValueOnce(undefined);
         vi.spyOn(bookingsRepositoryMock, "create").mockResolvedValueOnce({
@@ -58,8 +62,10 @@ describe("CreateBookingService", () => {
             userId: "user-123",
             petId: "pet-123",
             jobId: "job-123",
-            bookingDate: "2026-02-15 10:00",
+            bookingDate: "2026-02-15",
+            bookingTime: "10:00",
             status: "agendado",
+            price: 60,
             realStartTime: null,
             realEndTime: null,
             createdAt: "2026-01-28T00:00:00Z",
@@ -70,12 +76,20 @@ describe("CreateBookingService", () => {
             userRole: "client",
             petId: "pet-123",
             jobId: "job-123",
-            bookingDate: "2026-02-15 10:00",
+            bookingDate: "2026-02-15",
+            bookingTime: "10:00",
         });
 
         expect(booking.id).toBeDefined();
         expect(booking.status).toBe("agendado");
-        expect(bookingsRepositoryMock.create).toHaveBeenCalled();
+        expect(bookingsRepositoryMock.create).toHaveBeenCalledWith(
+            expect.objectContaining({
+                userId: "user-123",
+                petId: "pet-123",
+                jobId: "job-123",
+            }),
+            60 // price for M size
+        );
     });
 
     it("deve lançar erro se a data estiver em formato inválido", async () => {
@@ -85,7 +99,8 @@ describe("CreateBookingService", () => {
                 userRole: "client",
                 petId: "pet-123",
                 jobId: "job-123",
-                bookingDate: "15/02/2026 10:00",
+                bookingDate: "15/02/2026",
+                bookingTime: "10:00",
             })
         ).rejects.toBeInstanceOf(BadRequestError);
     });
@@ -98,6 +113,7 @@ describe("CreateBookingService", () => {
                 petId: "pet-123",
                 jobId: "job-123",
                 bookingDate: "",
+                bookingTime: "10:00",
             })
         ).rejects.toBeInstanceOf(BadRequestError);
     });
@@ -111,7 +127,8 @@ describe("CreateBookingService", () => {
                 userRole: "client",
                 petId: "pet-inexistente",
                 jobId: "job-123",
-                bookingDate: "2026-02-15 10:00",
+                bookingDate: "2026-02-15",
+                bookingTime: "10:00",
             })
         ).rejects.toBeInstanceOf(NotFoundError);
     });
@@ -125,6 +142,7 @@ describe("CreateBookingService", () => {
             breed: null,
             age: null,
             weight: null,
+            size: "M",
         });
 
         await expect(
@@ -133,7 +151,8 @@ describe("CreateBookingService", () => {
                 userRole: "client",
                 petId: "pet-123",
                 jobId: "job-123",
-                bookingDate: "2026-02-15 10:00",
+                bookingDate: "2026-02-15",
+                bookingTime: "10:00",
             })
         ).rejects.toBeInstanceOf(BadRequestError);
     });
@@ -147,6 +166,7 @@ describe("CreateBookingService", () => {
             breed: null,
             age: null,
             weight: null,
+            size: "M",
         });
         vi.spyOn(jobsRepositoryMock, "findById").mockResolvedValueOnce(undefined);
 
@@ -156,7 +176,8 @@ describe("CreateBookingService", () => {
                 userRole: "client",
                 petId: "pet-123",
                 jobId: "job-inexistente",
-                bookingDate: "2026-02-15 10:00",
+                bookingDate: "2026-02-15",
+                bookingTime: "10:00",
             })
         ).rejects.toBeInstanceOf(NotFoundError);
     });
@@ -170,6 +191,7 @@ describe("CreateBookingService", () => {
             breed: null,
             age: null,
             weight: null,
+            size: "M",
         });
         vi.spyOn(jobsRepositoryMock, "findById").mockResolvedValueOnce({
             id: "job-123",
@@ -179,14 +201,19 @@ describe("CreateBookingService", () => {
             priceM: 60,
             priceG: 70,
             duration: 30,
+            availability: [
+                { id: "av1", jobId: "job-123", dayOfWeek: 0, startTime: "09:00", endTime: "18:00" }
+            ]
         });
         vi.spyOn(bookingsRepositoryMock, "findDuplicate").mockResolvedValueOnce({
             id: "booking-existente",
             userId: "user-123",
             petId: "pet-123",
             jobId: "job-123",
-            bookingDate: "2026-02-15 10:00",
+            bookingDate: "2026-02-15",
+            bookingTime: "10:00",
             status: "agendado",
+            price: 60,
             realStartTime: null,
             realEndTime: null,
             createdAt: "2026-01-28T00:00:00Z",
@@ -198,7 +225,8 @@ describe("CreateBookingService", () => {
                 userRole: "client",
                 petId: "pet-123",
                 jobId: "job-123",
-                bookingDate: "2026-02-15 10:00",
+                bookingDate: "2026-02-15",
+                bookingTime: "10:00",
             })
         ).rejects.toBeInstanceOf(ConflictError);
     });
@@ -212,6 +240,7 @@ describe("CreateBookingService", () => {
             breed: null,
             age: null,
             weight: null,
+            size: "G",
         });
         vi.spyOn(jobsRepositoryMock, "findById").mockResolvedValueOnce({
             id: "job-123",
@@ -221,6 +250,9 @@ describe("CreateBookingService", () => {
             priceM: 60,
             priceG: 70,
             duration: 30,
+            availability: [
+                { id: "av1", jobId: "job-123", dayOfWeek: 0, startTime: "09:00", endTime: "18:00" }
+            ]
         });
         vi.spyOn(bookingsRepositoryMock, "findDuplicate").mockResolvedValueOnce(undefined);
         vi.spyOn(bookingsRepositoryMock, "create").mockResolvedValueOnce({
@@ -228,8 +260,10 @@ describe("CreateBookingService", () => {
             userId: "dono-do-pet",
             petId: "pet-123",
             jobId: "job-123",
-            bookingDate: "2026-02-15 10:00",
+            bookingDate: "2026-02-15",
+            bookingTime: "10:00",
             status: "agendado",
+            price: 70,
             realStartTime: null,
             realEndTime: null,
             createdAt: "2026-01-28T00:00:00Z",
@@ -240,11 +274,15 @@ describe("CreateBookingService", () => {
             userRole: "admin",
             petId: "pet-123",
             jobId: "job-123",
-            bookingDate: "2026-02-15 10:00",
+            bookingDate: "2026-02-15",
+            bookingTime: "10:00",
         });
 
-        expect(bookingsRepositoryMock.create).toHaveBeenCalledWith(expect.objectContaining({
-            userId: "dono-do-pet"
-        }));
+        expect(bookingsRepositoryMock.create).toHaveBeenCalledWith(
+            expect.objectContaining({
+                userId: "dono-do-pet"
+            }),
+            70 // price for G size
+        );
     });
 });

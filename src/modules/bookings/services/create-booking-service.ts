@@ -5,6 +5,7 @@ import type { BookingsRepository } from "../repositories/bookings-repository";
 import type { PetsRepository } from "../../pets/repositories/pets-repository";
 import type { JobsRepository } from "../../jobs/repositories/jobs-repository";
 import type { IBooking, IBookingCreate } from "../types/booking-types";
+import type { PetSize } from "../../pets/models/pet";
 
 export class CreateBookingService {
     constructor(
@@ -12,6 +13,19 @@ export class CreateBookingService {
         private petsRepository: PetsRepository,
         private jobsRepository: JobsRepository
     ) { }
+
+    private calculatePrice(petSize: PetSize, job: { priceP: number; priceM: number; priceG: number }): number {
+        switch (petSize) {
+            case 'P':
+                return job.priceP;
+            case 'M':
+                return job.priceM;
+            case 'G':
+                return job.priceG;
+            default:
+                return job.priceM; // Default to medium if unknown
+        }
+    }
 
     async execute(data: IBookingCreate): Promise<IBooking> {
         if (!data.userId || typeof data.userId !== "string") {
@@ -30,9 +44,18 @@ export class CreateBookingService {
             throw new BadRequestError("Data do agendamento é obrigatória.");
         }
 
-        const dateRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
+        if (!data.bookingTime || typeof data.bookingTime !== "string") {
+            throw new BadRequestError("Horário do agendamento é obrigatório.");
+        }
+
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
         if (!dateRegex.test(data.bookingDate)) {
-            throw new BadRequestError("Data deve estar no formato YYYY-MM-DD HH:mm");
+            throw new BadRequestError("Data deve estar no formato YYYY-MM-DD");
+        }
+
+        const timeRegex = /^\d{2}:\d{2}$/;
+        if (!timeRegex.test(data.bookingTime)) {
+            throw new BadRequestError("Horário deve estar no formato HH:MM");
         }
 
         const pet = await this.petsRepository.findById(data.petId);
@@ -49,10 +72,31 @@ export class CreateBookingService {
         if (!job) {
             throw new NotFoundError("Serviço não encontrado.");
         }
+
+        // Check if job is available at this day/time
+        // Parse the date to get day of week correctly (add T12:00 to avoid timezone issues)
+        const bookingDateObj = new Date(`${data.bookingDate}T12:00:00`);
+        const dayOfWeek = bookingDateObj.getDay();
+        
+        // Only check availability if job has availability defined
+        const hasAvailability = job.availability && job.availability.length > 0;
+        if (hasAvailability) {
+            const isAvailable = job.availability!.some(avail => 
+                avail.dayOfWeek === dayOfWeek &&
+                avail.startTime <= data.bookingTime! &&
+                avail.endTime > data.bookingTime!
+            );
+
+            if (!isAvailable) {
+                throw new BadRequestError("Este serviço não está disponível neste dia/horário.");
+            }
+        }
+
         const existingBooking = await this.bookingsRepository.findDuplicate(
             data.petId,
             data.jobId,
-            data.bookingDate
+            data.bookingDate,
+            data.bookingTime
         );
         if (existingBooking) {
             throw new ConflictError(
@@ -60,6 +104,9 @@ export class CreateBookingService {
             );
         }
 
-        return this.bookingsRepository.create(data);
+        // Calculate price based on pet size
+        const price = this.calculatePrice(pet.size, job);
+
+        return this.bookingsRepository.create(data, price);
     }
 }

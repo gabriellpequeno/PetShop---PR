@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import type { IBooking, IBookingCreate, IBookingResponse } from "../types/booking-types";
 
 export class BookingsRepository {
-    async create(data: IBookingCreate): Promise<IBooking> {
+    async create(data: IBookingCreate, price: number): Promise<IBooking> {
         const id = randomUUID();
         const now = new Date().toISOString();
 
@@ -13,22 +13,26 @@ export class BookingsRepository {
             petId: data.petId,
             jobId: data.jobId,
             bookingDate: data.bookingDate,
+            bookingTime: data.bookingTime,
             status: "agendado",
+            price,
             realStartTime: null,
             realEndTime: null,
             createdAt: now,
         };
 
         await db.run(
-            `INSERT INTO bookings (id, userId, petId, jobId, bookingDate, status, realStartTime, realEndTime, createdAt)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO bookings (id, userId, petId, jobId, bookingDate, bookingTime, status, price, realStartTime, realEndTime, createdAt)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 booking.id,
                 booking.userId,
                 booking.petId,
                 booking.jobId,
                 booking.bookingDate,
+                booking.bookingTime,
                 booking.status,
+                booking.price,
                 booking.realStartTime,
                 booking.realEndTime,
                 booking.createdAt,
@@ -49,12 +53,13 @@ export class BookingsRepository {
     async findDuplicate(
         petId: string,
         jobId: string,
-        bookingDate: string
+        bookingDate: string,
+        bookingTime: string
     ): Promise<IBooking | undefined> {
         const booking = await db.get<IBooking>(
             `SELECT id FROM bookings 
-       WHERE petId = ? AND jobId = ? AND bookingDate = ? AND status != 'cancelado'`,
-            [petId, jobId, bookingDate]
+       WHERE petId = ? AND jobId = ? AND bookingDate = ? AND bookingTime = ? AND status != 'cancelado'`,
+            [petId, jobId, bookingDate, bookingTime]
         );
         return booking;
     }
@@ -64,7 +69,9 @@ export class BookingsRepository {
             `SELECT 
         b.*,
         p.name as petName,
+        p.size as petSize,
         j.name as jobName,
+        j.duration as jobDuration,
         u.name as userName
       FROM bookings b
       LEFT JOIN pets p ON b.petId = p.id
@@ -82,7 +89,9 @@ export class BookingsRepository {
             `SELECT 
         b.*,
         p.name as petName,
+        p.size as petSize,
         j.name as jobName,
+        j.duration as jobDuration,
         u.name as userName
       FROM bookings b
       LEFT JOIN pets p ON b.petId = p.id
@@ -108,5 +117,15 @@ export class BookingsRepository {
        WHERE id = ?`,
             [realStartTime, realEndTime, id]
         );
+    }
+
+    async findOccupiedSlots(startDate: string, endDate: string): Promise<{ bookingDate: string; bookingTime: string; jobId: string }[]> {
+        const slots = await db.all<{ bookingDate: string; bookingTime: string; jobId: string }[]>(
+            `SELECT bookingDate, bookingTime, jobId
+             FROM bookings 
+             WHERE bookingDate >= ? AND bookingDate <= ? AND status != 'cancelado'`,
+            [startDate, endDate]
+        );
+        return slots;
     }
 }
