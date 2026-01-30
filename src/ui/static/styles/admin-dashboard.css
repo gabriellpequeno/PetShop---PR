@@ -1,6 +1,11 @@
 /* Admin Dashboard Styles */
 
 /* Layout Principal - uses same pattern as profile.html */
+body {
+  background-color: var(--mint-light);
+  overflow-x: hidden;
+}
+
 .dashboard-container {
   display: flex;
   min-height: 100vh;
@@ -8,14 +13,17 @@
 
 .main-content {
   flex: 1;
-  margin-left: 250px;
+  margin-left: 280px;
+  padding: 2rem;
   background-color: var(--surface-light);
   min-height: 100vh;
 }
 
 @media (prefers-color-scheme: dark) {
+  /* Keep admin dashboard background light to match design intent */
   .main-content {
-    background-color: var(--background-dark);
+    background-color: var(--surface-light);
+    color: var(--text-main-light);
   }
 }
 
@@ -28,24 +36,24 @@
 
 /* Header */
 .admin-header {
-  background-color: white;
-  padding: 1.5rem 2rem;
-  border-bottom: 1px solid #e5e7eb;
+  background: transparent;
+  padding: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 2rem;
 }
 
 @media (prefers-color-scheme: dark) {
   .admin-header {
-    background-color: var(--surface-dark);
-    border-bottom-color: #374151;
+    background: transparent;
+    border-bottom-color: transparent;
   }
-}
+} 
 
 .page-title {
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--secondary);
 }
@@ -53,23 +61,6 @@
 @media (prefers-color-scheme: dark) {
   .page-title {
     color: white;
-  }
-}
-
-/* Header */
-.admin-header {
-  background-color: white;
-  padding: 1.5rem 2rem;
-  border-bottom: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-@media (prefers-color-scheme: dark) {
-  .admin-header {
-    background-color: var(--surface-dark);
-    border-bottom-color: #374151;
   }
 }
 
@@ -129,45 +120,48 @@
 /* Metric Card */
 .metric-card {
   background-color: white;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: var(--shadow-soft);
+  border-radius: 1.5rem;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
   display: flex;
   align-items: center;
   gap: 1rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .metric-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px -8px rgba(0,0,0,0.08);
 }
 
 .metric-card.active {
-  border: 2px solid var(--primary);
-  box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.2);
-}
+  border: 2px solid rgba(255,165,0,0.12);
+  box-shadow: 0 0 0 4px rgba(255,165,0,0.06);
+} 
 
 @media (prefers-color-scheme: dark) {
+  /* Keep metric cards light to match design */
   .metric-card {
-    background-color: var(--surface-dark);
+    background-color: var(--surface-light);
+    color: var(--text-main-light);
   }
 }
 
 .metric-icon {
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 0.75rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .metric-icon svg {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 24px;
+  height: 24px;
   color: white;
-}
+} 
 
 .metric-icon.users {
   background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
@@ -194,8 +188,9 @@
 }
 
 @media (prefers-color-scheme: dark) {
+  /* Use same metric value color as light theme for consistency */
   .metric-value {
-    color: white;
+    color: var(--secondary);
   }
 }
 
@@ -233,14 +228,15 @@
 /* Table */
 .users-table-container {
   background-color: white;
-  border-radius: 1rem;
-  box-shadow: var(--shadow-soft);
+  border-radius: 1.5rem;
+  box-shadow: 0 6px 18px -8px rgba(0,0,0,0.06);
   overflow: hidden;
-}
+} 
 
 @media (prefers-color-scheme: dark) {
+  /* Keep table container light */
   .users-table-container {
-    background-color: var(--surface-dark);
+    background-color: var(--surface-light);
   }
 }
 
@@ -262,9 +258,10 @@
 }
 
 @media (prefers-color-scheme: dark) {
+  /* Keep table header light */
   .users-table th {
-    background-color: #1f2937;
-    border-bottom-color: #374151;
+    background-color: #f9fafb;
+    border-bottom-color: #e5e7eb;
   }
 }
 
@@ -285,12 +282,16 @@
 }
 
 .users-table tbody tr:hover {
-  background-color: #f9fafb;
+  background-color: #f3f4f6;
+}
+
+.users-table tbody tr:nth-child(even) td {
+  background-color: #f8fafc;
 }
 
 @media (prefers-color-scheme: dark) {
   .users-table tbody tr:hover {
-    background-color: #1f2937;
+    background-color: #f3f4f6;
   }
 }
 
@@ -366,15 +367,7 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .admin-sidebar {
-    transform: translateX(-100%);
-  }
-
-  .admin-sidebar.open {
-    transform: translateX(0);
-  }
-
-  .admin-main {
+  .main-content {
     margin-left: 0;
   }
 
