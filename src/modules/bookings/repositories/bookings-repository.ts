@@ -108,14 +108,23 @@ export class BookingsRepository {
 
     async complete(
         id: string,
-        realStartTime: string,
-        realEndTime: string
+        realStartTime: string | null,
+        realEndTime: string | null
     ): Promise<void> {
         await db.run(
             `UPDATE bookings 
        SET status = 'concluido', realStartTime = ?, realEndTime = ? 
        WHERE id = ?`,
             [realStartTime, realEndTime, id]
+        );
+    }
+
+    async reopen(id: string): Promise<void> {
+        await db.run(
+            `UPDATE bookings 
+             SET status = 'agendado', realStartTime = NULL, realEndTime = NULL 
+             WHERE id = ?`,
+            [id]
         );
     }
 

@@ -4,6 +4,7 @@ import { ListBookingsController } from "../controllers/list-bookings-controller"
 import { ListOccupiedSlotsController } from "../controllers/list-occupied-slots-controller";
 import { CancelBookingController } from "../controllers/cancel-booking-controller";
 import { CompleteBookingController } from "../controllers/complete-booking-controller";
+import { ReopenBookingController } from "../controllers/reopen-booking-controller";
 import { RenderBookingPageController } from "../controllers/render-booking-page-controller";
 import { RenderMyBookingsPageController } from "../controllers/render-my-bookings-page-controller";
 import { EnsureAuthenticationMiddleware } from "@/middlewares/ensure-authentication-middleware";
@@ -16,5 +17,6 @@ bookingRouter.get("/api/bookings", EnsureAuthenticationMiddleware.handle, ListBo
 bookingRouter.get("/api/bookings/occupied-slots", EnsureAuthenticationMiddleware.handle, ListOccupiedSlotsController.handle);
 bookingRouter.patch("/api/bookings/:id/cancel", EnsureAuthenticationMiddleware.handle, CancelBookingController.handle);
 bookingRouter.patch("/api/bookings/:id/complete", EnsureAuthenticationMiddleware.handle, CompleteBookingController.handle);
+bookingRouter.patch("/api/bookings/:id/reopen", EnsureAuthenticationMiddleware.handle, ReopenBookingController.handle);
 
 export { bookingRouter }; 
