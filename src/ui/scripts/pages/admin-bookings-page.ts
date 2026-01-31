@@ -1,27 +1,11 @@
 import { FeedbackModal } from '../components/feedback-modal.js'
-
-interface Booking {
-  id: string;
-  userId: string;
-  petId: string;
-  jobId: string;
-  bookingDate: string;
-  bookingTime?: string;
-  status: "agendado" | "concluido" | "cancelado";
-  price: number;
-  realStartTime: string | null;
-  realEndTime: string | null;
-  createdAt: string;
-  petName?: string;
-  petSize?: "P" | "M" | "G";
-  jobName?: string;
-  jobDuration?: number;
-  userName?: string;
-}
+import { BookingsClient } from '../consumers/bookings-client.js'
+import type { AdminBooking as Booking } from '../consumers/bookings-client.js' 
 
 class AdminBookingsPage {
   private bookings: Booking[] = [];
   private filteredBookings: Booking[] = [];
+  private bookingsClient = new BookingsClient();
   private currentDate: Date = new Date();
   private currentView: "week" | "month" = "week";
   private selectedBooking: Booking | null = null;
@@ -40,9 +24,7 @@ class AdminBookingsPage {
 
   private async loadBookings() {
     try {
-      const response = await fetch("/api/bookings");
-      if (!response.ok) throw new Error("Failed to load bookings");
-      this.bookings = await response.json();
+      this.bookings = await this.bookingsClient.listAllBookings();
       this.applyFilters();
     } catch (error) {
       console.error("Error loading bookings:", error);
@@ -518,36 +500,11 @@ class AdminBookingsPage {
 
     try {
       if (newStatus === "concluido" && currentStatus !== "concluido") {
-        const response = await fetch(`/api/bookings/${bookingId}/complete`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({})
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || "Falha ao concluir agendamento");
-        }
+        await this.bookingsClient.completeBooking(bookingId);
       } else if (newStatus === "cancelado") {
-        // Cancel booking
-        const response = await fetch(`/api/bookings/${bookingId}/cancel`, {
-          method: "PATCH",
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || "Falha ao cancelar agendamento");
-        }
+        await this.bookingsClient.cancelBooking(bookingId);
       } else if (newStatus === "agendado" && currentStatus !== "agendado") {
-        // Reopen booking (change from concluido/cancelado back to agendado)
-        const response = await fetch(`/api/bookings/${bookingId}/reopen`, {
-          method: "PATCH"
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || "Falha ao reabrir agendamento");
-        }
+        await this.bookingsClient.reopenBooking(bookingId);
       }
 
       await this.loadBookings();

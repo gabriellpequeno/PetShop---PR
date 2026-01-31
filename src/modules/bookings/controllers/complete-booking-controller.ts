@@ -6,7 +6,7 @@ import { BadRequestError } from "../../../errors/bad-request-error";
 export class CompleteBookingController {
     static async handle(request: Request, response: Response) {
         const { id } = request.params;
-        const { realStartTime, realEndTime } = request.body;
+        const { realStartTime, realEndTime } = request.body || {};
         const userRole = request.user.role;
 
         if (!id || typeof id !== "string") {

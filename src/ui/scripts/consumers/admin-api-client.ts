@@ -43,6 +43,25 @@ export interface BookingListItem {
 
 export type DashboardPeriod = 'today' | 'week' | 'month'
 
+export interface AdminPet {
+    id: string
+    name: string
+    species: string
+    breed: string | null
+    age: number | null
+    weight: number | null
+    size: 'P' | 'M' | 'G'
+    userId: string
+    ownerName: string
+    ownerEmail: string
+}
+
+export interface AdminPetUser {
+    id: string
+    name: string
+    email: string
+}
+
 export class AdminApiClient extends ApiConsumer {
     async getDashboardSummary(range: DashboardPeriod = 'month'): Promise<DashboardSummary> {
         const response = await fetch(`${ApiConsumer.BASE_URL}/admin/dashboard-summary?range=${range}`, {
@@ -107,5 +126,64 @@ export class AdminApiClient extends ApiConsumer {
         }
 
         return response.json()
+    }
+
+    async getAdminPets(params?: Record<string, string>): Promise<AdminPet[]> {
+        const qs = params ? new URLSearchParams(params).toString() : ''
+        const url = `${ApiConsumer.BASE_URL}/admin/pets${qs ? `?${qs}` : ''}`
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: this.getHeaders(),
+            credentials: 'include',
+        })
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch admin pets')
+        }
+
+        return response.json()
+    }
+
+    async getPetsUsers(): Promise<AdminPetUser[]> {
+        const response = await fetch(`${ApiConsumer.BASE_URL}/admin/pets/users`, {
+            method: 'GET',
+            headers: this.getHeaders(),
+            credentials: 'include',
+        })
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch users for admin pets')
+        }
+
+        return response.json()
+    }
+
+    async updatePet(id: string, data: Partial<AdminPet>): Promise<AdminPet> {
+        const response = await fetch(`${ApiConsumer.BASE_URL}/admin/pets/${id}`, {
+            method: 'PUT',
+            headers: this.getHeaders(),
+            credentials: 'include',
+            body: JSON.stringify(data),
+        })
+
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({}))
+            throw new Error(error.message || 'Failed to update pet')
+        }
+
+        return response.json()
+    }
+
+    async deletePet(id: string): Promise<void> {
+        const response = await fetch(`${ApiConsumer.BASE_URL}/admin/pets/${id}`, {
+            method: 'DELETE',
+            headers: this.getHeaders(),
+            credentials: 'include',
+        })
+
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({}))
+            throw new Error(error.message || 'Failed to delete pet')
+        }
     }
 }

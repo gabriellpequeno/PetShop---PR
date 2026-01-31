@@ -1,4 +1,5 @@
 import { FeedbackModal } from '../components/feedback-modal.js'
+import { AdminApiClient } from '../consumers/admin-api-client.js'
 
 
 interface Pet {
@@ -25,6 +26,7 @@ interface User {
 class AdminPetsPage {
   private pets: Pet[] = [];
   private users: User[] = [];
+  private adminApiClient = new AdminApiClient();
   private currentPetId: string | null = null;
 
   // DOM Elements
@@ -162,13 +164,7 @@ class AdminPetsPage {
 
   private async loadUsers() {
     try {
-      const response = await fetch("/api/admin/pets/users", {
-        credentials: "include",
-      });
-
-      if (!response.ok) throw new Error("Failed to load users");
-
-      this.users = await response.json();
+      this.users = await this.adminApiClient.getPetsUsers();
       this.populateUserFilter();
     } catch (error) {
       console.error("Erro ao carregar usuários:", error);
@@ -206,13 +202,11 @@ class AdminPetsPage {
     if (userId) params.append("userId", userId);
 
     try {
-      const response = await fetch(`/api/admin/pets?${params.toString()}`, {
-        credentials: "include",
-      });
+      const paramsObj: Record<string, string> = {};
+      if (search) paramsObj.search = search;
+      if (userId) paramsObj.userId = userId;
 
-      if (!response.ok) throw new Error("Failed to load pets");
-
-      this.pets = await response.json();
+      this.pets = await this.adminApiClient.getAdminPets(paramsObj);
       this.renderTable();
       this.updateResultsCount();
     } catch (error) {
@@ -475,21 +469,11 @@ class AdminPetsPage {
       breed: breedInput?.value || null,
       age: ageInput?.value ? Number(ageInput.value) : null,
       weight: weightInput?.value ? Number(weightInput.value) : null,
-      size: sizeSelect?.value || "M",
-    };
+      size: (sizeSelect?.value || "M") as 'P' | 'M' | 'G',
+    }; 
 
     try {
-      const response = await fetch(`/api/admin/pets/${this.currentPetId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Erro ao atualizar pet");
-      }
+      await this.adminApiClient.updatePet(this.currentPetId, data);
 
       this.closeEditModal()
       await this.loadPets()
@@ -522,15 +506,7 @@ class AdminPetsPage {
     if (!this.currentPetId) return;
 
     try {
-      const response = await fetch(`/api/admin/pets/${this.currentPetId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Erro ao excluir pet");
-      }
+      await this.adminApiClient.deletePet(this.currentPetId);
 
       this.closeDeleteModal()
       await this.loadPets()

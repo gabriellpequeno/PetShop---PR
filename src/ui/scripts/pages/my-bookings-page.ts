@@ -94,9 +94,7 @@ class MyBookingsPage {
 
   private async loadBookings() {
     try {
-      const response = await fetch("/api/bookings");
-      if (!response.ok) throw new Error("Failed to load bookings");
-      this.bookings = await response.json();
+      this.bookings = await this.bookingsClient.listUserBookings();
     } catch (error) {
       console.error("Error loading bookings:", error);
       this.bookings = [];
@@ -1093,16 +1091,7 @@ class MyBookingsPage {
     }
 
     try {
-      const response = await fetch(
-        `/api/bookings/${this.selectedBooking.id}/cancel`,
-        {
-          method: "PATCH",
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to cancel booking");
-      }
+      await this.bookingsClient.cancelBooking(this.selectedBooking.id);
 
       // Reload bookings and occupied slots, then re-render
       await Promise.all([this.loadBookings(), this.loadOccupiedSlots()]);
