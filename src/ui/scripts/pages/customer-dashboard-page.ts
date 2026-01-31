@@ -161,41 +161,52 @@ class CustomerDashboardPage {
 
     try {
       const bookings = await this.bookingsClient.listUserBookings();
+      const pets: Pet[] = await this.petsClient.listPets();
+      const jobs: Job[] = await this.jobsClient.listJobs();
 
-      // Filter for upcoming/active bookings
-      const activeBookings = bookings.filter((b) =>
-        b.status !== "cancelled" && new Date(b.bookingDate) >= new Date()
+      const petsMap = new Map<string, Pet>(pets.map((p: Pet) => [p.id, p] as [string, Pet]));
+      const jobsMap = new Map<string, Job>(jobs.map((j: Job) => [j.id, j] as [string, Job]));
+
+      const sortedBookings = bookings.sort((a, b) => 
+        new Date(b.bookingDate).getTime() - new Date(a.bookingDate).getTime()
       );
 
       if (countElement) {
-        countElement.textContent = `${activeBookings.length} agendamento${activeBookings.length !== 1 ? "s" : ""}`;
+        const activeCount = bookings.filter(b => b.status === "agendado").length;
+        countElement.textContent = `${activeCount} agendamento${activeCount !== 1 ? "s" : ""} ativos`;
       }
 
-      if (activeBookings.length === 0) {
+      if (sortedBookings.length === 0) {
         cardBody.innerHTML = `
           <div class="empty-state">
             <i data-lucide="calendar-x"></i>
-            <span>Nenhum agendamento próximo</span>
+            <span>Nenhum agendamento encontrado</span>
           </div>
         `;
         return;
       }
 
-      const displayBookings = activeBookings.slice(0, 4); // Show max 4 bookings
+      const displayBookings = sortedBookings.slice(0, 4);
       cardBody.innerHTML = `
         <div class="items-list">
-          ${displayBookings.map((booking) => `
-            <div class="item-row">
-              <div class="item-icon booking">
-                <i data-lucide="calendar-check"></i>
+          ${displayBookings.map((booking) => {
+            const pet = petsMap.get(booking.petId);
+            const job = jobsMap.get(booking.jobId);
+            const statusClass = this.getStatusClass(booking.status);
+            const statusIcon = this.getStatusIcon(booking.status);
+            
+            return `
+            <div class="item-row ${statusClass}">
+              <div class="item-icon booking ${statusClass}">
+                <i data-lucide="${statusIcon}"></i>
               </div>
               <div class="item-info">
-                <p class="item-name">Agendamento</p>
+                <p class="item-name">${job?.name || 'Serviço'} - ${pet?.name || 'Pet'}</p>
                 <p class="item-details">${this.formatDate(booking.bookingDate)}</p>
               </div>
-              <span class="item-badge ${booking.status}">${this.getStatusLabel(booking.status)}</span>
+              <span class="item-badge ${statusClass}">${this.getStatusLabel(booking.status)}</span>
             </div>
-          `).join("")}
+          `}).join("")}
         </div>
       `;
     } catch (error) {
@@ -206,6 +217,24 @@ class CustomerDashboardPage {
           <span>Erro ao carregar agendamentos</span>
         </div>
       `;
+    }
+  }
+
+  private getStatusClass(status: string): string {
+    switch (status) {
+      case "concluido": return "completed";
+      case "cancelado": return "cancelled";
+      case "agendado": return "scheduled";
+      default: return "";
+    }
+  }
+
+  private getStatusIcon(status: string): string {
+    switch (status) {
+      case "concluido": return "check-circle";
+      case "cancelado": return "x-circle";
+      case "agendado": return "calendar-clock";
+      default: return "calendar-check";
     }
   }
 
@@ -222,6 +251,9 @@ class CustomerDashboardPage {
 
   private getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
+      agendado: "Agendado",
+      concluido: "Concluído",
+      cancelado: "Cancelado",
       pending: "Pendente",
       confirmed: "Confirmado",
       cancelled: "Cancelado"
@@ -245,22 +277,20 @@ class CustomerDashboardPage {
       if (services.length === 0) {
         cardBody.innerHTML = `
           <div class="empty-state">
-            <i data-lucide="sparkles"></i>
+            <i data-lucide="scissors"></i>
             <span>Nenhum serviço disponível</span>
           </div>
         `;
         return;
       }
 
-      console.log(services)
-
-      const displayServices = services.slice(0, 4); // Show max 4 services
+      const displayServices = services.slice(0, 4);
       cardBody.innerHTML = `
         <div class="items-list">
-          ${displayServices.map((service: any) => `
+          ${displayServices.map((service: any, index: number) => `
             <div class="item-row">
               <div class="item-icon service">
-                <i data-lucide="sparkles"></i>
+                <i data-lucide="${this.getServiceIcon(service.name, index)}"></i>
               </div>
               <div class="item-info">
                 <p class="item-name">${service.name}</p>
@@ -281,9 +311,23 @@ class CustomerDashboardPage {
       `;
     }
   }
+
+  private getServiceIcon(serviceName: string, index: number): string {
+    const nameLower = serviceName.toLowerCase();
+    
+    if (nameLower.includes("banho")) return "droplets";
+    if (nameLower.includes("tosa") || nameLower.includes("corte")) return "scissors";
+    if (nameLower.includes("veterinário") || nameLower.includes("consulta") || nameLower.includes("vacina")) return "stethoscope";
+    if (nameLower.includes("hotel") || nameLower.includes("hospedagem")) return "home";
+    if (nameLower.includes("passeio") || nameLower.includes("adestramento")) return "footprints";
+    if (nameLower.includes("spa") || nameLower.includes("hidratação")) return "bath";
+    if (nameLower.includes("unha") || nameLower.includes("pata")) return "hand";
+    
+    const defaultIcons = ["scissors", "bath", "heart", "star"];
+    return defaultIcons[index % defaultIcons.length] ?? 'scissors';
+  }
 }
 
-// Initialize when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
   const page = new CustomerDashboardPage();
   page.init();

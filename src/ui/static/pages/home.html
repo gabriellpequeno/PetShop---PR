@@ -52,7 +52,11 @@
       </div>
 
       <div class="nav-cta desktop-only">
-        <button class="btn btn-primary" data-auth-modal>Login</button>
+        <button class="btn btn-primary btn-enter" data-auth-modal>Entrar</button>
+        <button class="theme-toggle nav-toggle" id="navThemeToggle" aria-label="Alternar tema">
+          <i data-lucide="sun" class="theme-icon sun-icon"></i>
+          <i data-lucide="moon" class="theme-icon moon-icon"></i>
+        </button>
       </div>
 
       <!-- Mobile Menu Button -->
@@ -71,6 +75,13 @@
       <a href="#about" class="mobile-nav-link">Sobre Nós</a>
       <a href="#testimonials" class="mobile-nav-link">Feedbacks</a>
       <a href="#contact" class="mobile-nav-link">Contato</a>
+      <div class="mobile-theme-toggle">
+        <span>Tema</span>
+        <button class="theme-toggle" id="mobileThemeToggle" aria-label="Alternar tema">
+          <i data-lucide="sun" class="theme-icon sun-icon"></i>
+          <i data-lucide="moon" class="theme-icon moon-icon"></i>
+        </button>
+      </div>
       <button class="btn btn-primary full-width-mobile" data-auth-modal>
         Entrar
       </button>

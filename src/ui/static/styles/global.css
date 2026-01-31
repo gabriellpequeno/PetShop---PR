@@ -46,11 +46,16 @@ body {
     color 0.3s;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: var(--background-dark);
-    color: var(--text-main-dark);
-  }
+/* Paw trail styles removed as requested. */
+
+[data-theme="dark"] body {
+  background-color: var(--background-dark);
+  color: var(--text-main-dark);
+}
+
+[data-theme="light"] body {
+  background-color: var(--background-light);
+  color: var(--text-main-light);
 }
 
 a {
@@ -130,18 +135,32 @@ button {
 }
 
 .navbar.scrolled {
-  background-color: rgba(210, 255, 230, 0.9);
-  /* mint-light with opacity */
-  backdrop-filter: blur(12px);
   padding: 0.5rem 0;
+  backdrop-filter: blur(12px);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  .navbar.scrolled {
-    background-color: rgba(26, 64, 50, 0.9);
-    /* mint-dark */
-  }
+[data-theme="light"] .navbar.scrolled {
+  background-color: rgba(255,255,255,0.95);
+  border-bottom: 1px solid rgba(12, 78, 90, 0.06);
+}
+
+[data-theme="dark"] .navbar.scrolled {
+  background-color: rgba(26, 64, 50, 0.9);
+}
+
+/* Ensure readable text on scrolled navbar */
+[data-theme="light"] .navbar.scrolled .logo-text,
+[data-theme="light"] .navbar.scrolled .nav-link,
+[data-theme="light"] .navbar.scrolled .mobile-menu-btn,
+[data-theme="light"] .navbar.scrolled .mobile-nav-link {
+  color: var(--secondary);
+}
+
+[data-theme="dark"] .navbar.scrolled .logo-text,
+[data-theme="dark"] .navbar.scrolled .nav-link {
+  color: white;
 }
 
 .navbar-container {
@@ -184,10 +203,16 @@ button {
   color: var(--secondary);
 }
 
-@media (prefers-color-scheme: dark) {
-  .logo-text {
-    color: white;
-  }
+/* Dark theme specific override */
+[data-theme="dark"] .logo-text {
+  color: white;
+}
+
+/* Light theme: use secondary color for navbar texts to match design */
+[data-theme="light"] .logo-text,
+[data-theme="light"] .nav-link,
+[data-theme="light"] .mobile-nav-link {
+  color: var(--secondary);
 }
 
 .nav-links.desktop-only {
@@ -219,6 +244,8 @@ button {
 
   .nav-cta.desktop-only {
     display: flex;
+    align-items: center; /* center Entrar and switch vertically */
+    gap: 0.75rem;
   }
 
   .mobile-menu-btn-container {
