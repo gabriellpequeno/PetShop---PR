@@ -1,253 +1,290 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gerenciar Agendamentos | Admin - Little's Petshop</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerenciar Agendamentos | Admin - Little's Petshop</title>
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Styles -->
   <link rel="stylesheet" href="../styles/global.css" />
   <link rel="stylesheet" href="../styles/components/feedback-modal.css" />
   <link rel="stylesheet" href="../styles/calendar-view.css" />
   <link rel="stylesheet" href="../styles/admin-bookings.css" />
   
-  <!-- Scripts -->
   <script src="/scripts/components/sidebar-component.js" type="module"></script>
   <script src="/scripts/pages/admin-bookings-page.js" type="module"></script>
 </head>
 <body>
 
-  <div class="dashboard-container">
-    <!-- Sidebar Component -->
-    <petshop-sidebar mode="admin" active="bookings"></petshop-sidebar>
+    <!-- Scripts -->
+    <script
+      src="/scripts/components/sidebar-component.js"
+      type="module"
+    ></script>
+    <script src="/scripts/pages/admin-bookings-page.js" type="module"></script>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar Component -->
+      <petshop-sidebar mode="admin" active="bookings"></petshop-sidebar>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      <div class="page-header">
-        <div class="header-left">
-          <h1 class="page-title">Gerenciar Agendamentos</h1>
-          <p class="page-subtitle">Visualize e edite todos os agendamentos dos clientes</p>
-        </div>
-        <div class="header-actions">
-          <div class="filter-dropdown">
-            <button class="btn-filter" id="filterBtn">
-              <i data-lucide="filter"></i>
-              Filtrar
-            </button>
-            <div class="filter-menu" id="filterMenu" style="display: none;">
-              <label class="filter-option">
-                <input type="checkbox" value="agendado" checked>
-                <span class="status-dot agendado"></span>
-                Agendados
-              </label>
-              <label class="filter-option">
-                <input type="checkbox" value="concluido" checked>
-                <span class="status-dot concluido"></span>
-                Concluídos
-              </label>
-              <label class="filter-option">
-                <input type="checkbox" value="cancelado">
-                <span class="status-dot cancelado"></span>
-                Cancelados
-              </label>
-            </div>
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="page-header">
+          <div class="header-left">
+            <h1 class="page-title">Gerenciar Agendamentos</h1>
+            <p class="page-subtitle">
+              Visualize e edite todos os agendamentos dos clientes
+            </p>
           </div>
-        </div>
-      </div>
-
-      <!-- Stats Summary -->
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-icon agendado">
-            <i data-lucide="calendar-clock"></i>
-          </div>
-          <div class="stat-info">
-            <span class="stat-value" id="agendadosCount">0</span>
-            <span class="stat-label">Agendados</span>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon concluido">
-            <i data-lucide="calendar-check"></i>
-          </div>
-          <div class="stat-info">
-            <span class="stat-value" id="concluidosCount">0</span>
-            <span class="stat-label">Concluídos</span>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon cancelado">
-            <i data-lucide="calendar-x"></i>
-          </div>
-          <div class="stat-info">
-            <span class="stat-value" id="canceladosCount">0</span>
-            <span class="stat-label">Cancelados</span>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon revenue">
-            <i data-lucide="trending-up"></i>
-          </div>
-          <div class="stat-info">
-            <span class="stat-value" id="revenueValue">R$ 0</span>
-            <span class="stat-label">Receita do Mês</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Calendar Section -->
-      <div class="calendar-wrapper">
-        <!-- Calendar Header -->
-        <div class="calendar-top-bar">
-          <div class="calendar-nav-section">
-            <button class="btn-today" id="todayBtn">Hoje</button>
-            <div class="nav-arrows">
-              <button class="nav-arrow" id="prevWeek" aria-label="Semana anterior">
-                <i data-lucide="chevron-left"></i>
+          <div class="header-actions">
+            <div class="filter-dropdown">
+              <button class="btn-filter" id="filterBtn">
+                <i data-lucide="filter"></i>
+                Filtrar
               </button>
-              <button class="nav-arrow" id="nextWeek" aria-label="Próxima semana">
-                <i data-lucide="chevron-right"></i>
+              <div class="filter-menu" id="filterMenu" style="display: none">
+                <label class="filter-option">
+                  <input type="checkbox" value="agendado" checked />
+                  <span class="status-dot agendado"></span>
+                  Agendados
+                </label>
+                <label class="filter-option">
+                  <input type="checkbox" value="concluido" checked />
+                  <span class="status-dot concluido"></span>
+                  Concluídos
+                </label>
+                <label class="filter-option">
+                  <input type="checkbox" value="cancelado" />
+                  <span class="status-dot cancelado"></span>
+                  Cancelados
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Summary -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon agendado">
+              <i data-lucide="calendar-clock"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value" id="agendadosCount">0</span>
+              <span class="stat-label">Agendados</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon concluido">
+              <i data-lucide="calendar-check"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value" id="concluidosCount">0</span>
+              <span class="stat-label">Concluídos</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon cancelado">
+              <i data-lucide="calendar-x"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value" id="canceladosCount">0</span>
+              <span class="stat-label">Cancelados</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon revenue">
+              <i data-lucide="trending-up"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value" id="revenueValue">R$ 0</span>
+              <span class="stat-label">Receita do Mês</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calendar Section -->
+        <div class="calendar-wrapper">
+          <!-- Calendar Header -->
+          <div class="calendar-top-bar">
+            <div class="calendar-nav-section">
+              <button class="btn-today" id="todayBtn">Hoje</button>
+              <div class="nav-arrows">
+                <button
+                  class="nav-arrow"
+                  id="prevWeek"
+                  aria-label="Semana anterior"
+                >
+                  <i data-lucide="chevron-left"></i>
+                </button>
+                <button
+                  class="nav-arrow"
+                  id="nextWeek"
+                  aria-label="Próxima semana"
+                >
+                  <i data-lucide="chevron-right"></i>
+                </button>
+              </div>
+              <h2 class="calendar-period" id="calendarPeriod">Janeiro 2026</h2>
+            </div>
+            <div class="view-toggle">
+              <button class="view-btn active" data-view="week">Semana</button>
+              <button class="view-btn" data-view="month">Mês</button>
+            </div>
+          </div>
+
+          <!-- Week View Calendar -->
+          <div class="calendar-container" id="weekView">
+            <div class="calendar-header-row">
+              <div class="time-gutter"></div>
+              <div class="day-headers" id="dayHeaders">
+                <!-- Day headers will be generated by JavaScript -->
+              </div>
+            </div>
+
+            <div class="calendar-body">
+              <div class="time-column" id="timeColumn">
+                <!-- Time slots will be generated by JavaScript -->
+              </div>
+              <div class="days-grid" id="daysGrid">
+                <!-- Day columns with events will be generated by JavaScript -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Month View Calendar -->
+          <div
+            class="calendar-container month-view"
+            id="monthView"
+            style="display: none"
+          >
+            <div class="month-header-row">
+              <div class="month-day-label">DOM</div>
+              <div class="month-day-label">SEG</div>
+              <div class="month-day-label">TER</div>
+              <div class="month-day-label">QUA</div>
+              <div class="month-day-label">QUI</div>
+              <div class="month-day-label">SEX</div>
+              <div class="month-day-label">SÁB</div>
+            </div>
+            <div class="month-grid" id="monthGrid">
+              <!-- Month cells will be generated by JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Event Details Modal (Editable) -->
+        <div class="modal-overlay" id="eventModal" style="display: none">
+          <div class="modal-content admin-modal">
+            <div class="modal-header">
+              <h3 class="modal-title">Editar Agendamento</h3>
+              <button class="modal-close" id="closeModal">
+                <i data-lucide="x"></i>
               </button>
             </div>
-            <h2 class="calendar-period" id="calendarPeriod">Janeiro 2026</h2>
-          </div>
-          <div class="view-toggle">
-            <button class="view-btn active" data-view="week">Semana</button>
-            <button class="view-btn" data-view="month">Mês</button>
-          </div>
-        </div>
+            <div class="modal-body">
+              <form id="editBookingForm">
+                <input type="hidden" id="bookingId" />
 
-        <!-- Week View Calendar -->
-        <div class="calendar-container" id="weekView">
-          <div class="calendar-header-row">
-            <div class="time-gutter"></div>
-            <div class="day-headers" id="dayHeaders">
-              <!-- Day headers will be generated by JavaScript -->
-            </div>
-          </div>
-          
-          <div class="calendar-body">
-            <div class="time-column" id="timeColumn">
-              <!-- Time slots will be generated by JavaScript -->
-            </div>
-            <div class="days-grid" id="daysGrid">
-              <!-- Day columns with events will be generated by JavaScript -->
-            </div>
-          </div>
-        </div>
-
-        <!-- Month View Calendar -->
-        <div class="calendar-container month-view" id="monthView" style="display: none;">
-          <div class="month-header-row">
-            <div class="month-day-label">DOM</div>
-            <div class="month-day-label">SEG</div>
-            <div class="month-day-label">TER</div>
-            <div class="month-day-label">QUA</div>
-            <div class="month-day-label">QUI</div>
-            <div class="month-day-label">SEX</div>
-            <div class="month-day-label">SÁB</div>
-          </div>
-          <div class="month-grid" id="monthGrid">
-            <!-- Month cells will be generated by JavaScript -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Admin Event Details Modal (Editable) -->
-      <div class="modal-overlay" id="eventModal" style="display: none;">
-        <div class="modal-content admin-modal">
-          <div class="modal-header">
-            <h3 class="modal-title">Editar Agendamento</h3>
-            <button class="modal-close" id="closeModal">
-              <i data-lucide="x"></i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form id="editBookingForm">
-              <input type="hidden" id="bookingId">
-              
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label">Cliente</label>
-                  <input type="text" id="clientName" class="form-input" readonly>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Pet</label>
-                  <input type="text" id="petName" class="form-input" readonly>
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label">Serviço</label>
-                  <input type="text" id="serviceName" class="form-input" readonly>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Porte do Pet</label>
-                  <input type="text" id="petSize" class="form-input" readonly>
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label">Data do Agendamento</label>
-                  <input type="date" id="bookingDate" class="form-input">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Preço</label>
-                  <input type="text" id="bookingPrice" class="form-input" readonly>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Status</label>
-                <select id="bookingStatus" class="form-select">
-                  <option value="agendado">Agendado</option>
-                  <option value="concluido">Concluído</option>
-                  <option value="cancelado">Cancelado</option>
-                </select>
-              </div>
-
-              <div class="complete-section" id="completeSection" style="display: none;">
-                <h4 class="section-subtitle">Informações de Conclusão</h4>
                 <div class="form-row">
                   <div class="form-group">
-                    <label class="form-label">Horário de Início Real</label>
-                    <input type="time" id="realStartTime" class="form-input">
+                    <label class="form-label">Cliente</label>
+                    <input
+                      type="text"
+                      id="clientName"
+                      class="form-input"
+                      readonly
+                    />
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Horário de Término Real</label>
-                    <input type="time" id="realEndTime" class="form-input">
+                    <label class="form-label">Pet</label>
+                    <input
+                      type="text"
+                      id="petName"
+                      class="form-input"
+                      readonly
+                    />
                   </div>
                 </div>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button class="btn-secondary" id="cancelChangesBtn">
-              Cancelar
-            </button>
-            <button class="btn-primary" id="saveChangesBtn">
-              <i data-lucide="save"></i>
-              Salvar Alterações
-            </button>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Serviço</label>
+                    <input
+                      type="text"
+                      id="serviceName"
+                      class="form-input"
+                      readonly
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Porte do Pet</label>
+                    <input
+                      type="text"
+                      id="petSize"
+                      class="form-input"
+                      readonly
+                    />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Data do Agendamento</label>
+                    <input type="date" id="bookingDate" class="form-input" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Preço</label>
+                    <input
+                      type="text"
+                      id="bookingPrice"
+                      class="form-input"
+                      readonly
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Status</label>
+                  <select id="bookingStatus" class="form-select">
+                    <option value="agendado">Agendado</option>
+                    <option value="concluido">Concluído</option>
+                    <option value="cancelado">Cancelado</option>
+                  </select>
+                  <p
+                    id="statusMessage"
+                    class="status-message"
+                    style="display: none"
+                  ></p>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-secondary" id="cancelChangesBtn">
+                Cancelar
+              </button>
+              <button class="btn-primary" id="saveChangesBtn">
+                <i data-lucide="save"></i>
+                Salvar Alterações
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </main>
+    </div>
 
-    </main>
-  </div>
-
-  <script>
-    lucide.createIcons();
-  </script>
-</body>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
 </html>

@@ -97,15 +97,18 @@ export class AdminUsersClient extends ApiConsumer {
     })
 
     if (!response.ok) {
-      throw new Error('Failed to update user')
+      let body: any = null
+      try {
+        body = await response.json()
+      } catch (e) {
+      }
+      const msg = body && (body.error || body.message || body) ? (body.error || body.message || JSON.stringify(body)) : 'Failed to update user'
+      throw new Error(msg)
     }
 
     return true
   }
 
-  /**
-   * Delete user (admin only)
-   */
   async deleteUser(userId: string): Promise<boolean> {
     const response = await fetch(`${ApiConsumer.BASE_URL}/admin/users/${userId}`, {
       method: 'DELETE',
@@ -120,9 +123,6 @@ export class AdminUsersClient extends ApiConsumer {
     return true
   }
 
-  /**
-   * Get pets for a specific user (admin only)
-   */
   async getUserPets(userId: string): Promise<Pet[]> {
     const response = await fetch(`${ApiConsumer.BASE_URL}/admin/users/${userId}/pets`, {
       method: 'GET',
@@ -137,9 +137,6 @@ export class AdminUsersClient extends ApiConsumer {
     return response.json()
   }
 
-  /**
-   * Get bookings for a specific user (admin only)
-   */
   async getUserBookings(userId: string): Promise<any[]> {
     const response = await fetch(
       `${ApiConsumer.BASE_URL}/bookings?userId=${userId}`,

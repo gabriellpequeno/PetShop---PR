@@ -50,6 +50,16 @@ class AdminUsersPage {
       this.handleSaveUser()
     })
 
+    const phoneInput = document.getElementById('userPhone') as HTMLInputElement | null
+    phoneInput?.addEventListener('input', (e) => {
+      const target = e.target as HTMLInputElement
+      target.value = this.applyPhoneMask(target.value)
+      this.clearFormError('userPhone')
+    })
+
+    const emailInput = document.getElementById('userEmail') as HTMLInputElement | null
+    emailInput?.addEventListener('input', () => this.clearFormError('userEmail'))
+
     // Close modals
     document.getElementById('closeModal')?.addEventListener('click', () => {
       this.closeEditModal()
@@ -115,7 +125,7 @@ class AdminUsersPage {
   private renderUsers(users: User[]) {
     if (!this.usersList) return
 
-    this.usersList.innerHTML = '' // Clear content safely
+    this.usersList.innerHTML = ''
 
     if (users.length === 0) {
       const emptyState = document.createElement('div')
@@ -255,7 +265,7 @@ class AdminUsersPage {
     const petsContainer = document.getElementById('userPetsList')
     if (!petsContainer) return
 
-    petsContainer.innerHTML = '' // Clear content safely
+    petsContainer.innerHTML = ''
 
     if (this.currentUserPets.length === 0) {
       const emptyDiv = document.createElement('div')
@@ -320,7 +330,7 @@ class AdminUsersPage {
     const bookingsContainer = document.getElementById('userBookingsList')
     if (!bookingsContainer) return
 
-    bookingsContainer.innerHTML = '' // Clear content safely
+    bookingsContainer.innerHTML = ''
 
     if (this.currentUserBookings.length === 0) {
       const emptyDiv = document.createElement('div')
@@ -406,6 +416,16 @@ class AdminUsersPage {
     const location = (document.getElementById('userLocation') as HTMLInputElement).value
     const birthDate = (document.getElementById('userBirthDate') as HTMLInputElement).value
 
+    if (!this.validateEmail(email)) {
+      this.showFormError('userEmail', 'Email inválido. Insira um email válido (ex: usuario@exemplo.com)')
+      return
+    }
+
+    if (phone && !this.validatePhone(phone)) {
+      this.showFormError('userPhone', 'Formato de telefone inválido.')
+      return
+    }
+
     try {
       await this.adminClient.updateUser(userId, {
         name,
@@ -462,7 +482,7 @@ class AdminUsersPage {
   private showLoading() {
     if (!this.usersList) return
 
-    this.usersList.innerHTML = '' // Clear content safely
+    this.usersList.innerHTML = ''
 
     const loadingSpinner = document.createElement('div')
     loadingSpinner.className = 'loading-spinner'
@@ -477,7 +497,7 @@ class AdminUsersPage {
   private showError(message: string) {
     if (!this.usersList) return
 
-    this.usersList.innerHTML = '' // Clear content safely
+    this.usersList.innerHTML = ''
 
     const emptyState = document.createElement('div')
     emptyState.className = 'empty-state'
@@ -495,9 +515,69 @@ class AdminUsersPage {
     this.usersList.appendChild(emptyState)
     lucide.createIcons()
   }
+
+  private applyPhoneMask(value: string): string {
+    const numbers = value.replace(/\D/g, '')
+    const limited = numbers.substring(0, 11)
+
+    if (limited.length <= 2) {
+      return limited
+    } else if (limited.length <= 6) {
+      return `(${limited.substring(0, 2)}) ${limited.substring(2)}`
+    } else if (limited.length <= 10) {
+      return `(${limited.substring(0, 2)}) ${limited.substring(2, 6)}-${limited.substring(6)}`
+    } else {
+      return `(${limited.substring(0, 2)}) ${limited.substring(2, 7)}-${limited.substring(7)}`
+    }
+  }
+
+  private validatePhone(phone: string): boolean {
+    const numbers = phone.replace(/\D/g, '')
+    return numbers.length === 10 || numbers.length === 11
+  }
+
+  private validateEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  private showFormError(inputId: string, message: string) {
+    const input = document.getElementById(inputId) as HTMLInputElement | null
+    if (!input) return
+
+    const existing = input.parentElement?.querySelector('.form-error')
+    if (existing) existing.remove()
+
+    input.classList.add('has-error')
+    input.setAttribute('aria-invalid', 'true')
+
+    const errorEl = document.createElement('span')
+    errorEl.className = 'form-error'
+    const errorId = `${inputId}-error`
+    errorEl.id = errorId
+    errorEl.textContent = message
+
+    input.parentElement?.appendChild(errorEl)
+    input.setAttribute('aria-describedby', errorId)
+  }
+
+  private clearFormError(inputId?: string) {
+    if (inputId) {
+      const input = document.getElementById(inputId) as HTMLInputElement | null
+      if (!input) return
+      input.classList.remove('has-error')
+      input.removeAttribute('aria-invalid')
+      input.removeAttribute('aria-describedby')
+      const existing = input.parentElement?.querySelector('.form-error')
+      if (existing) existing.remove()
+      return
+    }
+
+    document.querySelectorAll('.form-error').forEach(el => el.remove())
+    document.querySelectorAll('input').forEach(i => (i as HTMLInputElement).classList.remove('has-error'))
+  }
 }
 
-// Initialize when DOM is loaded
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => new AdminUsersPage())
 } else {

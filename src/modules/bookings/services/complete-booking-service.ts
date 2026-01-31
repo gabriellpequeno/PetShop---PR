@@ -12,8 +12,7 @@ interface CompleteBookingRequest {
 }
 
 export class CompleteBookingService {
-    constructor(private repository: BookingsRepository) { }
-
+  constructor(private repository: BookingsRepository) {}
     async execute({
         bookingId,
         userRole,
