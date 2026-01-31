@@ -26,7 +26,8 @@
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid #f0fdfa; /* Light teal border */
+    border: 4px solid #f0fdfa;
+    /* Light teal border */
 }
 
 .edit-avatar-btn {
@@ -43,7 +44,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .profile-info {
@@ -93,6 +94,21 @@
     width: 18px;
     height: 18px;
     color: var(--p-500);
+    flex-shrink: 0;
+}
+
+.detail-item span {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Location field truncation - 2 lines */
+#profileLocation {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: normal;
 }
 
 /* Pets List (Responsive Grid) */
@@ -113,10 +129,19 @@
     text-align: center;
     border: 1px solid #e2e8f0;
     transition: transform 0.2s;
-    overflow: hidden; /* Prevent overflow */
+    overflow: hidden;
+    /* Prevent overflow */
 }
 
 .pet-preview-card h4 {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Truncate breed text (p element inside pet card) */
+.pet-preview-card p {
     width: 100%;
     white-space: nowrap;
     overflow: hidden;
@@ -130,7 +155,8 @@
 }
 
 .add-pet-preview {
-    min-height: 180px; /* Ensure height matches roughly the content cards */
+    min-height: 180px;
+    /* Ensure height matches roughly the content cards */
     background: transparent;
     border: 2px dashed #cbd5e1;
     border-radius: 1rem;
@@ -177,7 +203,8 @@
     font-family: var(--font-display);
     font-size: 1.5rem;
     color: var(--secondary);
-    margin-bottom: 0; /* Let header-row handle spacing */
+    margin-bottom: 0;
+    /* Let header-row handle spacing */
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -194,7 +221,8 @@
 
 .link-secondary {
     background: #f0fdfa;
-    color: var(--secondary); /* Corrigindo contraste */
+    color: var(--secondary);
+    /* Corrigindo contraste */
     padding: 0.5rem 1rem;
     border-radius: 999px;
     font-weight: 700;
@@ -211,14 +239,16 @@
 }
 
 .schedule-item {
-    background: #f8fafc; /* Lighter background inside the white container */
+    background: #f8fafc;
+    /* Lighter background inside the white container */
     border-radius: 1.25rem;
     padding: 1.25rem;
     display: flex;
     align-items: center;
     gap: 1.25rem;
     margin-bottom: 1rem;
-    border: 1px solid transparent; /* Remove the visible border, use background */
+    border: 1px solid transparent;
+    /* Remove the visible border, use background */
     transition: all 0.2s ease;
 }
 
@@ -235,7 +265,8 @@
 
 .date-box {
     background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
-    color: var(--secondary); /* Corrigindo contraste */
+    color: var(--secondary);
+    /* Corrigindo contraste */
     border-radius: 1rem;
     padding: 0.75rem;
     display: flex;
@@ -243,7 +274,7 @@
     align-items: center;
     justify-content: center;
     min-width: 70px;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .date-box .month {
@@ -304,7 +335,7 @@
     border-radius: 1.5rem;
     padding: 2rem;
     color: white;
-    background-image: radial-gradient(circle at top right, rgba(255,255,255,0.1), transparent);
+    background-image: radial-gradient(circle at top right, rgba(255, 255, 255, 0.1), transparent);
 }
 
 .loyalty-title {
@@ -317,7 +348,7 @@
 }
 
 .progress-bar-container {
-    background: rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
     height: 8px;
     border-radius: 4px;
     margin: 1.5rem 0;
@@ -325,7 +356,8 @@
 }
 
 .progress-bar {
-    background: var(--p-400); /* Orange/Amber tint */
+    background: var(--p-400);
+    /* Orange/Amber tint */
     height: 100%;
     border-radius: 4px;
 }
@@ -408,7 +440,8 @@
 
 .form-group input:focus {
     outline: none;
-    border-color: var(--primary); /* Usando cor primária definida */
+    border-color: var(--primary);
+    /* Usando cor primária definida */
 }
 
 /* Mobile and Tablet Responsiveness */
@@ -506,8 +539,13 @@
         align-self: flex-start;
     }
 
-    .date-box .month { font-size: 0.65rem; }
-    .date-box .day { font-size: 1.25rem; }
+    .date-box .month {
+        font-size: 0.65rem;
+    }
+
+    .date-box .day {
+        font-size: 1.25rem;
+    }
 
     .schedule-info {
         align-items: flex-start;
@@ -519,6 +557,7 @@
         margin-top: 0.5rem;
     }
 
-    .schedule-info p { font-size: 0.85rem; }
+    .schedule-info p {
+        font-size: 0.85rem;
+    }
 }
-

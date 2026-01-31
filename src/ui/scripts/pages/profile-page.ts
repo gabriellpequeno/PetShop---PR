@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadUserProfile() {
   const user = await usersClient.getProfile()
 
-  setText('profileName', user.name)
+  setText('profileName', formatDisplayName(user.name))
   setText('profileEmail', user.email)
   setText('profilePhone', user.phone || 'Não informado')
   setText('profileLocation', user.location || 'Não informado')
@@ -46,6 +46,21 @@ async function loadUserProfile() {
 
   const profileAvatar = document.getElementById('profileAvatar') as HTMLImageElement
   if (profileAvatar) profileAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=FFdbf6f3&color=112d45`
+}
+
+/**
+ * Formata o nome para exibição: limita a 2 primeiros nomes OU 23 caracteres
+ */
+function formatDisplayName(fullName: string): string {
+  const names = fullName.trim().split(/\s+/)
+  const twoNames = names.slice(0, 2).join(' ')
+
+  if (twoNames.length <= 23) {
+    return twoNames
+  }
+
+  // Se 2 nomes > 23 chars, trunca em 23 chars
+  return twoNames.substring(0, 23) + '...'
 }
 
 async function loadPets() {
@@ -182,9 +197,9 @@ async function loadSchedule() {
 
 function applyPhoneMask(value: string): string {
   const numbers = value.replace(/\D/g, '')
-  
+
   const limited = numbers.substring(0, 11)
-  
+
   if (limited.length <= 2) {
     return limited
   } else if (limited.length <= 6) {
@@ -315,14 +330,14 @@ function showFormError(inputId: string, message: string) {
   errorEl.className = 'form-error'
   errorEl.textContent = message
   errorEl.style.cssText = 'color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem; display: block;'
-  
+
   input.parentElement?.appendChild(errorEl)
 }
 
 function clearFormErrors() {
   const errors = document.querySelectorAll('.form-error')
   errors.forEach(err => err.remove())
-  
+
   const inputs = document.querySelectorAll('#editProfileForm input')
   inputs.forEach((input: any) => {
     input.style.borderColor = ''

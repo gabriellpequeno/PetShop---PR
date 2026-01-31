@@ -268,11 +268,51 @@ body {
 .user-name {
   font-weight: 600;
   color: var(--secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  display: inline-block;
 }
 
 .user-email {
   color: #64748b;
   font-size: 0.875rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  display: block;
+}
+
+/* Truncate all table cells to prevent layout breaking */
+.users-table td {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Allow wrap for cells with line breaks */
+.users-table td:has(br),
+.users-table td:has(small) {
+  white-space: normal;
+}
+
+/* Truncate inner spans in table cells (except badges) */
+.users-table td>span:not(.badge) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 1.3;
+}
+
+/* Compact spacing for service + time cells */
+.users-table td small {
+  display: block;
+  margin-top: 0.125rem;
+  line-height: 1.2;
 }
 
 /* Badge - same as status-badge */
