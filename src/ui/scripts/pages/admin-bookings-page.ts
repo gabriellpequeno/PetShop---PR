@@ -1,3 +1,5 @@
+import { FeedbackModal } from '../components/feedback-modal.js'
+
 interface Booking {
   id: string;
   userId: string;
@@ -506,24 +508,11 @@ class AdminBookingsPage {
 
     const bookingId = this.selectedBooking.id;
     const currentStatus = this.selectedBooking.status;
-    const newStatus = (
-      document.getElementById("bookingStatus") as HTMLSelectElement
-    ).value;
-
-    const statusMessage = document.getElementById("statusMessage");
-
-    // Hide any previous message
-    if (statusMessage) {
-      statusMessage.style.display = "none";
-    }
+    const newStatus = (document.getElementById("bookingStatus") as HTMLSelectElement).value;
 
     // Check if trying to cancel a completed booking
     if (currentStatus === "concluido" && newStatus === "cancelado") {
-      if (statusMessage) {
-        statusMessage.textContent =
-          "Serviços concluídos não podem ser cancelados.";
-        statusMessage.style.display = "block";
-      }
+      await FeedbackModal.error("Serviços concluídos não podem ser cancelados.");
       return;
     }
 
@@ -532,26 +521,33 @@ class AdminBookingsPage {
         const response = await fetch(`/api/bookings/${bookingId}/complete`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({}),
+          body: JSON.stringify({})
         });
 
-        if (!response.ok) throw new Error("Failed to complete booking");
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || "Falha ao concluir agendamento");
+        }
       } else if (newStatus === "cancelado") {
         // Cancel booking
         const response = await fetch(`/api/bookings/${bookingId}/cancel`, {
           method: "PATCH",
         });
 
-        if (!response.ok) throw new Error("Failed to cancel booking");
-      } else if (newStatus === "agendado" && currentStatus === "concluido") {
-        // Revert from completed to scheduled
-        const response = await fetch(`/api/bookings/${bookingId}/status`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: "agendado" }),
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || "Falha ao cancelar agendamento");
+        }
+      } else if (newStatus === "agendado" && currentStatus !== "agendado") {
+        // Reopen booking (change from concluido/cancelado back to agendado)
+        const response = await fetch(`/api/bookings/${bookingId}/reopen`, {
+          method: "PATCH"
         });
 
-        if (!response.ok) throw new Error("Failed to update booking status");
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || "Falha ao reabrir agendamento");
+        }
       }
 
       await this.loadBookings();
@@ -559,10 +555,11 @@ class AdminBookingsPage {
       this.renderCalendar();
       this.closeModal();
 
-      alert("Alterações salvas com sucesso!");
+      await FeedbackModal.success("Alterações salvas com sucesso!");
     } catch (error) {
       console.error("Error saving changes:", error);
-      alert("Erro ao salvar alterações. Tente novamente.");
+      const errorMessage = error instanceof Error ? error.message : "Erro ao salvar alterações. Tente novamente.";
+      await FeedbackModal.error(errorMessage);
     }
   }
 }

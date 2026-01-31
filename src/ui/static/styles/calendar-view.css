@@ -296,7 +296,7 @@ body {
 }
 
 .time-slot-label {
-  height: 60px;
+  height: 40px;
   padding-right: 8px;
   display: flex;
   align-items: flex-start;
@@ -325,7 +325,7 @@ body {
 }
 
 .hour-slot {
-  height: 60px;
+  height: 40px;
   border-bottom: 1px solid #f1f5f9;
   position: relative;
 }
@@ -864,12 +864,13 @@ body {
 }
 
 .hour-slot.available-slot {
-  background: rgba(16, 185, 129, 0.08);
+  background: rgba(16, 185, 129, 0.25);
   cursor: pointer;
+  border-left: 3px solid #10b981;
 }
 
 .hour-slot.available-slot:hover {
-  background: rgba(16, 185, 129, 0.15);
+  background: rgba(16, 185, 129, 0.35);
 }
 
 .hour-slot.unavailable-slot {

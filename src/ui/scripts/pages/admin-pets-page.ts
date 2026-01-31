@@ -1,3 +1,6 @@
+import { FeedbackModal } from '../components/feedback-modal.js'
+
+
 interface Pet {
   id: string;
   name: string;
@@ -10,6 +13,8 @@ interface Pet {
   ownerName: string;
   ownerEmail: string;
 }
+
+
 
 interface User {
   id: string;
@@ -486,11 +491,12 @@ class AdminPetsPage {
         throw new Error(error.message || "Erro ao atualizar pet");
       }
 
-      this.closeEditModal();
-      await this.loadPets();
+      this.closeEditModal()
+      await this.loadPets()
+      await FeedbackModal.success('Pet atualizado com sucesso!')
     } catch (error) {
-      console.error("Erro ao atualizar pet:", error);
-      alert(error instanceof Error ? error.message : "Erro ao atualizar pet");
+      console.error('Erro ao atualizar pet:', error)
+      await FeedbackModal.error(error instanceof Error ? error.message : 'Erro ao atualizar pet')
     }
   }
 
@@ -526,11 +532,12 @@ class AdminPetsPage {
         throw new Error(error.message || "Erro ao excluir pet");
       }
 
-      this.closeDeleteModal();
-      await this.loadPets();
+      this.closeDeleteModal()
+      await this.loadPets()
+      await FeedbackModal.success('Pet excluído com sucesso!')
     } catch (error) {
-      console.error("Erro ao excluir pet:", error);
-      alert(error instanceof Error ? error.message : "Erro ao excluir pet");
+      console.error('Erro ao excluir pet:', error)
+      await FeedbackModal.error(error instanceof Error ? error.message : 'Erro ao excluir pet')
     }
   }
 
@@ -541,7 +548,6 @@ class AdminPetsPage {
   }
 }
 
-// Initialize when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
   new AdminPetsPage();
 });

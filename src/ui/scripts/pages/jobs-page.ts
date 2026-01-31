@@ -1,5 +1,6 @@
 import { JobsClient } from "../consumers/jobs-client";
 import { AuthClient } from "../consumers/auth-client";
+import { FeedbackModal } from "../components/feedback-modal.js";
 
 interface JobAvailability {
   id?: string;
@@ -376,22 +377,22 @@ class AdminServicesPage {
 
       // Validations
       if (!data.name || data.name.length < 3) {
-        alert("Nome do serviço deve ter pelo menos 3 caracteres");
+        await FeedbackModal.warning("Nome do serviço deve ter pelo menos 3 caracteres");
         return;
       }
 
       if (data.priceP <= 0 || data.priceM <= 0 || data.priceG <= 0) {
-        alert("Todos os preços devem ser maiores que zero");
+        await FeedbackModal.warning("Todos os preços devem ser maiores que zero");
         return;
       }
 
       if (data.duration <= 0) {
-        alert("Duração deve ser maior que zero");
+        await FeedbackModal.warning("Duração deve ser maior que zero");
         return;
       }
 
       if (availability.length === 0) {
-        alert("Selecione pelo menos um dia de disponibilidade");
+        await FeedbackModal.warning("Selecione pelo menos um dia de disponibilidade");
         return;
       }
 
@@ -410,10 +411,11 @@ class AdminServicesPage {
 
         this.closeModal();
         await this.loadServices();
+        await FeedbackModal.success(this.editingServiceId ? "Serviço atualizado com sucesso!" : "Serviço criado com sucesso!");
 
       } catch (error) {
         console.error("Error saving service:", error);
-        alert("Erro ao salvar serviço. Verifique os dados.");
+        await FeedbackModal.error("Erro ao salvar serviço. Verifique os dados.");
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = originalText || "Salvar Serviço";
@@ -485,10 +487,11 @@ class AdminServicesPage {
 
       this.closeDeleteModal();
       await this.loadServices();
+      await FeedbackModal.success("Serviço excluído com sucesso!");
 
     } catch (error) {
       console.error("Error deleting service:", error);
-      alert("Erro ao excluir serviço.");
+      await FeedbackModal.error("Erro ao excluir serviço.");
     } finally {
       confirmBtn.disabled = false;
       confirmBtn.textContent = originalText || "Excluir";

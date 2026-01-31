@@ -1,5 +1,6 @@
 import { AdminUsersClient } from '../consumers/admin-users-client.js'
 import type { User, Pet } from '../consumers/admin-users-client.js'
+import { FeedbackModal } from '../components/feedback-modal.js'
 
 declare const lucide: any;
 
@@ -124,7 +125,7 @@ class AdminUsersPage {
   private renderUsers(users: User[]) {
     if (!this.usersList) return
 
-    this.usersList.innerHTML = '' // Clear content safely
+    this.usersList.innerHTML = ''
 
     if (users.length === 0) {
       const emptyState = document.createElement('div')
@@ -264,7 +265,7 @@ class AdminUsersPage {
     const petsContainer = document.getElementById('userPetsList')
     if (!petsContainer) return
 
-    petsContainer.innerHTML = '' // Clear content safely
+    petsContainer.innerHTML = ''
 
     if (this.currentUserPets.length === 0) {
       const emptyDiv = document.createElement('div')
@@ -329,7 +330,7 @@ class AdminUsersPage {
     const bookingsContainer = document.getElementById('userBookingsList')
     if (!bookingsContainer) return
 
-    bookingsContainer.innerHTML = '' // Clear content safely
+    bookingsContainer.innerHTML = ''
 
     if (this.currentUserBookings.length === 0) {
       const emptyDiv = document.createElement('div')
@@ -441,22 +442,10 @@ class AdminUsersPage {
       this.closeEditModal()
 
       // Show success message
-      alert('Usuário atualizado com sucesso!')
-    } catch (error: any) {
+      await FeedbackModal.success('Usuário atualizado com sucesso!')
+    } catch (error) {
       console.error('Failed to update user:', error)
-      const message = error?.message || String(error)
-
-      if (/telefone|telefone/i.test(message)) {
-        this.showFormError('userPhone', message)
-        return
-      }
-
-      if (/email/i.test(message)) {
-        this.showFormError('userEmail', message)
-        return
-      }
-
-      alert(message)
+      await FeedbackModal.error('Erro ao atualizar usuário. Verifique os dados e tente novamente.')
     }
   }
 
@@ -483,17 +472,17 @@ class AdminUsersPage {
       await this.loadUsers()
 
       // Show success message
-      alert('Usuário excluído com sucesso!')
+      await FeedbackModal.success('Usuário excluído com sucesso!')
     } catch (error) {
       console.error('Failed to delete user:', error)
-      alert('Erro ao excluir usuário. Tente novamente.')
+      await FeedbackModal.error('Erro ao excluir usuário. Tente novamente.')
     }
   }
 
   private showLoading() {
     if (!this.usersList) return
 
-    this.usersList.innerHTML = '' // Clear content safely
+    this.usersList.innerHTML = ''
 
     const loadingSpinner = document.createElement('div')
     loadingSpinner.className = 'loading-spinner'
@@ -508,7 +497,7 @@ class AdminUsersPage {
   private showError(message: string) {
     if (!this.usersList) return
 
-    this.usersList.innerHTML = '' // Clear content safely
+    this.usersList.innerHTML = ''
 
     const emptyState = document.createElement('div')
     emptyState.className = 'empty-state'

@@ -550,28 +550,22 @@ export class PetshopSidebar extends HTMLElement {
 
   private _renderNavLinks(): void {
     const linksSlot = this._shadow.querySelector('slot[name="links"]')
-    if (!linksSlot) return
+    if (!linksSlot) {
+      return
+    }
 
     // Check if user provided custom slot content
     const slotContent = linksSlot as HTMLSlotElement
     const assignedNodes = slotContent.assignedNodes()
-    if (assignedNodes.length > 0) return // User provided custom links
+    if (assignedNodes.length > 0) {
+      return 
+    }
 
     // Render default links
     const nav = this._shadow.querySelector('nav')
-    if (!nav) return
-    
-    // Clear existing (if re-rendering)
-    // NOTE: If slot was used, we wouldn't be here. But since we append to nav directly if slot is empty...
-    // Actually the template has `<slot name="links">`. We can't easily append TO the slot from inside shadow DOM if it's default content.
-    // We should append siblings or replace the slot fallback content. 
-    // The previous implementation appended to `nav`, which is the parent of the slot.
-    // Wait, the template has `<nav><slot name="links"></slot></nav>`.
-    // If I append to `nav`, it appears AFTER the slot.
-    // Correct way for default content is either put it INSIDE the slot tag in template, or append to nav if slot is empty.
-    // The previous implementation did: `nav.appendChild(link)`. This makes links appear after the slot. That works.
-    
-    // Clear previous dynamic links (if any)
+    if (!nav) {
+      return
+    }
     const dynamicLinks = nav.querySelectorAll('.nav-link')
     dynamicLinks.forEach(el => el.remove())
 
@@ -655,7 +649,9 @@ export class PetshopSidebar extends HTMLElement {
   }
 
   private async _fetchAndRenderProfile(): Promise<void> {
-    if (!this._userSection) return
+    if (!this._userSection) {
+      return
+    }
 
     try {
       const usersClient = new UsersClient()
@@ -691,7 +687,6 @@ export class PetshopSidebar extends HTMLElement {
         logoutBtn?.addEventListener('click', () => this._handleLogout())
       }
     } catch (error) {
-      console.warn('Failed to fetch user profile:', error)
       this._renderUserProfileFromLocalStorage()
     }
   }

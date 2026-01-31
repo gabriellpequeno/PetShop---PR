@@ -15,7 +15,7 @@ describe('AdminUpdateUserService', () => {
         name: 'John Doe',
         email: 'john@example.com',
         password: 'hashed_password',
-        role: 'customer',
+        role: 'customer' as const,
         phone: '(11) 91234-5678',
         location: 'São Paulo',
         birth_date: '1990-01-15',
@@ -82,7 +82,7 @@ describe('AdminUpdateUserService', () => {
                 service.execute({
                     role: 'admin',
                     userId: 'user-1',
-                    phone: '11987654321',
+                    phone: '123456789', // 9 digits - invalid
                 })
             ).rejects.toThrow(BadRequestError)
         })
@@ -113,7 +113,7 @@ describe('AdminUpdateUserService', () => {
         it('should throw BadRequestError for future birth date', async () => {
             const futureDate = new Date()
             futureDate.setFullYear(futureDate.getFullYear() + 1)
-            const futureDateString = futureDate.toISOString().split('T')[0]
+            const futureDateString = futureDate.toISOString().split('T')[0]!
 
             await expect(
                 service.execute({

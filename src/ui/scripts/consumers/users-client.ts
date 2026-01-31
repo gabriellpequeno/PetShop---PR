@@ -24,6 +24,7 @@ export class UsersClient extends ApiConsumer {
     const response = await fetch(`${ApiConsumer.BASE_URL}/users/me`, {
       method: 'PUT',
       headers: this.getHeaders(),
+      credentials: 'include',
       body: JSON.stringify(data),
     })
 

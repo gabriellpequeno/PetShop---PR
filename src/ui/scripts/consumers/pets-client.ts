@@ -15,7 +15,8 @@ export class PetsClient extends ApiConsumer {
   async listPets() {
     const response = await fetch(`${ApiConsumer.BASE_URL}/pets`, {
       method: 'GET',
-      headers: this.getHeaders()
+      headers: this.getHeaders(),
+      credentials: 'include'
     });
     
     if (!response.ok) {
@@ -29,6 +30,7 @@ export class PetsClient extends ApiConsumer {
     const response = await fetch(`${ApiConsumer.BASE_URL}/pets`, {
       method: 'POST',
       headers: this.getHeaders(),
+      credentials: 'include',
       body: JSON.stringify(data)
     });
 
@@ -42,7 +44,8 @@ export class PetsClient extends ApiConsumer {
   async deletePet(id: string) {
     const response = await fetch(`${ApiConsumer.BASE_URL}/pets/${id}`, {
       method: 'DELETE',
-      headers: this.getHeaders()
+      headers: this.getHeaders(),
+      credentials: 'include'
     });
 
     if (!response.ok) {
