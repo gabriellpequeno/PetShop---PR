@@ -781,6 +781,10 @@ export class PetshopSidebar extends HTMLElement {
     this._overlay?.classList.add('visible')
     this._mobileToggle?.setAttribute('aria-expanded', 'true')
     this._mobileToggle?.setAttribute('aria-label', 'Fechar menu')
+    // expose a host attribute so page styles can react when the sidebar is open on mobile
+    try {
+      this.setAttribute('mobile-open', '')
+    } catch (err) {}
 
     const firstLink = this._shadow.querySelector('.nav-link') as HTMLElement
     firstLink?.focus()
@@ -797,6 +801,9 @@ export class PetshopSidebar extends HTMLElement {
     this._overlay?.classList.remove('visible')
     this._mobileToggle?.setAttribute('aria-expanded', 'false')
     this._mobileToggle?.setAttribute('aria-label', 'Abrir menu')
+    try {
+      this.removeAttribute('mobile-open')
+    } catch (err) {}
     try {
       document.body.style.overflow = ''
       document.documentElement.style.overflow = ''

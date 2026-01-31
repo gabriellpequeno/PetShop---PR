@@ -678,6 +678,24 @@ body {
    Responsive Design
    ======================================== */
 
+/* Fix: when sidebar is open on mobile, allow main content to use full width */
+petshop-sidebar[mobile-open] + main {
+  margin-left: 0 !important;
+  max-width: 100% !important;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* At small viewports, always let main content take full width */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0 !important;
+    max-width: 100% !important;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}
+
 @media (max-width: 1200px) {
   .filters-section {
     flex-direction: column;
@@ -704,7 +722,6 @@ body {
 
 @media (max-width: 900px) {
   .main-content {
-    margin-left: 0;
     padding: 1.5rem;
   }
 
@@ -729,9 +746,76 @@ body {
     padding: 1rem;
   }
 
-  .pets-table th:nth-child(3),
-  .pets-table td:nth-child(3) {
+  /* Switch to stacked card layout for table rows */
+  .pets-table thead {
     display: none;
+  }
+
+  .pets-table,
+  .pets-table tbody,
+  .pets-table tr,
+  .pets-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .pets-table tr {
+    margin-bottom: 1rem;
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 20px rgba(16, 24, 40, 0.04);
+    padding: 0.65rem;
+    border: 1px solid #f1f5f9;
+  }
+
+  .pets-table td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .pets-table td::before {
+    content: attr(data-label);
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-right: 0.75rem;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .pet-info {
+    gap: 0.5rem;
+  }
+
+  .pet-name {
+    max-width: 55%;
+    white-space: normal;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .owner-info-cell {
+    max-width: 45%;
+    text-align: right;
+  }
+
+  .actions-cell {
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  .species-badge,
+  .size-badge {
+    white-space: nowrap;
+  }
+
+  .results-count {
+    margin-left: 0;
+    text-align: center;
+    margin-top: 0.5rem;
   }
 
   .modal-content {
