@@ -7,8 +7,8 @@ import type { IBooking } from "../types/booking-types";
 interface CompleteBookingRequest {
     bookingId: string;
     userRole: string;
-    realStartTime: string;
-    realEndTime: string;
+    realStartTime?: string;
+    realEndTime?: string;
 }
 
 export class CompleteBookingService {
@@ -28,17 +28,19 @@ export class CompleteBookingService {
         }
 
         const timeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
-        if (!realStartTime || !timeRegex.test(realStartTime)) {
+        if (realStartTime && !timeRegex.test(realStartTime)) {
             throw new BadRequestError("Horário de início deve estar no formato YYYY-MM-DD HH:mm");
         }
-        if (!realEndTime || !timeRegex.test(realEndTime)) {
+        if (realEndTime && !timeRegex.test(realEndTime)) {
             throw new BadRequestError("Horário de término deve estar no formato YYYY-MM-DD HH:mm");
         }
 
-        const startDate = new Date(realStartTime.replace(" ", "T"));
-        const endDate = new Date(realEndTime.replace(" ", "T"));
-        if (startDate >= endDate) {
-            throw new BadRequestError("O horário de início deve ser anterior ao horário de término.");
+        if (realStartTime && realEndTime) {
+            const startDate = new Date(realStartTime.replace(" ", "T"));
+            const endDate = new Date(realEndTime.replace(" ", "T"));
+            if (startDate >= endDate) {
+                throw new BadRequestError("O horário de início deve ser anterior ao horário de término.");
+            }
         }
 
         const booking = await this.repository.findById(bookingId);
@@ -53,13 +55,13 @@ export class CompleteBookingService {
             throw new BadRequestError("Este agendamento já foi concluído.");
         }
 
-        await this.repository.complete(bookingId, realStartTime, realEndTime);
+        await this.repository.complete(bookingId, realStartTime || null, realEndTime || null);
 
         return {
             ...booking,
             status: "concluido",
-            realStartTime,
-            realEndTime,
+            realStartTime: realStartTime || null,
+            realEndTime: realEndTime || null,
         };
     }
 }

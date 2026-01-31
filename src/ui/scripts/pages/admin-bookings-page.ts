@@ -460,25 +460,45 @@ class AdminBookingsPage {
     const realStartTimeRaw = (document.getElementById('realStartTime') as HTMLInputElement).value;
     const realEndTimeRaw = (document.getElementById('realEndTime') as HTMLInputElement).value;
     
-    const realStartTime = realStartTimeRaw ? realStartTimeRaw.replace('T', ' ') : '';
-    const realEndTime = realEndTimeRaw ? realEndTimeRaw.replace('T', ' ') : '';
+    const bookingDate = this.selectedBooking.bookingDate.split('T')[0];
+    const realStartTime = realStartTimeRaw ? `${bookingDate} ${realStartTimeRaw}` : '';
+    const realEndTime = realEndTimeRaw ? `${bookingDate} ${realEndTimeRaw}` : '';
 
     try {
-      if (newStatus === 'concluido' && realStartTime && realEndTime) {
+      if (newStatus === 'concluido') {
+        const body: { realStartTime?: string; realEndTime?: string } = {};
+        if (realStartTime) body.realStartTime = realStartTime;
+        if (realEndTime) body.realEndTime = realEndTime;
+
         const response = await fetch(`/api/bookings/${bookingId}/complete`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ realStartTime, realEndTime })
+          body: JSON.stringify(body)
         });
 
-        if (!response.ok) throw new Error('Failed to complete booking');
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Failed to complete booking');
+        }
       } else if (newStatus === 'cancelado') {
         // Cancel booking
         const response = await fetch(`/api/bookings/${bookingId}/cancel`, {
           method: 'PATCH'
         });
 
-        if (!response.ok) throw new Error('Failed to cancel booking');
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Falha ao cancelar agendamento');
+        }
+      } else if (newStatus === 'agendado' && this.selectedBooking.status !== 'agendado') {
+        const response = await fetch(`/api/bookings/${bookingId}/reopen`, {
+          method: 'PATCH'
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Falha ao reabrir agendamento');
+        }
       }
 
       await this.loadBookings();
@@ -489,7 +509,8 @@ class AdminBookingsPage {
       await FeedbackModal.success('Alterações salvas com sucesso!');
     } catch (error) {
       console.error('Error saving changes:', error);
-      await FeedbackModal.error('Erro ao salvar alterações. Tente novamente.');
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao salvar alterações. Tente novamente.';
+      await FeedbackModal.error(errorMessage);
     }
   }
 }
