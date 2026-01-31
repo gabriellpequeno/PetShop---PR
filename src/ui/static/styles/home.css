@@ -1,3 +1,136 @@
+.theme-toggle {
+    position: relative;
+    width: 58px; /* reduced */
+    height: 34px; /* reduced */
+    padding: 4px;
+    border-radius: 9999px;
+    border: none;
+    background: linear-gradient(90deg, #ffd6cc 0%, #ffb3a7 100%); /* warm sunrise */
+    box-shadow: 0 6px 14px rgba(12, 78, 90, 0.10), inset 0 -1px 0 rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.15s ease;
+    overflow: visible;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.02);
+}
+
+.theme-icon {
+    width: 16px;
+    height: 16px;
+    color: rgba(255,255,255,0.95);
+    transition: color 0.2s ease, opacity 0.2s ease;
+    z-index: 2;
+}
+
+.sun-icon {
+    opacity: 0.95;
+}
+
+.moon-icon {
+    opacity: 0.85;
+}
+
+.theme-toggle::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 4px; /* tighter */
+    transform: translateY(-50%);
+    width: 26px; /* reduced */
+    height: 26px; /* reduced */
+    background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+    border-radius: 50%;
+    box-shadow: 0 6px 10px rgba(16,24,40,0.14), inset 0 2px 6px rgba(255,255,255,0.85);
+    transition: left 0.28s cubic-bezier(0.2, 0.9, 0.2, 1), box-shadow 0.2s;
+    z-index: 1;
+}
+
+[data-theme="dark"] .theme-toggle {
+    background: linear-gradient(90deg, #2f4dfd 0%, #7c3aed 100%); /* cool night */
+}
+
+[data-theme="dark"] .theme-toggle::after {
+    left: calc(100% - 34px); /* adjusted for smaller knob */
+    background: linear-gradient(180deg, #fbfbff 0%, #e6eefb 100%);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.28);
+}
+
+[data-theme="light"] .theme-icon {
+    color: rgba(255,255,255,0.95);
+}
+
+[data-theme="dark"] .theme-icon {
+    color: rgba(255,255,255,0.95);
+}
+
+.sun-icon { display: none; }
+.moon-icon { display: block; }
+[data-theme="dark"] .sun-icon { display: block; }
+[data-theme="dark"] .moon-icon { display: none; }
+
+.theme-toggle.nav-toggle {
+    width: 50px; /* smaller */
+    height: 30px; /* smaller */
+    padding: 3px;
+    margin-left: 1rem; /* spacing from Entrar */
+    gap: 5px;
+    align-self: center;
+}
+
+.theme-toggle.nav-toggle .theme-icon {
+    width: 12px;
+    height: 12px;
+}
+
+.theme-toggle.nav-toggle::after {
+    width: 20px;
+    height: 20px;
+    left: 3px;
+}
+
+[data-theme="dark"] .theme-toggle.nav-toggle {
+    background: linear-gradient(90deg, #16322a 0%, #0b241c 100%);
+}
+
+[data-theme="dark"] .theme-toggle.nav-toggle::after {
+    left: calc(100% - 23px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.32);
+}
+
+@media (max-width: 767px) {
+    .theme-toggle.nav-toggle { display: none; }
+}
+
+.nav-cta .btn-enter {
+    font-size: 0.98rem;
+    padding: 0.6rem 1.15rem;
+}
+
+.mobile-theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    margin: 0.5rem 0;
+    background: rgba(12, 78, 90, 0.03);
+    border-radius: 0.5rem;
+}
+
+.mobile-theme-toggle span {
+    font-weight: 500;
+    color: var(--secondary);
+}
+
+[data-theme="dark"] .mobile-theme-toggle span {
+    color: white;
+}
+
 /* Hero Section */
 .hero {
     position: relative;
@@ -8,10 +141,8 @@
     overflow: hidden;
 }
 
-@media (prefers-color-scheme: dark) {
-    .hero {
-        background-color: var(--mint-dark);
-    }
+[data-theme="dark"] .hero {
+    background-color: var(--mint-dark);
 }
 
 .hero-container {
@@ -54,10 +185,8 @@
     }
 }
 
-@media (prefers-color-scheme: dark) {
-    .hero-title {
-        color: white;
-    }
+[data-theme="dark"] .hero-title {
+    color: white;
 }
 
 .highlight-text {
@@ -73,10 +202,8 @@
     font-weight: 500;
 }
 
-@media (prefers-color-scheme: dark) {
-    .hero-subtitle {
-        color: rgba(229, 231, 235, 0.9);
-    }
+[data-theme="dark"] .hero-subtitle {
+    color: rgba(229, 231, 235, 0.9);
 }
 
 @media (min-width: 1024px) {
@@ -96,10 +223,8 @@
     margin-top: 1rem;
 }
 
-@media (prefers-color-scheme: dark) {
-    .hero-description {
-        color: rgba(209, 213, 219, 0.8);
-    }
+[data-theme="dark"] .hero-description {
+    color: rgba(209, 213, 219, 0.8);
 }
 
 .hero-cta {
@@ -110,10 +235,8 @@
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    /* Garante que o cachorro "pouse" no fundo */
     position: relative;
     height: 100%;
-    /* Remova qualquer overflow: hidden se houver aqui */
 }
 
 .hero-blob {
@@ -127,68 +250,48 @@
     z-index: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-    .hero-blob {
-        background-color: rgba(255, 255, 255, 0.1);
-    }
+[data-theme="dark"] .hero-blob {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .hero-img {
     width: 140%;
-    /* Permite que a imagem cresça além do container se necessário */
     max-width: 45rem;
-    /* Aumentado (era 28rem) */
     position: relative;
     z-index: 10;
-    /* Mantém abaixo dos 20 da wave */
-
-    /* Faz a imagem descer e sobrepor a área da wave */
     margin-bottom: -9rem;
-
     object-fit: contain;
     transition: transform 0.7s ease-in-out;
 }
 
-/* Media Query para Celulares */
 @media (max-width: 768px) {
 
     .hero-content {
         margin-bottom: 1rem;
-        /* Era 3rem */
     }
 
-    /* 2. Reduz o espaço acima da imagem do cachorro */
     .hero-image-container {
         margin-top: 0.5rem;
-        /* Era 2rem ou 1rem */
     }
 
-    /* 3. Ajuste para o cachorro subir e ficar maior */
     .hero-img {
         width: 180%;
         max-width: 550px;
         position: relative;
         left: 50%;
         transform: translateX(-50%);
-
-        /* Aumentamos a margem negativa para ele "subir" mais 
-           e garantir que a base continue escondida pela wave */
         margin-bottom: -12rem;
         z-index: 10;
     }
 
-    /* Opcional: Reduz o padding do topo da seção para subir tudo */
     .hero {
         padding-top: 5rem;
-        /* Ajuste conforme a altura da sua navbar */
     }
 }
 
-/* Ajuste específico para telas muito pequenas (iPhone SE, etc) */
 @media (max-width: 400px) {
     .hero-img {
         width: 150%;
-        /* Mais impacto em telas minúsculas */
         margin-bottom: -3.5rem;
     }
 }
@@ -202,9 +305,7 @@
     bottom: 0;
     width: 100%;
     z-index: 20;
-    /* Esse valor DEVE ser maior que o do cachorro */
     pointer-events: none;
-    /* Opcional: permite clicar no botão através da wave se ela subir demais */
 }
 
 .wave-svg {
@@ -226,10 +327,8 @@
     fill: var(--background-light);
 }
 
-@media (prefers-color-scheme: dark) {
-    .wave-path {
-        fill: var(--background-dark);
-    }
+[data-theme="dark"] .wave-path {
+    fill: var(--background-dark);
 }
 
 /* Services */
@@ -238,10 +337,8 @@
     background-color: var(--background-light);
 }
 
-@media (prefers-color-scheme: dark) {
-    .services-section {
-        background-color: var(--background-dark);
-    }
+[data-theme="dark"] .services-section {
+    background-color: var(--background-dark);
 }
 
 .section-header {
@@ -256,10 +353,8 @@
     color: var(--secondary);
 }
 
-@media (prefers-color-scheme: dark) {
-    .section-title {
-        color: white;
-    }
+[data-theme="dark"] .section-title {
+    color: white;
 }
 
 .title-underline {
@@ -276,10 +371,8 @@
     margin-top: 1rem;
 }
 
-@media (prefers-color-scheme: dark) {
-    .section-subtitle {
-        color: #d1d5db;
-    }
+[data-theme="dark"] .section-subtitle {
+    color: #d1d5db;
 }
 
 .services-grid {
@@ -306,11 +399,9 @@
     transition: all 0.3s;
 }
 
-@media (prefers-color-scheme: dark) {
-    .service-card {
-        background-color: var(--surface-dark);
-        border-color: #374151;
-    }
+[data-theme="dark"] .service-card {
+    background-color: var(--surface-dark);
+    border-color: #374151;
 }
 
 .service-card:hover {
@@ -335,10 +426,8 @@
     transition: transform 0.3s;
 }
 
-@media (prefers-color-scheme: dark) {
-    .service-icon-wrapper {
-        background-color: var(--mint-dark);
-    }
+[data-theme="dark"] .service-icon-wrapper {
+    background-color: var(--mint-dark);
 }
 
 .service-card:hover .service-icon-wrapper {
@@ -351,13 +440,10 @@
     height: 2rem;
 }
 
-@media (prefers-color-scheme: dark) {
-    .service-icon {
-        color: white;
-    }
+[data-theme="dark"] .service-icon {
+    color: white;
 }
 
-/* Specialized rotation for the cross icon */
 .rotate-icon {
     transform: rotate(45deg);
 }
@@ -371,20 +457,16 @@
     margin-top: 2rem;
 }
 
-@media (prefers-color-scheme: dark) {
-    .service-title {
-        color: white;
-    }
+[data-theme="dark"] .service-title {
+    color: white;
 }
 
 .service-description {
     color: #4b5563;
 }
 
-@media (prefers-color-scheme: dark) {
-    .service-description {
-        color: #9ca3af;
-    }
+[data-theme="dark"] .service-description {
+    color: #9ca3af;
 }
 
 /* About Section */
@@ -393,12 +475,10 @@
     background: linear-gradient(to bottom, var(--mint-light), white);
 }
 
-@media (prefers-color-scheme: dark) {
-    .about-section {
-        background: linear-gradient(to bottom,
-                var(--mint-dark),
-                var(--background-dark));
-    }
+[data-theme="dark"] .about-section {
+    background: linear-gradient(to bottom,
+            var(--mint-dark),
+            var(--background-dark));
 }
 
 .about-container {
@@ -462,10 +542,8 @@
     animation: bounce-slow 3s infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-    .about-badge {
-        background-color: var(--surface-dark);
-    }
+[data-theme="dark"] .about-badge {
+    background-color: var(--surface-dark);
 }
 
 .badge-icon {
@@ -480,10 +558,8 @@
     color: var(--secondary);
 }
 
-@media (prefers-color-scheme: dark) {
-    .badge-title {
-        color: white;
-    }
+[data-theme="dark"] .badge-title {
+    color: white;
 }
 
 .badge-subtitle {
@@ -509,10 +585,8 @@
     margin-bottom: 1.5rem;
 }
 
-@media (prefers-color-scheme: dark) {
-    .about-title {
-        color: white;
-    }
+[data-theme="dark"] .about-title {
+    color: white;
 }
 
 .about-text {
@@ -522,10 +596,8 @@
     line-height: 1.8;
 }
 
-@media (prefers-color-scheme: dark) {
-    .about-text {
-        color: #d1d5db;
-    }
+[data-theme="dark"] .about-text {
+    color: #d1d5db;
 }
 
 .link-arrow {
@@ -558,10 +630,8 @@
     background-color: var(--background-light);
 }
 
-@media (prefers-color-scheme: dark) {
-    .testimonials-section {
-        background-color: var(--background-dark);
-    }
+[data-theme="dark"] .testimonials-section {
+    background-color: var(--background-dark);
 }
 
 .testimonials-grid {
@@ -590,11 +660,9 @@
     transition: transform 0.3s;
 }
 
-@media (prefers-color-scheme: dark) {
-    .testimonial-card {
-        background-color: var(--surface-dark);
-        border-color: #374151;
-    }
+[data-theme="dark"] .testimonial-card {
+    background-color: var(--surface-dark);
+    border-color: #374151;
 }
 
 .testimonial-card:hover {
@@ -641,10 +709,8 @@
     flex-grow: 1;
 }
 
-@media (prefers-color-scheme: dark) {
-    .testimonial-text {
-        color: #9ca3af;
-    }
+[data-theme="dark"] .testimonial-text {
+    color: #9ca3af;
 }
 
 .testimonial-author {
@@ -652,10 +718,8 @@
     color: var(--secondary);
 }
 
-@media (prefers-color-scheme: dark) {
-    .testimonial-author {
-        color: white;
-    }
+[data-theme="dark"] .testimonial-author {
+    color: white;
 }
 
 .testimonial-role {
@@ -721,13 +785,10 @@
     transform: translateX(-50%);
     width: 5rem;
     height: 4.5rem;
-    /* Um pouco mais alta para acompanhar a ponta */
     background-color: var(--mint-light);
-    /* Mesma lógica de arredondamento para a parte interna */
     border-radius: 50% 50% 10% 10% / 100% 100% 0% 0%;
 }
 
-/* Inclinação das orelhas para as laterais (opcional, igual ao desenho) */
 .arch:first-child {
     transform: rotate(-10deg);
 }
@@ -740,14 +801,15 @@
     .arch-inner {
         width: 9rem;
         height: 8rem;
-        /* Ajuste proporcional para desktop */
     }
 }
 
-@media (prefers-color-scheme: dark) {
-    .arch-inner {
-        background-color: var(--mint-dark);
-    }
+[data-theme="dark"] .arch-inner {
+    background-color: var(--mint-dark);
+}
+
+[data-theme="light"] .arch-inner {
+    background-color: #e8fff6; 
 }
 
 @media (min-width: 768px) {
@@ -785,7 +847,6 @@
 }
 
 @media (min-width: 1024px) {
-    /* Form removed from contact section: make info span full width */
     .contact-grid {
         grid-template-columns: 1fr;
     }
