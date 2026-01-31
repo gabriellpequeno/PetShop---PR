@@ -21,7 +21,8 @@ describe('UpdatePetService', () => {
       species: 'Dog',
       breed: 'Poodle',
       age: 5,
-      weight: 10
+      weight: 10,
+      size: 'M'
     })).resolves.not.toThrow()
 
     expect(repository.update).toHaveBeenCalledWith(expect.objectContaining({
@@ -42,7 +43,8 @@ describe('UpdatePetService', () => {
       species: 'Dog',
       breed: 'Poodle',
       age: 5,
-      weight: 10
+      weight: 10,
+      size: 'M'
     })).resolves.not.toThrow()
 
     expect(repository.update).toHaveBeenCalledWith(expect.objectContaining({
@@ -61,7 +63,8 @@ describe('UpdatePetService', () => {
       species: 'Dog',
       breed: 'Poodle',
       age: 5,
-      weight: 10
+      weight: 10,
+      size: 'M'
     })).rejects.toThrow(AppError)
   })
 
@@ -77,7 +80,8 @@ describe('UpdatePetService', () => {
       species: 'Dog',
       breed: 'Poodle',
       age: 5,
-      weight: 10
+      weight: 10,
+      size: 'M'
     })).rejects.toThrow(AppError)
   })
 })

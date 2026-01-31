@@ -110,27 +110,31 @@ export class BookingsRepository {
     await db.run("UPDATE bookings SET status = ? WHERE id = ?", [status, id]);
   }
 
-  async complete(
-    id: string,
-    realStartTime: string | null,
-    realEndTime: string | null,
-  ): Promise<void> {
-    await db.run(
-      `UPDATE bookings 
-       SET status = 'concluido', realStartTime = ?, realEndTime = ? 
-       WHERE id = ?`,
+    async complete(
+        id: string,
+        realStartTime: string | null,
+        realEndTime: string | null
+    ): Promise<void> {
+        await db.run(
+            `UPDATE bookings 
+            SET status = 'concluido', realStartTime = ?, realEndTime = ? 
+            WHERE id = ?`,
       [realStartTime, realEndTime, id],
     );
   }
 
-  async findOccupiedSlots(
-    startDate: string,
-    endDate: string,
-  ): Promise<{ bookingDate: string; bookingTime: string; jobId: string }[]> {
-    const slots = await db.all<
-      { bookingDate: string; bookingTime: string; jobId: string }[]
-    >(
-      `SELECT bookingDate, bookingTime, jobId
+    async reopen(id: string): Promise<void> {
+        await db.run(
+            `UPDATE bookings 
+             SET status = 'agendado', realStartTime = NULL, realEndTime = NULL 
+             WHERE id = ?`,
+            [id]
+        );
+    }
+
+    async findOccupiedSlots(startDate: string, endDate: string): Promise<{ bookingDate: string; bookingTime: string; jobId: string }[]> {
+        const slots = await db.all<{ bookingDate: string; bookingTime: string; jobId: string }[]>(
+            `SELECT bookingDate, bookingTime, jobId
              FROM bookings 
              WHERE bookingDate >= ? AND bookingDate <= ? AND status != 'cancelado'`,
       [startDate, endDate],

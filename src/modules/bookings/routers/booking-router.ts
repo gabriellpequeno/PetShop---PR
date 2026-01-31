@@ -4,10 +4,12 @@ import { ListBookingsController } from "../controllers/list-bookings-controller"
 import { ListOccupiedSlotsController } from "../controllers/list-occupied-slots-controller";
 import { CancelBookingController } from "../controllers/cancel-booking-controller";
 import { CompleteBookingController } from "../controllers/complete-booking-controller";
+import { ReopenBookingController } from "../controllers/reopen-booking-controller";
 import { UpdateBookingStatusController } from "../controllers/update-booking-status-controller";
 import { RenderBookingPageController } from "../controllers/render-booking-page-controller";
 import { RenderMyBookingsPageController } from "../controllers/render-my-bookings-page-controller";
 import { EnsureAuthenticationMiddleware } from "@/middlewares/ensure-authentication-middleware";
+
 const bookingRouter = Router();
 
 bookingRouter.get(
@@ -49,6 +51,10 @@ bookingRouter.patch(
   "/api/bookings/:id/status",
   EnsureAuthenticationMiddleware.handle,
   UpdateBookingStatusController.handle,
+);
+bookingRouter.patch("/api/bookings/:id/reopen", 
+    EnsureAuthenticationMiddleware.handle, 
+    ReopenBookingController.handle
 );
 
 export { bookingRouter };

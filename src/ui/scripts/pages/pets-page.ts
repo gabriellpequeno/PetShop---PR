@@ -1,6 +1,7 @@
 import { PetsClient } from "../consumers/pets-client";
 import { AuthClient } from "../consumers/auth-client";
 import { BookingsClient } from "../consumers/bookings-client";
+import { FeedbackModal } from "../components/feedback-modal.js";
 
 interface Pet {
   id: string;
@@ -28,7 +29,6 @@ class PetsPage {
   private bookingToCancel: string | null = null;
 
   async init() {
-    // Check auth
     const user = this.authClient.getUser();
     if (!user) {
       window.location.href = "/pages/login.html";
@@ -277,15 +277,15 @@ class PetsPage {
             modal.classList.remove("fixed");
             this.bookingToCancel = null;
             await this.loadSchedule(); // Refresh list
+            await FeedbackModal.success("Agendamento cancelado com sucesso!");
           } catch (error) {
             console.error("Error cancelling booking:", error);
-            alert("Erro ao cancelar agendamento.");
+            await FeedbackModal.error("Erro ao cancelar agendamento.");
           }
         }
       });
     }
 
-    // Close on click outside
     window.addEventListener("click", (e) => {
       if (e.target === modal) {
         modal?.classList.remove("fixed");
@@ -300,15 +300,15 @@ class PetsPage {
 
   async loadPets() {
     const petsGrid = document.getElementById("petsGrid");
-    if (!petsGrid) return;
+    if (!petsGrid) {
+      return;
+    }
 
     try {
       const pets = await this.petsClient.listPets();
 
-      // Clear existing pets (keep the "Add New" button if possible, but simpler to rebuild)
       petsGrid.innerHTML = "";
 
-      // Re-add "Add New" button
       const addBtn = document.createElement("button");
       addBtn.className = "add-pet-card";
       addBtn.onclick = () =>
@@ -331,8 +331,7 @@ class PetsPage {
       // @ts-ignore
       if (window.lucide) window.lucide.createIcons();
     } catch (error) {
-      console.error("Error loading pets:", error);
-      alert("Erro ao carregar pets.");
+      await FeedbackModal.error("Erro ao carregar pets.");
     }
   }
 
@@ -411,11 +410,7 @@ class PetsPage {
   }
 
   async handleDelete(id: string) {
-    if (
-      !confirm(
-        "Tem certeza que deseja excluir este pet? Esta ação não pode ser desfeita.",
-      )
-    ) {
+    if (!await FeedbackModal.confirm("Tem certeza?", "Esta ação excluirá o pet permanentemente.")) {
       return;
     }
 
@@ -423,9 +418,10 @@ class PetsPage {
       await this.petsClient.deletePet(id);
       document.getElementById("petDetailsModal")?.classList.remove("fixed");
       await this.loadPets();
+      await FeedbackModal.success("Pet excluído com sucesso!");
     } catch (error) {
       console.error("Error deleting pet:", error);
-      alert("Erro ao excluir pet.");
+      await FeedbackModal.error("Erro ao excluir pet.");
     }
   }
 
@@ -520,16 +516,13 @@ class PetsPage {
 
       try {
         await this.petsClient.createPet(data);
-
-        // Reset and close
         form.reset();
         document.getElementById("petModal")?.classList.remove("fixed");
-
-        // Reload list
         await this.loadPets();
+        await FeedbackModal.success("Pet cadastrado com sucesso!");
       } catch (error) {
         console.error("Error creating pet:", error);
-        alert("Erro ao criar pet. Verifique os dados.");
+        await FeedbackModal.error("Erro ao criar pet. Verifique os dados.");
       }
     });
   }
