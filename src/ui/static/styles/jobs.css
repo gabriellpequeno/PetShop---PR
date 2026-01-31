@@ -3,6 +3,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -76,18 +77,24 @@
 }
 
 .service-card-title {
-  font-family: var(--font-body); /* Using Inter for cleaner look */
+  font-family: var(--font-body);
+  /* Using Inter for cleaner look */
   font-size: 1.125rem;
   font-weight: 600;
   color: #1e293b;
   line-height: 1.4;
   margin: 0;
   flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .service-card-actions {
   display: flex;
   gap: 0.25rem;
+  flex-shrink: 0;
 }
 
 .icon-btn {
@@ -126,6 +133,10 @@
   margin-bottom: 1.5rem;
   line-height: 1.6;
   min-height: 2.8rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .service-card-prices {
@@ -217,6 +228,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -250,7 +262,8 @@
 .form-group select:focus {
   outline: none;
   border-color: var(--secondary);
-  box-shadow: 0 0 0 3px rgba(12, 78, 90, 0.05); /* Using secondary color trace */
+  box-shadow: 0 0 0 3px rgba(12, 78, 90, 0.05);
+  /* Using secondary color trace */
 }
 
 /* Input with icon */
@@ -285,7 +298,8 @@
 }
 
 .btn-primary {
-  background-color: var(--secondary); /* Teal > Orange for minimal look */
+  background-color: var(--secondary);
+  /* Teal > Orange for minimal look */
   color: white;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
@@ -419,7 +433,8 @@
     flex-direction: column;
     align-items: stretch;
     gap: 1.5rem;
-    margin-top: 3rem; /* Space for the mobile menu toggle */
+    margin-top: 3rem;
+    /* Space for the mobile menu toggle */
   }
 
   .page-title {
@@ -466,10 +481,11 @@
 
 @media (max-width: 480px) {
   .page-header {
-    margin-top: 4rem; /* Extra space for smaller screens if needed */
+    margin-top: 4rem;
+    /* Extra space for smaller screens if needed */
   }
-  
-  .loading-container, 
+
+  .loading-container,
   .empty-state {
     padding: 3rem 1.5rem;
   }

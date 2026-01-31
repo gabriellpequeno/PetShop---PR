@@ -22,7 +22,8 @@ body {
   left: 0;
   top: 0;
   z-index: 100;
-  overflow-y: auto; /* allow internal scrolling if items overflow */
+  overflow-y: auto;
+  /* allow internal scrolling if items overflow */
   -webkit-overflow-scrolling: touch;
 }
 
@@ -176,6 +177,8 @@ body {
 .pet-info {
   flex: 1;
   padding: 0.5rem;
+  min-width: 0;
+  /* permite truncamento em flex */
 }
 
 .pet-name {
@@ -184,12 +187,20 @@ body {
   font-weight: 700;
   color: var(--secondary);
   line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .pet-details {
   font-size: 0.875rem;
   color: #666;
   margin-bottom: 0.75rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .add-pet-card {

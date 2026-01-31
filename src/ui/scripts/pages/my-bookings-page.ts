@@ -774,7 +774,7 @@ class MyBookingsPage {
         <label class="service-option" data-job-id="${job.id}">
           <input type="radio" name="service" value="${job.id}" />
           <div class="service-info">
-            <div class="service-name">${job.name}</div>
+            <div class="service-name" title="${job.name}">${job.name}</div>
             <div class="service-duration">${job.duration} minutos</div>
           </div>
           <div class="service-price" data-price-p="${job.priceP}" data-price-m="${job.priceM}" data-price-g="${job.priceG}">
@@ -839,7 +839,7 @@ class MyBookingsPage {
       <label class="pet-option" data-pet-id="${pet.id}" data-pet-size="${pet.size}">
         <input type="radio" name="pet" value="${pet.id}" />
         <div class="pet-info">
-          <div class="pet-name">${pet.name}</div>
+          <div class="pet-name">${this.formatPetName(pet.name)}</div>
           <div class="pet-size">${sizeLabels[pet.size] || pet.size}</div>
         </div>
       </label>
@@ -1114,6 +1114,21 @@ class MyBookingsPage {
       console.error('Error canceling booking:', error);
       await FeedbackModal.error('Erro ao cancelar agendamento. Tente novamente.');
     }
+  }
+
+  /**
+   * Formata o nome do pet para exibição: limita a 2 primeiros nomes OU 23 caracteres
+   */
+  private formatPetName(fullName: string): string {
+    const names = fullName.trim().split(/\s+/);
+    const twoNames = names.slice(0, 2).join(" ");
+
+    if (twoNames.length <= 23) {
+      return twoNames;
+    }
+
+    // Se 2 nomes > 23 chars, trunca em 23 chars
+    return twoNames.substring(0, 23) + "...";
   }
 }
 

@@ -30,7 +30,7 @@ class CustomerDashboardPage {
   async init() {
     this.displayDateTime();
     this.displayUserName();
-    
+
     // Load all data in parallel
     await Promise.all([
       this.loadPets(),
@@ -69,12 +69,21 @@ class CustomerDashboardPage {
       if (userData) {
         try {
           const user = JSON.parse(userData);
-          userNameElement.textContent = user.name || user.username || "Visitante";
+          const fullName = user.name || user.username || "Visitante";
+          userNameElement.textContent = this.formatDisplayName(fullName);
         } catch {
           userNameElement.textContent = "Visitante";
         }
       }
     }
+  }
+
+  /**
+   * Formata o nome para exibição: exibe apenas os 2 primeiros nomes
+   */
+  private formatDisplayName(fullName: string): string {
+    const names = fullName.trim().split(/\s+/);
+    return names.slice(0, 2).join(" ");
   }
 
   private async loadPets() {
@@ -85,7 +94,7 @@ class CustomerDashboardPage {
 
     try {
       const pets = await this.petsClient.listPets();
-      
+
       if (countElement) {
         countElement.textContent = `${pets.length} pet${pets.length !== 1 ? "s" : ""}`;
       }
@@ -152,9 +161,9 @@ class CustomerDashboardPage {
 
     try {
       const bookings = await this.bookingsClient.listUserBookings();
-      
+
       // Filter for upcoming/active bookings
-      const activeBookings = bookings.filter((b) => 
+      const activeBookings = bookings.filter((b) =>
         b.status !== "cancelled" && new Date(b.bookingDate) >= new Date()
       );
 
@@ -228,7 +237,7 @@ class CustomerDashboardPage {
 
     try {
       const services = await this.jobsClient.listJobs();
-      
+
       if (countElement) {
         countElement.textContent = `${services.length} serviço${services.length !== 1 ? "s" : ""}`;
       }
