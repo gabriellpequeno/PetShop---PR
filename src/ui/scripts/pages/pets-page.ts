@@ -29,7 +29,6 @@ class PetsPage {
   private bookingToCancel: string | null = null;
 
   async init() {
-    // Check auth
     const user = this.authClient.getUser();
     if (!user) {
       window.location.href = "/pages/login.html";
@@ -301,7 +300,9 @@ class PetsPage {
 
   async loadPets() {
     const petsGrid = document.getElementById("petsGrid");
-    if (!petsGrid) return;
+    if (!petsGrid) {
+      return;
+    }
 
     try {
       const pets = await this.petsClient.listPets();
@@ -330,7 +331,6 @@ class PetsPage {
       // @ts-ignore
       if (window.lucide) window.lucide.createIcons();
     } catch (error) {
-      console.error("Error loading pets:", error);
       await FeedbackModal.error("Erro ao carregar pets.");
     }
   }
