@@ -1,7 +1,48 @@
 import { AuthApiConsumer } from '../consumers/auth-api-consumer'
 import { FeedbackModal } from '../components/feedback-modal.js'
 
+function initTheme(): void {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcons(savedTheme);
+}
+
+function toggleTheme(): void {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcons(newTheme);
+}
+
+function updateThemeIcons(theme: string): void {
+    const sunIcons = document.querySelectorAll('.sun-icon');
+    const moonIcons = document.querySelectorAll('.moon-icon');
+    
+    if (theme === 'dark') {
+        sunIcons.forEach(icon => (icon as HTMLElement).style.display = 'block');
+        moonIcons.forEach(icon => (icon as HTMLElement).style.display = 'none');
+    } else {
+        sunIcons.forEach(icon => (icon as HTMLElement).style.display = 'none');
+        moonIcons.forEach(icon => (icon as HTMLElement).style.display = 'block');
+    }
+}
+
+initTheme();
+
 document.addEventListener('DOMContentLoaded', () => {
+    const navThemeToggle = document.getElementById('navThemeToggle');
+    const mobileThemeToggle = document.getElementById('mobileThemeToggle');
+    
+    navThemeToggle?.addEventListener('click', toggleTheme);
+    mobileThemeToggle?.addEventListener('click', toggleTheme);
+    
+    setTimeout(() => {
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        updateThemeIcons(currentTheme);
+    }, 100);
+
     const mobileMenuBtn = document.getElementById('mobileMenuBtn') as HTMLButtonElement | null;
     const mobileMenu = document.getElementById('mobileMenu') as HTMLDivElement | null;
     const menuIcon = document.getElementById('menuIcon') as HTMLElement | null;
@@ -49,6 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('scroll', handleScroll);
+
+    // Paw trail feature removed as per user request. Previously implemented decorative paw trail has been disabled.
 
     const userString = localStorage.getItem('user');
     const authConsumer = new AuthApiConsumer();
