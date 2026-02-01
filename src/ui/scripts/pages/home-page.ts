@@ -56,10 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isOpen) {
             mobileMenu.classList.remove('open');
+            navbar?.classList.remove('menu-open');
             menuIcon.style.display = 'block';
             closeIcon.style.display = 'none';
         } else {
             mobileMenu.classList.add('open');
+            navbar?.classList.add('menu-open');
             menuIcon.style.display = 'none';
             closeIcon.style.display = 'block';
         }
