@@ -14,6 +14,7 @@
     />
     <script src="/scripts/pages/home-page.js" type="module"></script>
     <script src="/scripts/pages/auth-modal.js" type="module"></script>
+    <script src="/scripts/pages/contact-modal.js" type="module"></script>
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -22,6 +23,7 @@
     <link rel="stylesheet" href="../styles/global.css" />
     <link rel="stylesheet" href="../styles/home.css" />
     <link rel="stylesheet" href="../styles/auth-modal.css" />
+    <link rel="stylesheet" href="../styles/contact-modal.css" />
   </head>
 
   <body>
@@ -407,6 +409,14 @@
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><i data-lucide="facebook"></i></a>
             </div>
           </div>
+
+          <div class="footer-contact">
+            <h4 class="footer-heading">Fale Conosco</h4>
+            <button class="footer-contact-btn" data-contact-modal>
+              <i data-lucide="mail"></i>
+              Enviar Mensagem
+            </button>
+          </div>
         </div>
 
         <div class="footer-bottom">
@@ -663,6 +673,123 @@
               </p>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div class="contact-modal-backdrop" id="contactModalBackdrop">
+      <div class="contact-modal">
+        <button
+          class="contact-modal-close"
+          id="contactModalClose"
+          aria-label="Fechar modal"
+        >
+          <i data-lucide="x"></i>
+        </button>
+
+        <!-- Contact Form -->
+        <div id="contactFormContainer">
+          <div class="contact-modal-header">
+            <div class="contact-modal-icon">
+              <i data-lucide="mail"></i>
+            </div>
+            <h2 class="contact-modal-title">Fale Conosco</h2>
+            <p class="contact-modal-subtitle">
+              Envie sua mensagem e entraremos em contato!
+            </p>
+          </div>
+
+          <div class="contact-modal-body">
+            <form id="contactForm">
+              <div class="contact-form-group">
+                <label class="contact-form-label" for="contactName">Nome</label>
+                <div class="contact-form-input-wrapper">
+                  <input
+                    type="text"
+                    id="contactName"
+                    class="contact-form-input"
+                    placeholder="Seu nome"
+                    autocomplete="name"
+                  />
+                  <i data-lucide="user"></i>
+                </div>
+                <div class="contact-form-error" id="contactNameError">
+                  <i data-lucide="alert-circle"></i>
+                  <span></span>
+                </div>
+              </div>
+
+              <div class="contact-form-group">
+                <label class="contact-form-label" for="contactEmail">E-mail</label>
+                <div class="contact-form-input-wrapper">
+                  <input
+                    type="email"
+                    id="contactEmail"
+                    class="contact-form-input"
+                    placeholder="seu@email.com"
+                    autocomplete="email"
+                  />
+                  <i data-lucide="mail"></i>
+                </div>
+                <div class="contact-form-error" id="contactEmailError">
+                  <i data-lucide="alert-circle"></i>
+                  <span></span>
+                </div>
+              </div>
+
+              <div class="contact-form-group">
+                <label class="contact-form-label" for="contactSubject">Assunto</label>
+                <div class="contact-form-input-wrapper">
+                  <input
+                    type="text"
+                    id="contactSubject"
+                    class="contact-form-input"
+                    placeholder="Assunto da mensagem"
+                  />
+                  <i data-lucide="file-text"></i>
+                </div>
+                <div class="contact-form-error" id="contactSubjectError">
+                  <i data-lucide="alert-circle"></i>
+                  <span></span>
+                </div>
+              </div>
+
+              <div class="contact-form-group">
+                <label class="contact-form-label" for="contactMessage">Mensagem</label>
+                <div class="contact-form-input-wrapper">
+                  <textarea
+                    id="contactMessage"
+                    class="contact-form-textarea"
+                    placeholder="Escreva sua mensagem aqui..."
+                    rows="4"
+                  ></textarea>
+                  <i data-lucide="message-square"></i>
+                </div>
+                <div class="contact-char-counter" id="contactCharCounter">0/10 caracteres mínimos</div>
+                <div class="contact-form-error" id="contactMessageError">
+                  <i data-lucide="alert-circle"></i>
+                  <span></span>
+                </div>
+              </div>
+
+              <button type="submit" class="contact-submit-btn" id="contactSubmitBtn">
+                <span class="btn-text">Enviar Mensagem</span>
+                <div class="spinner"></div>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Success Message -->
+        <div class="contact-success-message" id="contactSuccessMessage">
+          <i data-lucide="check-circle"></i>
+          <h3>Mensagem Enviada!</h3>
+          <p>
+            Sua mensagem foi enviada para<br/>
+            <strong>07little.s.petshop07@gmail.com</strong><br/>
+            Entraremos em contato em breve.
+          </p>
         </div>
       </div>
     </div>
