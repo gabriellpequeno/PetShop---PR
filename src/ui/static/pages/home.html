@@ -46,6 +46,7 @@
       <!-- Desktop Nav -->
       <div class="nav-links desktop-only">
         <a href="/" class="nav-link">Home</a>
+        <a href="#services" class="nav-link">Serviços</a>
         <a href="#about" class="nav-link">Sobre Nós</a>
         <a href="#testimonials" class="nav-link">Feedbacks</a>
         <a href="#contact" class="nav-link">Contato</a>
@@ -132,7 +133,7 @@
     <!-- Services -->
     <section id="services" class="services-section">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header reveal-on-scroll">
           <h2 class="section-title">Nossos Serviços de Spa</h2>
           <div class="title-underline"></div>
           <p class="section-subtitle">
@@ -142,7 +143,7 @@
 
         <div class="services-grid">
           <!-- Service 1 -->
-          <div class="service-card group">
+          <div class="service-card group reveal-on-scroll delay-100">
             <div class="service-icon-wrapper">
               <span class="service-icon">
                 <i data-lucide="scissors"></i>
@@ -156,7 +157,7 @@
           </div>
 
           <!-- Service 2 -->
-          <div class="service-card group">
+          <div class="service-card group reveal-on-scroll delay-200">
             <div class="service-icon-wrapper">
               <span class="service-icon">
                 <i data-lucide="flower"></i>
@@ -169,7 +170,7 @@
           </div>
 
           <!-- Service 3 -->
-          <div class="service-card group">
+          <div class="service-card group reveal-on-scroll delay-300">
             <div class="service-icon-wrapper">
               <span class="service-icon">
                 <!-- Rotated Cross using CSS or Lucide props? will use standard cross and CSS rotate -->
@@ -189,7 +190,7 @@
     <section id="about" class="about-section">
       <div class="container about-container">
         <!-- Image Side -->
-        <div class="about-image-wrapper">
+        <div class="about-image-wrapper reveal-on-scroll">
           <div class="about-blob"></div>
           <img
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUqHwTOmH6FLzbEQNZM9OCm9RaY0lzSReXR1o7xMxevkJQb6a0WjnD18KpKr13wo7gh0ID87AS6gP-BAeNip7ibpZcfJdgC9jAG-FZkcyENQEXP_wh5Ynuj9bj7QtMR9sJY5dudu7htBcLy_qGdB2cHZmzbP09asDlIgK_OQW0NzVu6KvO3yxoPdHe-9rySpdfWhCFftYyZjCsa9C66-3N8glA3RjQ6IegsuSYn4kWasbdhf9_XSNp182A43fN-UEVbuGGuDqO2qk"
@@ -206,7 +207,7 @@
         </div>
 
         <!-- Content Side -->
-        <div class="about-content">
+        <div class="about-content reveal-on-scroll delay-200">
           <h2 class="about-title">Mais que um Petshop, uma família.</h2>
           <p class="about-text">
             Fundada com o propósito de redefinir o cuidado animal, a Little's
@@ -218,7 +219,7 @@
             Utilizamos técnicas de manejo <em>fear-free</em> e produtos de
             aromaterapia para garantir que seu pet se sinta em casa (ou
             melhor, no spa!).
-          </p>
+          </p>  
         </div>
       </div>
     </section>
@@ -226,67 +227,221 @@
     <!-- Testimonials -->
     <section id="testimonials" class="testimonials-section">
       <div class="container">
-        <h2 class="section-title text-center">O que dizem os donos</h2>
+        <h2 class="section-title text-center">Relatos dos tutores!</h2>
 
-        <div class="testimonials-grid">
-          <!-- Testimonial 1 -->
-          <div class="testimonial-card">
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuADsSVrZTOLrLj-n84FJe0ZfCA9JgCudyNVFrdwo7c2olRr4BhsgClJqbpLbl1ycltXasMvh5uUSVd3aGATdoQSRXeRIqvLU9A6zqjEjtZFdYRN-p6kQG27usUSzlcfe3F0PlQ2FV-PthRy0AymOCVjQi9yTRpUsNIhqhjwwkiRALAPD3w-7ubCQgg28nrZELs1mXYZoTytLg9slSZ9wajoWMsJJWRZUNUPnU6SyNQEQVHcEO1fe51aVxye7ryjvc5gKF8GrE5kBIM"
-              alt="Ana Silva" class="testimonial-avatar" />
-            <div class="stars">
-              <i data-lucide="star" class="star-filled"></i>
-              <i data-lucide="star" class="star-filled"></i>
-              <i data-lucide="star" class="star-filled"></i>
-              <i data-lucide="star" class="star-filled"></i>
-              <i data-lucide="star" class="star-filled"></i>
+        <div class="testimonial-track-container">
+          <div class="testimonial-track">
+            <!-- 1. Ana Silva -->
+            <div class="testimonial-card">
+              <img src="../assets/img/avatar-placeholder.svg" alt="Ana Silva" class="testimonial-avatar" />
+              <div class="stars">
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+              </div>
+              <p class="testimonial-text">
+                "Meu Rex nunca gostou de banho, mas aqui ele entra correndo! O
+                carinho da equipe é visível."
+              </p>
+              <h4 class="testimonial-author">Ana Silva</h4>
+              <span class="testimonial-role">Mãe do Rex</span>
             </div>
-            <p class="testimonial-text">
-              "Meu Rex nunca gostou de banho, mas aqui ele entra correndo! O
-              carinho da equipe é visível."
-            </p>
-            <h4 class="testimonial-author">Ana Silva</h4>
-            <span class="testimonial-role">Mãe do Rex</span>
-          </div>
 
-          <!-- Testimonial 2 (Highlight) -->
-          <div class="testimonial-card highlight">
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHl6PfiOHfDdQ6YdoLwh0NIv7ooJdbcD3qrpA5Xz8QqBC3ZfK7P2Wu7wGXjrJ7m1cGYc6ngld1Mv6_botUMqPKXBQfAD9W8ZyZS_UFmL6scv6MvLTb4noXwwyPppNsRW6WICzteBGJ20x672ipxI_W2L9X0vscdfwR1sXFAHm02f_kgh7WUSoTo5jpkn2PnQU0bRm2PHLwCPeweWxsH7QLmJgpD5Xl55LhbLzeMZJcawCjNchVW-gIOTMy4w8JLWJyBnYhemlgQXs"
-              alt="Carlos Mendes" class="testimonial-avatar" />
-            <div class="stars">
-              <i data-lucide="star" class="star-filled"></i>
-              <i data-lucide="star" class="star-filled"></i>
-              <i data-lucide="star" class="star-filled"></i>
-              <i data-lucide="star" class="star-filled"></i>
-              <i data-lucide="star" class="star-filled"></i>
+            <!-- 2. Carlos Mendes -->
+            <div class="testimonial-card highlight">
+              <img src="../assets/img/avatar-placeholder.svg" alt="Carlos Mendes" class="testimonial-avatar" />
+              <div class="stars">
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+              </div>
+              <p class="testimonial-text">
+                "A tosa na tesoura da Luna ficou impecável. O cheirinho que ela
+                volta dura dias! Recomendo muito."
+              </p>
+              <h4 class="testimonial-author">Carlos Mendes</h4>
+              <span class="testimonial-role">Pai da Luna</span>
             </div>
-            <p class="testimonial-text">
-              "A tosa na tesoura da Luna ficou impecável. O cheirinho que ela
-              volta dura dias! Recomendo muito."
-            </p>
-            <h4 class="testimonial-author">Carlos Mendes</h4>
-            <span class="testimonial-role">Pai da Luna</span>
-          </div>
 
-          <!-- Testimonial 3 -->
-          <div class="testimonial-card">
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOOkbMTbF1mL1wntaLJyh0MONY8wMO3aUKz-anp4CcMPUJM_kS-CjkZ0ZAYy7AZVEWKzC3NcPsgdGVAlcgeHTJTxdQhPFcA6vJhrlTOOQ1RJiH_u7x1iyDh0UwOmAKpQgWTD-RvKfG-1N152N3ZxadBON8dMcBAKJo3QH1B31pvE7zHhKtyLhJZHm2RKM9FckfcP6LOipFTIm2Imkqp75kct2NFUOxaZPYXeS4hJhzSTsfxC-sUfGJ-j7KF_c2CMCXdCRC1elZ1QQ"
-              alt="Beatriz Souza" class="testimonial-avatar" />
-            <div class="stars">
-              <i data-lucide="star" class="star-filled"></i>
-              <i data-lucide="star" class="star-filled"></i>
-              <i data-lucide="star" class="star-filled"></i>
-              <i data-lucide="star" class="star-filled"></i>
-              <i data-lucide="star" class="star-filled"></i>
+            <!-- 3. Beatriz Souza -->
+            <div class="testimonial-card">
+              <img src="../assets/img/avatar-placeholder.svg" alt="Beatriz Souza" class="testimonial-avatar" />
+              <div class="stars">
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+              </div>
+              <p class="testimonial-text">
+                "Profissionais super atenciosos. O ambiente é tão tranquilo que
+                até eu queria ficar lá relaxando!"
+              </p>
+              <h4 class="testimonial-author">Beatriz Souza</h4>
+              <span class="testimonial-role">Mãe do Paçoca</span>
             </div>
-            <p class="testimonial-text">
-              "Profissionais super atenciosos. O ambiente é tão tranquilo que
-              até eu queria ficar lá relaxando!"
-            </p>
-            <h4 class="testimonial-author">Beatriz Souza</h4>
-            <span class="testimonial-role">Mãe do Paçoca</span>
+
+            <!-- 4. Roberto Lima (New) -->
+            <div class="testimonial-card">
+              <img src="../assets/img/avatar-placeholder.svg" alt="Roberto Lima" class="testimonial-avatar" />
+              <div class="stars">
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+              </div>
+              <p class="testimonial-text">
+                "Serviço de primeira! A veterinária foi muito paciente com meu gato que é super arisco."
+              </p>
+              <h4 class="testimonial-author">Roberto Lima</h4>
+              <span class="testimonial-role">Pai do Miau</span>
+            </div>
+
+            <!-- 5. Fernanda Costa (New) -->
+            <div class="testimonial-card highlight">
+              <img src="../assets/img/avatar-placeholder.svg" alt="Fernanda Costa" class="testimonial-avatar" />
+              <div class="stars">
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+              </div>
+              <p class="testimonial-text">
+                "A hidratação fez milagres no pelo da minha Golden. Nunca vi tão brilhante e macio!"
+              </p>
+              <h4 class="testimonial-author">Fernanda Costa</h4>
+              <span class="testimonial-role">Mãe da Bella</span>
+            </div>
+
+            <!-- 6. Marcelo Santos (New) -->
+            <div class="testimonial-card">
+              <img src="../assets/img/avatar-placeholder.svg" alt="Marcelo Santos" class="testimonial-avatar" />
+              <div class="stars">
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+              </div>
+              <p class="testimonial-text">
+                "Preço justo e qualidade excelente. Virei cliente fiel depois da primeira visita."
+              </p>
+              <h4 class="testimonial-author">Marcelo Santos</h4>
+              <span class="testimonial-role">Pai do Thor</span>
+            </div>
+
+            <!-- DUPLICATES FOR INFINITE SCROLL -->
+
+            <!-- 1. Ana Silva (Duplicate) -->
+            <div class="testimonial-card">
+              <img src="../assets/img/avatar-placeholder.svg" alt="Ana Silva" class="testimonial-avatar" />
+              <div class="stars">
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+              </div>
+              <p class="testimonial-text">
+                "Meu Rex nunca gostou de banho, mas aqui ele entra correndo! O
+                carinho da equipe é visível."
+              </p>
+              <h4 class="testimonial-author">Ana Silva</h4>
+              <span class="testimonial-role">Mãe do Rex</span>
+            </div>
+
+            <!-- 2. Carlos Mendes (Duplicate) -->
+            <div class="testimonial-card highlight">
+              <img src="../assets/img/avatar-placeholder.svg" alt="Carlos Mendes" class="testimonial-avatar" />
+              <div class="stars">
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+              </div>
+              <p class="testimonial-text">
+                "A tosa na tesoura da Luna ficou impecável. O cheirinho que ela
+                volta dura dias! Recomendo muito."
+              </p>
+              <h4 class="testimonial-author">Carlos Mendes</h4>
+              <span class="testimonial-role">Pai da Luna</span>
+            </div>
+
+            <!-- 3. Beatriz Souza (Duplicate) -->
+            <div class="testimonial-card">
+              <img src="../assets/img/avatar-placeholder.svg" alt="Beatriz Souza" class="testimonial-avatar" />
+              <div class="stars">
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+              </div>
+              <p class="testimonial-text">
+                "Profissionais super atenciosos. O ambiente é tão tranquilo que
+                até eu queria ficar lá relaxando!"
+              </p>
+              <h4 class="testimonial-author">Beatriz Souza</h4>
+              <span class="testimonial-role">Mãe do Paçoca</span>
+            </div>
+
+            <!-- 4. Roberto Lima (Duplicate) -->
+            <div class="testimonial-card">
+              <img src="../assets/img/avatar-placeholder.svg" alt="Roberto Lima" class="testimonial-avatar" />
+              <div class="stars">
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+              </div>
+              <p class="testimonial-text">
+                "Serviço de primeira! A veterinária foi muito paciente com meu gato que é super arisco."
+              </p>
+              <h4 class="testimonial-author">Roberto Lima</h4>
+              <span class="testimonial-role">Pai do Miau</span>
+            </div>
+
+            <!-- 5. Fernanda Costa (Duplicate) -->
+            <div class="testimonial-card highlight">
+              <img src="../assets/img/avatar-placeholder.svg" alt="Fernanda Costa" class="testimonial-avatar" />
+              <div class="stars">
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+              </div>
+              <p class="testimonial-text">
+                "A hidratação fez milagres no pelo da minha Golden. Nunca vi tão brilhante e macio!"
+              </p>
+              <h4 class="testimonial-author">Fernanda Costa</h4>
+              <span class="testimonial-role">Mãe da Bella</span>
+            </div>
+
+            <!-- 6. Marcelo Santos (Duplicate) -->
+            <div class="testimonial-card">
+              <img src="../assets/img/avatar-placeholder.svg" alt="Marcelo Santos" class="testimonial-avatar" />
+              <div class="stars">
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+                <i data-lucide="star" class="star-filled"></i>
+              </div>
+              <p class="testimonial-text">
+                "Preço justo e qualidade excelente. Virei cliente fiel depois da primeira visita."
+              </p>
+              <h4 class="testimonial-author">Marcelo Santos</h4>
+              <span class="testimonial-role">Pai do Thor</span>
+            </div>
           </div>
         </div>
       </div>
@@ -365,7 +520,7 @@
     </div>
 
     <!-- Curved top edge -->
-    <div class="footer-curve"></div>
+    <!-- <div class="footer-curve"></div>-->
 
     <div class="container">
       <div class="footer-grid">
@@ -387,15 +542,6 @@
             <li><a href="/">Home</a></li>
             <li><a href="/#services">Serviços</a></li>
             <li><a href="/#about">Sobre</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-services">
-          <h4 class="footer-heading">Serviços</h4>
-          <ul>
-            <li><a href="/jobs.html">Banho e Tosa</a></li>
-            <li><a href="/jobs.html">Day Care</a></li>
-            <li><a href="/jobs.html">Veterinário</a></li>
           </ul>
         </div>
 

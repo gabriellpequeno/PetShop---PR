@@ -4,7 +4,6 @@ import { UsersClient } from '../consumers/users-client'
 function initTheme(): void {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
-    updateThemeIcons(savedTheme);
 }
 
 function toggleTheme(): void {
@@ -13,35 +12,41 @@ function toggleTheme(): void {
     
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
-    updateThemeIcons(newTheme);
 }
 
-function updateThemeIcons(theme: string): void {
-    const sunIcons = document.querySelectorAll('.sun-icon');
-    const moonIcons = document.querySelectorAll('.moon-icon');
-    
-    if (theme === 'dark') {
-        sunIcons.forEach(icon => (icon as HTMLElement).style.display = 'block');
-        moonIcons.forEach(icon => (icon as HTMLElement).style.display = 'none');
-    } else {
-        sunIcons.forEach(icon => (icon as HTMLElement).style.display = 'none');
-        moonIcons.forEach(icon => (icon as HTMLElement).style.display = 'block');
-    }
+function initScrollAnimations(): void {
+    const observerOptions = {
+        threshold: 0.15,
+        rootMargin: "0px 0px -50px 0px"
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('reveal-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+        observer.observe(el);
+    });
 }
+
+
 
 initTheme();
 
 document.addEventListener('DOMContentLoaded', () => {
+    initScrollAnimations();
     const navThemeToggle = document.getElementById('navThemeToggle');
     const mobileThemeToggle = document.getElementById('mobileThemeToggle');
     
     navThemeToggle?.addEventListener('click', toggleTheme);
     mobileThemeToggle?.addEventListener('click', toggleTheme);
     
-    setTimeout(() => {
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        updateThemeIcons(currentTheme);
-    }, 100);
+
 
     const mobileMenuBtn = document.getElementById('mobileMenuBtn') as HTMLButtonElement | null;
     const mobileMenu = document.getElementById('mobileMenu') as HTMLDivElement | null;
