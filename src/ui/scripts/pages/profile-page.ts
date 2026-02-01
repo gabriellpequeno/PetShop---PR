@@ -76,10 +76,10 @@ async function loadPets() {
     const card = document.createElement('div')
     card.className = 'pet-preview-card'
     card.innerHTML = `
-      <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(pet.name)}&background=random" style="width: 64px; height: 64px; border-radius: 50%; margin-bottom: 1rem;">
-      <h4 style="margin: 0 0 0.5rem 0; color: var(--secondary);">${pet.name}</h4>
-      <p style="margin: 0; color: #64748b; font-size: 0.85rem;">${pet.breed}</p>
-      <span style="font-size: 0.75rem; color: #94a3b8; display: block; margin-top: 0.5rem;">${pet.age} anos</span>
+      <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(pet.name)}&background=random" class="pet-preview-img">
+      <h4 class="pet-preview-title">${pet.name}</h4>
+      <p class="pet-preview-breed">${pet.breed}</p>
+      <span class="pet-preview-age">${pet.age} anos</span>
     `
     listContainer.appendChild(card)
   })
@@ -87,8 +87,8 @@ async function loadPets() {
   const addBtn = document.createElement('div')
   addBtn.className = 'add-pet-preview'
   addBtn.innerHTML = `
-    <i data-lucide="plus" style="width: 32px; height: 32px; margin-bottom: 0.5rem;"></i>
-    <span style="font-weight: 500;">Adicionar Pet</span>
+    <i data-lucide="plus" class="add-pet-icon"></i>
+    <span class="add-pet-text">Adicionar Pet</span>
   `
   addBtn.addEventListener('click', () => {
     window.location.href = '/pages/pets.html'
@@ -192,7 +192,7 @@ async function loadSchedule() {
 
   } catch (error) {
     console.error('Error loading schedule:', error)
-    scheduleContainer.innerHTML = '<p style="color:red">Erro ao carregar agendamentos</p>'
+    scheduleContainer.innerHTML = '<p class="schedule-error">Erro ao carregar agendamentos</p>'
   }
 }
 
