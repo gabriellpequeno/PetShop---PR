@@ -93,24 +93,24 @@ class AdminBookingsPage {
       });
     });
 
-    const filterBtn = document.getElementById("filterBtn");
-    const filterMenu = document.getElementById("filterMenu");
+    const statusFilterBtn = document.getElementById("statusFilterBtn");
+    const statusFilterMenu = document.getElementById("statusFilterMenu");
 
-    filterBtn?.addEventListener("click", (e) => {
+    statusFilterBtn?.addEventListener("click", (e) => {
       e.stopPropagation();
-      if (filterMenu) {
-        filterMenu.style.display =
-          filterMenu.style.display === "none" ? "block" : "none";
+      if (statusFilterMenu) {
+        statusFilterMenu.style.display =
+          statusFilterMenu.style.display === "none" ? "block" : "none";
       }
     });
 
     document.addEventListener("click", () => {
-      if (filterMenu) {
-        filterMenu.style.display = "none";
+      if (statusFilterMenu) {
+        statusFilterMenu.style.display = "none";
       }
     });
 
-    filterMenu?.addEventListener("click", (e) => {
+    statusFilterMenu?.addEventListener("click", (e) => {
       e.stopPropagation();
     });
 
@@ -242,7 +242,6 @@ class AdminBookingsPage {
     const weekStart = this.getWeekStart(this.currentDate);
     const days = this.getWeekDays(weekStart);
 
-    // 1. Render Header Row (Time Labels 07:00 - 20:00)
     const calendarHeaderRow = document.querySelector(".calendar-header-row");
     if (calendarHeaderRow) {
       calendarHeaderRow.innerHTML = "";
@@ -257,11 +256,14 @@ class AdminBookingsPage {
       const timelineHeader = document.createElement("div");
       timelineHeader.className = "timeline-header";
 
+      // Loop 7am to 19:30 (last slot starts at 19:30)
       for (let hour = 7; hour < 20; hour++) {
-        const slot = document.createElement("div");
-        slot.className = "timeline-header-slot";
-        slot.textContent = `${hour.toString().padStart(2, '0')}:00`;
-        timelineHeader.appendChild(slot);
+        for (let minute = 0; minute < 60; minute += 30) {
+          const slot = document.createElement("div");
+          slot.className = "timeline-header-slot";
+          slot.textContent = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+          timelineHeader.appendChild(slot);
+        }
       }
       calendarHeaderRow.appendChild(timelineHeader);
     }

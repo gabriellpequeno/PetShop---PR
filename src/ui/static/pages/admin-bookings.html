@@ -46,34 +46,6 @@
               Visualize e edite todos os agendamentos dos clientes
             </p>
           </div>
-          <div class="header-actions">
-            <div class="filter-dropdown">
-              <select class="form-select" id="serviceFilter" style="width: 200px;">
-                <option value="">Todos os Serviços</option>
-              </select>
-              <button class="btn-filter" id="filterBtn">
-                <i data-lucide="filter"></i>
-                Filtrar
-              </button>
-              <div class="filter-menu" id="filterMenu" style="display: none">
-                <label class="filter-option">
-                  <input type="checkbox" value="agendado" checked />
-                  <span class="status-dot agendado"></span>
-                  Agendados
-                </label>
-                <label class="filter-option">
-                  <input type="checkbox" value="concluido" checked />
-                  <span class="status-dot concluido"></span>
-                  Concluídos
-                </label>
-                <label class="filter-option">
-                  <input type="checkbox" value="cancelado" />
-                  <span class="status-dot cancelado"></span>
-                  Cancelados
-                </label>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- Stats Summary -->
@@ -132,9 +104,46 @@
               </div>
               <h2 class="calendar-period" id="calendarPeriod">Janeiro 2026</h2>
             </div>
-            <div class="view-toggle">
-              <button class="view-btn active" data-view="week">Semana</button>
-              <button class="view-btn" data-view="month">Mês</button>
+
+            <div class="calendar-filters">
+              <!-- Service Filter -->
+              <div class="filter-group">
+                <i data-lucide="filter" class="filter-icon"></i>
+                <select id="serviceFilter" class="filter-select">
+                  <option value="">Todos os Serviços</option>
+                </select>
+              </div>
+
+              <!-- Status Filter (separate) -->
+              <div class="filter-group status-filter-group" style="position: relative;">
+                <button class="btn-filter" id="statusFilterBtn" aria-label="Abrir Filtros de Status">
+                  <i data-lucide="filter" class="filter-icon"></i>
+                  <span class="filter-text">Status</span>
+                </button>
+
+                <div class="filter-menu" id="statusFilterMenu" style="display: none;">
+                  <label class="filter-option">
+                    <input type="checkbox" value="agendado" checked />
+                    <span class="status-dot agendado"></span>
+                    Agendados
+                  </label>
+                  <label class="filter-option">
+                    <input type="checkbox" value="concluido" checked />
+                    <span class="status-dot concluido"></span>
+                    Concluídos
+                  </label>
+                  <label class="filter-option">
+                    <input type="checkbox" value="cancelado" />
+                    <span class="status-dot cancelado"></span>
+                    Cancelados
+                  </label>
+                </div>
+              </div>
+
+              <div class="view-toggle">
+                <button class="view-btn active" data-view="week">Semana</button>
+                <button class="view-btn" data-view="month">Mês</button>
+              </div>
             </div>
           </div>
 

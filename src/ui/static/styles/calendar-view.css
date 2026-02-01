@@ -903,12 +903,15 @@ body {
   border: none;
   background: transparent;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 500; /* match compact buttons */
   color: var(--secondary);
   cursor: pointer;
-  padding: 0.5rem 0.25rem;
-  min-width: 160px;
+  padding: 0.25rem 0.5rem; /* compact */
+  min-width: 120px; /* reduced to match button width */
   outline: none;
+  height: 32px; /* ensure consistent vertical size */
+  display: inline-flex;
+  align-items: center;
 }
 
 .filter-select option {

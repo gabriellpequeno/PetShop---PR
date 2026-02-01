@@ -87,25 +87,62 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  font-weight: 600;
+  padding: 0.25rem 0.5rem; /* compacto para combinar com service filter */
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500; /* padronizado com select */
   font-size: 0.875rem;
   color: var(--secondary);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: color 0.15s;
 }
 
 .btn-filter:hover {
-  background: #f8fafc;
-  border-color: var(--secondary);
+  color: var(--secondary);
 }
 
-.btn-filter i {
-  width: 18px;
-  height: 18px;
+/* Icon inside filter buttons should match .filter-icon (16px) */
+.btn-filter i,
+.btn-filter .filter-icon {
+  width: 16px;
+  height: 16px;
+  color: #64748b;
+}
+
+/* Status filter: appearance aligned with service filter but without nested border and bold */
+.status-filter-group {
+  position: relative;
+}
+.status-filter-group .btn-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem 0.25rem 0.5rem; /* compact */
+  background: transparent; /* remove nested background */
+  border: none; /* remove nested border to avoid double border */
+  border-radius: 8px;
+  color: var(--secondary);
+}
+.status-filter-group .btn-filter i {
+  color: #64748b;
+}
+.status-filter-group .btn-filter .filter-text {
+  font-weight: 500; /* less bold to match select */
+  color: var(--secondary);
+  font-size: 0.875rem;
+}
+
+/* Keep wrapper focus style subtle */
+.status-filter-group:focus-within {
+  border-color: #e2e8f0;
+  box-shadow: none;
+  background: #fff; /* neutral */
+}
+
+.status-filter-group .btn-filter:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 .filter-menu {
