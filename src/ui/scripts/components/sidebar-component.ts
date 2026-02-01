@@ -363,6 +363,10 @@ template.innerHTML = `
       .sidebar.mobile-open {
         transform: translateX(0);
       }
+      
+      .sidebar.mobile-open .brand-icon {
+        opacity: 0;
+      }
 
       .mobile-toggle {
         display: flex;
