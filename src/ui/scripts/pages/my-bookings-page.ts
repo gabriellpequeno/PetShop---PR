@@ -375,130 +375,165 @@ class MyBookingsPage {
     );
   }
 
+  private getServiceColor(serviceName: string): string {
+    // Simple hash function to generate stable colors
+    let hash = 0;
+    for (let i = 0; i < serviceName.length; i++) {
+        hash = serviceName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+    const color = '#' + '00000'.substring(0, 6 - c.length) + c;
+    
+    // Ensure sufficient contrast / not too light: mix with a darker base if needed
+    // Or pick from a predefined palette
+    const palette = [
+        '#3b82f6', '#10b981', '#f59e0b', '#ef4444', 
+        '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'
+    ];
+    return palette[Math.abs(hash) % palette.length]!;
+  }
+
   private renderWeekView() {
     const weekStart = this.getWeekStart(this.currentDate);
     const days = this.getWeekDays(weekStart);
 
-    // Render day headers
-    const dayHeadersContainer = document.getElementById("dayHeaders");
-    if (dayHeadersContainer) {
-      dayHeadersContainer.innerHTML = days
-        .map((day) => {
-          const isToday = this.isToday(day);
-          const dayNames = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
-          return `
-          <div class="day-header ${isToday ? "today" : ""}">
-            <div class="day-name">${dayNames[day.getDay()]}</div>
-            <div class="day-number">${day.getDate()}</div>
-          </div>
-        `;
-        })
-        .join("");
-    }
+    // 1. Render Header Row (Time Labels 07:00 - 20:00, every 30min)
+    const calendarHeaderRow = document.querySelector(".calendar-header-row");
+    if (calendarHeaderRow) {
+      calendarHeaderRow.innerHTML = "";
 
-    // Render time column
-    const timeColumn = document.getElementById("timeColumn");
-    if (timeColumn) {
-      timeColumn.innerHTML = "";
+      // Empty corner slot
+      const cornerSlot = document.createElement("div");
+      cornerSlot.className = "day-label-column-header";
+      cornerSlot.textContent = "Data";
+      calendarHeaderRow.appendChild(cornerSlot);
+
+      // Timeline Header Track
+      const timelineHeader = document.createElement("div");
+      timelineHeader.className = "timeline-header";
+
+      // Loop 7am to 19:30 (last slot starts at 19:30)
       for (let hour = 7; hour < 20; hour++) {
-        for (let minute = 0; minute < 60; minute += 30) {
-          const timeSlot = document.createElement('div');
-          timeSlot.className = 'time-slot-label';
-          timeSlot.textContent = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-          timeColumn.appendChild(timeSlot);
-        }
+          for (let minute = 0; minute < 60; minute += 30) {
+            const slot = document.createElement("div");
+            slot.className = "timeline-header-slot";
+            slot.textContent = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+            timelineHeader.appendChild(slot);
+          }
       }
+      calendarHeaderRow.appendChild(timelineHeader);
     }
 
-    // Render days grid with events
-    const daysGrid = document.getElementById("daysGrid");
-    if (daysGrid) {
-      daysGrid.innerHTML = days.map((day, dayIndex) => {
-        const dayBookings = this.getBookingsForDay(day);
-        let hoursHtml = '';
+    // 2. Render Body (Day Rows)
+    const calendarBody = document.querySelector(".calendar-body");
+    if (calendarBody) {
+      calendarBody.innerHTML = ""; 
+
+      days.forEach((day, dayIndex) => {
+        const isToday = this.isToday(day);
+        const dayNames = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
         
-        for (let hour = 7; hour < 20; hour++) {
+        // Day Row Container
+        const dayRow = document.createElement("div");
+        dayRow.className = `day-row ${isToday ? "today" : ""}`;
+
+        // Left Column: Day Label
+        const dayLabelCol = document.createElement("div");
+        dayLabelCol.className = "day-label-column";
+        dayLabelCol.innerHTML = `
+          <div class="day-name">${dayNames[day.getDay()]}</div>
+          <div class="day-number">${day.getDate()}</div>
+        `;
+        dayRow.appendChild(dayLabelCol);
+
+        // Right Column: Timeline Track
+        const track = document.createElement("div");
+        track.className = "timeline-track";
+        
+        // Fetch bookings for this day to check overlaps
+        const dayBookings = this.getBookingsForDay(day);
+
+        // Render 30min slots inside track
+        for (let hour = 7; hour < 20; hour++) { 
             for (let minute = 0; minute < 60; minute += 30) {
-                const isPast = this.isPastSlot(day, hour, minute);
-                const isAvailable = !isPast && this.isSlotAvailable(day, hour, minute);
-                
                 const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
                 
-                const hasBooking = dayBookings.some(b => {
-                   const bookingJob = this.jobs.find(j => j.id === b.jobId);
-                   const duration = bookingJob ? bookingJob.duration : 60;
-                   const bTime = b.bookingTime || '09:00';
-                   return this.isTimeOverlapping(timeStr, bTime, duration);
+                // Check if this slot is covered by an existing booking
+                // A slot at 10:00 is occupied if a booking exists that covers this time
+                const isOccupiedByBooking = dayBookings.some(booking => {
+                    const job = this.jobs.find(j => j.id === booking.jobId);
+                    const duration = job ? job.duration : 60;
+                    return this.isTimeOverlapping(timeStr, booking.bookingTime || '09:00', duration);
                 });
 
-                let slotClass = 'hour-slot'; 
-                if (isPast) {
-                    slotClass += ' past-slot';
-                } else if (hasBooking) {
-                } else if (isAvailable) {
-                    slotClass += ' available-slot clickable';
+                const isPast = this.isPastSlot(day, hour, minute);
+                // isSlotAvailable checks generic availability (if job fits, etc)
+                // We add !isOccupiedByBooking to strictly force gray out
+                const isAvailable = !isPast && !isOccupiedByBooking && this.isSlotAvailable(day, hour, minute);
+
+                const slot = document.createElement("div");
+                let slotClass = "timeline-slot";
+                
+                if (isAvailable) {
+                    slotClass += " available";
+                    const dateStr = day.toISOString().split('T')[0] || "";
+                    slot.dataset.date = dateStr;
+                    slot.dataset.time = timeStr;
+                    
+                    slot.addEventListener("click", () => {
+                        this.openBookingModal(dateStr, timeStr);
+                    });
                 } else {
-                    slotClass += ' unavailable-slot';
+                    slotClass += " unavailable";
                 }
 
-                const dateStr = day.toISOString().split('T')[0];
-
-                hoursHtml += `<div class="${slotClass}" data-date="${dateStr}" data-time="${timeStr}" data-day-index="${dayIndex}" data-hour="${hour}" data-minute="${minute}"></div>`;
+                slot.className = slotClass;
+                track.appendChild(slot);
             }
         }
 
-        const eventsHtml = dayBookings.map(booking => {
-          const bookingTimeStr = booking.bookingTime || '09:00';
-          const [hStr, mStr] = bookingTimeStr.split(':');
-          const bookingHour = parseInt(hStr || '9', 10);
-          const bookingMinute = parseInt(mStr || '0', 10);
-          
-          const SLOT_HEIGHT = 40; // Reduced height for 30min slots
-          const slotsFromStart = (bookingHour - 7) * 2 + (bookingMinute / 30);
-          const topOffset = slotsFromStart * SLOT_HEIGHT;
-          
-          const job = this.jobs.find(j => j.id === booking.jobId);
-          const duration = job ? job.duration : 60;
-          const height = (duration / 30) * SLOT_HEIGHT;
-          
-          return `
-            <div class="calendar-event status-${booking.status}"
-                 style="top: ${topOffset}px; height: ${height}px;"
-                 data-booking-id="${booking.id}">
-              <div class="event-title">${booking.jobName || 'Serviço'}</div>
-              <div class="event-time">${booking.bookingTime || '09:00'}</div>
-              ${height > 30 ? `<div class="event-pet">${booking.petName || 'Pet'}</div>` : ''}
-            </div>
-          `;
-            })
-            .join("");
+        // Render Events overlay
+        dayBookings.forEach(booking => {
+            const job = this.jobs.find(j => j.id === booking.jobId);
+            const duration = job ? job.duration : 60;
 
-          return `
-          <div class="day-column">
-            ${hoursHtml}
-            ${eventsHtml}
-          </div>
-        `;
-        })
-        .join("");
+            const bookingTimeStr = booking.bookingTime || '09:00';
+            const [hStr, mStr] = bookingTimeStr.split(':');
+            const bookingHour = parseInt(hStr || '9', 10);
+            const bookingMinute = parseInt(mStr || '0', 10);
 
-      // Add click handlers for available slots
-      daysGrid.querySelectorAll(".hour-slot.clickable").forEach((slot) => {
-        slot.addEventListener("click", (e) => {
-          const target = e.currentTarget as HTMLElement;
-          const date = target.dataset.date!;
-          const time = target.dataset.time!;
-          this.openBookingModal(date, time);
+            // Calculate Position
+            // Total minutes from 07:00 to 20:00 = 13 * 60 = 780 minutes
+            const startMinutesFrom7 = (bookingHour - 7) * 60 + bookingMinute;
+            const leftPercent = (startMinutesFrom7 / 780) * 100;
+            const widthPercent = (duration / 780) * 100;
+
+            const serviceColor = this.getServiceColor(booking.jobName || 'Serviço');
+
+            const eventEl = document.createElement("div");
+            eventEl.className = `calendar-event status-${booking.status}`;
+            eventEl.style.left = `${leftPercent}%`;
+            eventEl.style.width = `${widthPercent}%`;
+            eventEl.style.background = serviceColor; // Apply dynamic color
+            eventEl.style.border = '1px solid rgba(255,255,255,0.2)'; 
+            eventEl.dataset.bookingId = booking.id;
+            
+            eventEl.innerHTML = `
+                <div class="event-title">${booking.jobName || 'Serviço'}</div>
+                <div class="event-pet">${booking.petName || 'Pet'}</div>
+                <div class="event-time">${bookingTimeStr}</div>
+            `;
+            
+            eventEl.addEventListener("click", (e) => {
+                e.stopPropagation();
+                this.openEventModal(booking.id);
+            });
+
+            track.appendChild(eventEl);
         });
-      });
 
-      // Add click handlers for events
-      daysGrid.querySelectorAll(".calendar-event").forEach((event) => {
-        event.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const bookingId = (e.currentTarget as HTMLElement).dataset.bookingId;
-          this.openEventModal(bookingId!);
-        });
+        dayRow.appendChild(track);
+        calendarBody.appendChild(dayRow);
       });
     }
   }
@@ -935,6 +970,8 @@ class MyBookingsPage {
       });
 
       this.closeBookingModal();
+      
+      // Refresh data once
       await Promise.all([
         this.loadBookings(),
         this.loadOccupiedSlots()
@@ -942,11 +979,7 @@ class MyBookingsPage {
       this.renderCalendar();
       
       await FeedbackModal.success('Agendamento realizado com sucesso!');
-
-      await Promise.all([this.loadBookings(), this.loadOccupiedSlots()]);
-      this.renderCalendar();
-
-      alert("Agendamento realizado com sucesso!");
+      
     } catch (error) {
       console.error('Error creating booking:', error);
       await FeedbackModal.error('Erro ao realizar agendamento. Tente novamente.');

@@ -1,23 +1,36 @@
-import { FeedbackModal } from '../components/feedback-modal.js'
-import { BookingsClient } from '../consumers/bookings-client.js'
-import type { AdminBooking as Booking } from '../consumers/bookings-client.js' 
+import { JobsClient } from '../consumers/jobs-client';
+import { BookingsClient } from '../consumers/bookings-client';
+import type { AdminBooking as Booking } from '../consumers/bookings-client';
+import { FeedbackModal } from '../components/feedback-modal.js';
+
+interface Job {
+  id: string;
+  name: string;
+}
 
 class AdminBookingsPage {
   private bookings: Booking[] = [];
   private filteredBookings: Booking[] = [];
   private bookingsClient = new BookingsClient();
+  private jobsClient = new JobsClient();
+  private jobs: Job[] = [];
   private currentDate: Date = new Date();
   private currentView: "week" | "month" = "week";
   private selectedBooking: Booking | null = null;
   private statusFilters: Set<string> = new Set(["agendado", "concluido"]);
+  private selectedJobId: string = "";
 
   constructor() {
     this.init();
   }
 
   private async init() {
-    await this.loadBookings();
+    await Promise.all([
+      this.loadBookings(),
+      this.loadJobs()
+    ]);
     this.setupEventListeners();
+    this.populateServiceFilter();
     this.updateStats();
     this.renderCalendar();
   }
@@ -33,10 +46,29 @@ class AdminBookingsPage {
     }
   }
 
+  private async loadJobs() {
+    try {
+      this.jobs = await this.jobsClient.listJobs();
+    } catch (error) {
+      console.error("Error loading jobs:", error);
+      this.jobs = [];
+    }
+  }
+
+  private populateServiceFilter() {
+    const select = document.getElementById("serviceFilter") as HTMLSelectElement;
+    if (select) {
+        select.innerHTML = '<option value="">Todos os Serviços</option>' + 
+            this.jobs.map(job => `<option value="${job.id}">${job.name}</option>`).join('');
+    }
+  }
+
   private applyFilters() {
-    this.filteredBookings = this.bookings.filter((booking) =>
-      this.statusFilters.has(booking.status),
-    );
+    this.filteredBookings = this.bookings.filter((booking) => {
+      const statusMatch = this.statusFilters.has(booking.status);
+      const jobMatch = !this.selectedJobId || booking.jobId === this.selectedJobId;
+      return statusMatch && jobMatch;
+    });
   }
 
   private setupEventListeners() {
@@ -61,24 +93,24 @@ class AdminBookingsPage {
       });
     });
 
-    const filterBtn = document.getElementById("filterBtn");
-    const filterMenu = document.getElementById("filterMenu");
+    const statusFilterBtn = document.getElementById("statusFilterBtn");
+    const statusFilterMenu = document.getElementById("statusFilterMenu");
 
-    filterBtn?.addEventListener("click", (e) => {
+    statusFilterBtn?.addEventListener("click", (e) => {
       e.stopPropagation();
-      if (filterMenu) {
-        filterMenu.style.display =
-          filterMenu.style.display === "none" ? "block" : "none";
+      if (statusFilterMenu) {
+        statusFilterMenu.style.display =
+          statusFilterMenu.style.display === "none" ? "block" : "none";
       }
     });
 
     document.addEventListener("click", () => {
-      if (filterMenu) {
-        filterMenu.style.display = "none";
+      if (statusFilterMenu) {
+        statusFilterMenu.style.display = "none";
       }
     });
 
-    filterMenu?.addEventListener("click", (e) => {
+    statusFilterMenu?.addEventListener("click", (e) => {
       e.stopPropagation();
     });
 
@@ -93,6 +125,13 @@ class AdminBookingsPage {
         this.applyFilters();
         this.renderCalendar();
       });
+    });
+
+    const serviceFilter = document.getElementById("serviceFilter");
+    serviceFilter?.addEventListener("change", (e) => {
+        this.selectedJobId = (e.target as HTMLSelectElement).value;
+        this.applyFilters();
+        this.renderCalendar();
     });
 
     document.getElementById("closeModal")?.addEventListener("click", () => {
@@ -158,16 +197,23 @@ class AdminBookingsPage {
       (b) => b.status === "cancelado",
     ).length;
 
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
+    const currentMonth = this.currentDate.getMonth();
+    const currentYear = this.currentDate.getFullYear();
+
     const revenue = this.bookings
       .filter((b) => {
-        const bookingDate = new Date(b.bookingDate);
-        return (
-          b.status === "concluido" &&
-          bookingDate.getMonth() === currentMonth &&
-          bookingDate.getFullYear() === currentYear
-        );
+        if (b.status !== "concluido") return false;
+        
+        // Robust date parsing (YYYY-MM-DD split to avoid timezone issues)
+        const dateStr = b.bookingDate ? b.bookingDate.split('T')[0] : '';
+        if (!dateStr) return false;
+
+        const [y, m, d] = dateStr.split('-').map(Number);
+        
+        if (y === undefined || m === undefined) return false;
+
+        // Note: m is 1-indexed in date string, but getMonth() is 0-indexed
+        return (m - 1) === currentMonth && y === currentYear;
       })
       .reduce((sum, b) => sum + b.price, 0);
 
@@ -189,88 +235,120 @@ class AdminBookingsPage {
       this.renderMonthView();
     }
     this.updatePeriodLabel();
+    this.updateStats();
   }
 
   private renderWeekView() {
     const weekStart = this.getWeekStart(this.currentDate);
     const days = this.getWeekDays(weekStart);
 
-    const dayHeadersContainer = document.getElementById("dayHeaders");
-    if (dayHeadersContainer) {
-      dayHeadersContainer.innerHTML = days
-        .map((day) => {
-          const isToday = this.isToday(day);
-          const dayNames = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
-          return `
-          <div class="day-header ${isToday ? "today" : ""}">
-            <div class="day-name">${dayNames[day.getDay()]}</div>
-            <div class="day-number">${day.getDate()}</div>
-          </div>
-        `;
-        })
-        .join("");
-    }
+    const calendarHeaderRow = document.querySelector(".calendar-header-row");
+    if (calendarHeaderRow) {
+      calendarHeaderRow.innerHTML = "";
 
-    const timeColumn = document.getElementById("timeColumn");
-    if (timeColumn) {
-      timeColumn.innerHTML = "";
+      // Empty corner slot
+      const cornerSlot = document.createElement("div");
+      cornerSlot.className = "day-label-column-header";
+      cornerSlot.textContent = "Data";
+      calendarHeaderRow.appendChild(cornerSlot);
+
+      // Timeline Header
+      const timelineHeader = document.createElement("div");
+      timelineHeader.className = "timeline-header";
+
+      // Loop 7am to 19:30 (last slot starts at 19:30)
       for (let hour = 7; hour < 20; hour++) {
-        const timeSlot = document.createElement("div");
-        timeSlot.className = "time-slot-label";
-        timeSlot.textContent = `${hour.toString().padStart(2, "0")}:00`;
-        timeColumn.appendChild(timeSlot);
+        for (let minute = 0; minute < 60; minute += 30) {
+          const slot = document.createElement("div");
+          slot.className = "timeline-header-slot";
+          slot.textContent = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+          timelineHeader.appendChild(slot);
+        }
       }
+      calendarHeaderRow.appendChild(timelineHeader);
     }
 
-    const daysGrid = document.getElementById("daysGrid");
-    if (daysGrid) {
-      daysGrid.innerHTML = days
-        .map((day) => {
-          const dayBookings = this.getBookingsForDay(day);
-          let hoursHtml = "";
+    // 2. Render Body (Day Rows)
+    const calendarBody = document.querySelector(".calendar-body");
+    if (calendarBody) {
+      calendarBody.innerHTML = "";
 
-          for (let hour = 7; hour < 20; hour++) {
-            hoursHtml += '<div class="hour-slot"></div>';
-          }
+      days.forEach((day, dayIndex) => {
+        const isToday = this.isToday(day);
+        const dayNames = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
+        
+        // Day Row
+        const dayRow = document.createElement("div");
+        dayRow.className = `day-row ${isToday ? "today" : ""}`;
 
-          const eventsHtml = dayBookings
-            .map((booking) => {
-              const bookingTimeStr = booking.bookingTime || "09:00";
-              const timeParts = bookingTimeStr.split(":").map(Number);
-              const hours = timeParts[0] || 9;
-              const minutes = timeParts[1] || 0;
-              const topOffset = (hours - 7) * 60 + minutes;
-
-              const duration = booking.jobDuration || 60;
-              const height = duration;
-
-              return `
-            <div class="calendar-event admin-event status-${booking.status}"
-                 style="top: ${topOffset}px; height: ${height}px;"
-                 data-booking-id="${booking.id}">
-              <div class="event-title">${booking.jobName || "Serviço"}</div>
-              <div class="event-time">${bookingTimeStr}</div>
-              <div class="event-pet">${booking.petName || "Pet"}</div>
-              <div class="event-user">${booking.userName || "Cliente"}</div>
-            </div>
-          `;
-            })
-            .join("");
-
-          return `
-          <div class="day-column">
-            ${hoursHtml}
-            ${eventsHtml}
-          </div>
+        // Left Column: Day Label
+        const dayLabelCol = document.createElement("div");
+        dayLabelCol.className = "day-label-column";
+        dayLabelCol.innerHTML = `
+          <div class="day-name">${dayNames[day.getDay()]}</div>
+          <div class="day-number">${day.getDate()}</div>
         `;
-        })
-        .join("");
+        dayRow.appendChild(dayLabelCol);
 
-      daysGrid.querySelectorAll(".calendar-event").forEach((event) => {
-        event.addEventListener("click", (e) => {
-          const bookingId = (e.currentTarget as HTMLElement).dataset.bookingId;
-          this.openEditModal(bookingId!);
+        // Right Column: Timeline Track
+        const track = document.createElement("div");
+        track.className = "timeline-track";
+
+        // Background Slots (Visual only for Admin)
+        for (let hour = 7; hour < 20; hour++) {
+            for (let minute = 0; minute < 60; minute += 30) {
+                const slot = document.createElement("div");
+                slot.className = "timeline-slot unavailable"; // Default look
+                // We could differentiate available slots if we had job data here, 
+                // but Admin view usually just shows bookings. 
+                // Keeping it simple as unavailable/gray background pattern using css.
+                track.appendChild(slot);
+            }
+        }
+
+        // Render Events
+        const dayBookings = this.getBookingsForDay(day);
+        
+        dayBookings.forEach(booking => {
+            const bookingTimeStr = booking.bookingTime || "09:00";
+            const [hStr, mStr] = bookingTimeStr.split(":").map(Number);
+            const hours = hStr || 9;
+            const minutes = mStr || 0;
+            
+            // Calculate Position
+            // Total minutes 07:00-20:00 = 780
+            const startMinutesFrom7 = (hours - 7) * 60 + minutes;
+            const duration = booking.jobDuration || 60;
+            
+            const leftPercent = (startMinutesFrom7 / 780) * 100;
+            const widthPercent = (duration / 780) * 100;
+
+            const eventEl = document.createElement("div");
+            eventEl.className = `calendar-event admin-event status-${booking.status}`;
+            eventEl.style.left = `${leftPercent}%`;
+            eventEl.style.width = `${widthPercent}%`;
+            eventEl.style.top = "10%";
+            eventEl.style.bottom = "10%";
+            eventEl.dataset.bookingId = booking.id;
+            
+            eventEl.innerHTML = `
+                <div class="event-title">${booking.jobName || "Serviço"}</div>
+                <div class="event-user">${booking.userName || "Cliente"} - ${booking.petName}</div>
+            `;
+            
+            eventEl.addEventListener("click", (e) => {
+                e.stopPropagation();
+                // We need to type cast or ensure standard method exists
+                const target = e.currentTarget as HTMLElement;
+                const bId = target.dataset.bookingId;
+                if(bId) this.openEditModal(bId);
+            });
+
+            track.appendChild(eventEl);
         });
+
+        dayRow.appendChild(track);
+        calendarBody.appendChild(dayRow);
       });
     }
   }
