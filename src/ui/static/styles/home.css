@@ -869,7 +869,9 @@
 
 @media (min-width: 1024px) {
     .contact-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 420px;
+        align-items: start;
+        gap: 6rem;
     }
 }
 
@@ -921,6 +923,73 @@
 .contact-value {
     font-weight: 700;
     font-size: 1.125rem;
+}
+
+/* Contact Card (Entrar em contato) */
+.contact-card {
+    background-color: var(--surface-light);
+    color: var(--text-main-light);
+    border-radius: 1rem;
+    padding: 1rem 1.25rem; /* compacto para reduzir altura */
+    box-shadow: var(--shadow-soft);
+    max-width: 420px;
+    border: 1px solid #f3f4f6;
+    transition: all 0.2s;
+} 
+
+.contact-card .card-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.contact-card .card-desc {
+    color: #4b5563; /* same as .section-subtitle */
+    margin-bottom: 1rem;
+} 
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #e6eaf0;
+    background: transparent;
+    color: inherit;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.contact-form textarea { resize: vertical; min-height: 80px; }
+
+.contact-card .btn { margin-top: 0.5rem; }
+
+/* Visually hidden for accessibility */
+.sr-only {
+    position: absolute !important;
+    height: 1px; width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap;
+}
+
+/* Dark mode overrides */
+[data-theme="dark"] .contact-card {
+    background-color: var(--surface-dark);
+    color: var(--text-main-dark);
+    box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+    border: 1px solid #374151; /* keep consistent with .service-card */
+}
+
+[data-theme="dark"] .contact-card .card-desc {
+    color: var(--text-muted-dark);
+}
+
+[data-theme="dark"] .contact-form input,
+[data-theme="dark"] .contact-form textarea {
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.03);
+    color: inherit;
 }
 
 /* Scroll Animations */

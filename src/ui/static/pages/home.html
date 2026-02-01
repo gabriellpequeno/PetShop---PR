@@ -494,7 +494,27 @@
               </div>
             </div>
 
-            <!-- Form Column removed as requested -->
+            <!-- Contact Card -->
+            <div class="contact-card reveal-on-scroll delay-100">
+              <h3 class="card-title">Entrar em contato</h3>
+              <p class="card-desc">Prefere enviar um e-mail? Envie aqui!</p>
+              <form class="contact-form" action="https://formsubmit.co/07little.s.petshop07@gmail.com" method="POST">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_subject" value="Contato via site - Formulário">
+                <input type="hidden" name="_next" value="/#contact">
+
+                <label class="sr-only" for="contact-name">Nome</label>
+                <input id="contact-name" type="text" name="name" placeholder="Seu nome" required>
+
+                <label class="sr-only" for="contact-email">E-mail</label>
+                <input id="contact-email" type="email" name="email" placeholder="Seu e-mail" required>
+
+                <label class="sr-only" for="contact-message">Mensagem</label>
+                <textarea id="contact-message" name="message" rows="4" placeholder="Como podemos ajudar?" required></textarea>
+
+                <button type="submit" class="btn btn-primary btn-block">Enviar mensagem</button>
+              </form>
+            </div>
           </div>
         </div>
       </section>
