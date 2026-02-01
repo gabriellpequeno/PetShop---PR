@@ -1,27 +1,43 @@
-/* CSS Variables */
 :root {
+  /* --- Cores da Marca --- */
   --primary: #ffa500;
-  /* Vibrant Orange */
+  --on-primary: #121212;
+
   --secondary: #0c4e5a;
-  /* Deep Teal */
+  /* Ajuste: Um Teal mais vibrante para detalhes no escuro, contrastando com o fundo neutro */
+  --secondary-accent: #26a69a;
+
+  /* --- Tons de Menta --- */
   --mint-light: #d2ffe6;
-  --mint-dark: #1a4032;
+  /* Ajuste: Um pouco mais saturado para não parecer marrom/sujo sobre o fundo Teal */
+  --mint-dark: #0c4459;
+
+  /* --- Fundos (Backgrounds) --- */
   --background-light: #ffffff;
+
+  /* CORREÇÃO PRINCIPAL: Fundo Neutro (#121212) */
+  /* Remove o tom azulado que brigava com a sua seção de contatos */
   --background-dark: #121212;
+
+  /* --- Superfícies --- */
   --surface-light: #f9fafb;
+  /* Superfície neutra para cards, garantindo que o destaque fique para o Laranja e o Teal */
   --surface-dark: #1e1e1e;
+
+  /* --- Tipografia --- */
   --text-main-light: #0c4e5a;
   --text-main-dark: #e0e0e0;
+  --text-muted-dark: #a0a0a0;
 
+  /* --- Configurações Globais --- */
   --font-display: "Baloo 2", cursive;
   --font-body: "Inter", sans-serif;
 
-  --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
-  --shadow-glow: 0 0 20px rgba(255, 165, 0, 0.3);
+  --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(255, 165, 0, 0.1);
 
   --container-padding: 1rem;
   --max-width: 80rem;
-  /* 1280px */
 }
 
 /* Reset & Base Styles */
@@ -476,7 +492,6 @@ button {
 }
 
 @keyframes bounce-slow {
-
   0%,
   100% {
     transform: translateY(0);
@@ -485,4 +500,108 @@ button {
   50% {
     transform: translateY(-10px);
   }
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--mint-light) 0%,
+    rgba(255, 165, 0, 0.1) 100%
+  );
+  border: 2px solid rgba(255, 165, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.1) rotate(15deg);
+  border-color: var(--primary);
+  box-shadow: 0 0 20px rgba(255, 165, 0, 0.4);
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle-btn .theme-icon-light,
+.theme-toggle-btn .theme-icon-dark {
+  position: absolute;
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-toggle-btn .theme-icon-light {
+  color: var(--primary);
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.theme-toggle-btn .theme-icon-dark {
+  color: var(--secondary);
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.5);
+}
+
+/* Dark mode styles for theme toggle */
+[data-theme="dark"] .theme-toggle-btn {
+  background: linear-gradient(
+    135deg,
+    var(--surface-dark) 0%,
+    rgba(255, 165, 0, 0.2) 100%
+  );
+  border-color: rgba(255, 165, 0, 0.4);
+}
+
+[data-theme="dark"] .theme-toggle-btn .theme-icon-light {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.5);
+}
+
+[data-theme="dark"] .theme-toggle-btn .theme-icon-dark {
+  color: var(--primary);
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* Mobile theme toggle container */
+.mobile-theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 0.5rem 0;
+}
+
+[data-theme="dark"] .mobile-theme-toggle {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-theme-label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--secondary);
+}
+
+[data-theme="dark"] .mobile-theme-label {
+  color: white;
+}
+
+/* Nav CTA flex alignment */
+.nav-cta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }

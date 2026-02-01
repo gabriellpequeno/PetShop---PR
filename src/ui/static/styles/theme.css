@@ -1,0 +1,142 @@
+/* Theme System - Manual Dark Mode Override */
+/* These styles override the default light mode when [data-theme="dark"] is set on html */
+
+/* Body */
+[data-theme="dark"] body {
+  background-color: var(--background-dark);
+  color: var(--text-main-dark);
+}
+
+/* Navbar */
+[data-theme="dark"] .navbar.scrolled {
+  background-color: rgba(26, 64, 50, 0.9);
+}
+
+[data-theme="dark"] .mobile-menu-btn {
+  color: white;
+}
+
+[data-theme="dark"] .logo-text {
+  color: white;
+}
+
+[data-theme="dark"] .nav-link {
+  color: #e5e7eb;
+}
+
+/* Mobile Menu */
+[data-theme="dark"] .mobile-menu {
+  background-color: var(--surface-dark);
+  border-top-color: #374151;
+}
+
+[data-theme="dark"] .mobile-nav-link {
+  color: white;
+}
+
+/* Hero Section */
+[data-theme="dark"] .hero {
+  background-color: var(--mint-dark);
+}
+
+[data-theme="dark"] .hero-title {
+  color: white;
+}
+
+[data-theme="dark"] .hero-subtitle {
+  color: rgba(229, 231, 235, 0.9);
+}
+
+[data-theme="dark"] .hero-description {
+  color: rgba(209, 213, 219, 0.8);
+}
+
+[data-theme="dark"] .hero-blob {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .wave-path {
+  fill: var(--background-dark);
+}
+
+/* Services Section */
+[data-theme="dark"] .services-section {
+  background-color: var(--background-dark);
+}
+
+[data-theme="dark"] .section-title {
+  color: white;
+}
+
+[data-theme="dark"] .section-subtitle {
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .service-card {
+  background-color: var(--surface-dark);
+  border-color: #374151;
+}
+
+[data-theme="dark"] .service-icon-wrapper {
+  background-color: var(--mint-dark);
+}
+
+[data-theme="dark"] .service-icon {
+  color: white;
+}
+
+[data-theme="dark"] .service-title {
+  color: white;
+}
+
+[data-theme="dark"] .service-description {
+  color: #9ca3af;
+}
+
+/* About Section */
+[data-theme="dark"] .about-section {
+  background: linear-gradient(
+    to bottom,
+    var(--mint-dark),
+    var(--background-dark)
+  );
+}
+
+[data-theme="dark"] .about-badge {
+  background-color: var(--surface-dark);
+}
+
+[data-theme="dark"] .badge-title {
+  color: white;
+}
+
+[data-theme="dark"] .about-title {
+  color: white;
+}
+
+[data-theme="dark"] .about-text {
+  color: #d1d5db;
+}
+
+/* Testimonials Section */
+[data-theme="dark"] .testimonials-section {
+  background-color: var(--background-dark);
+}
+
+[data-theme="dark"] .testimonial-card {
+  background-color: var(--surface-dark);
+  border-color: #374151;
+}
+
+[data-theme="dark"] .testimonial-text {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .testimonial-author {
+  color: white;
+}
+
+/* Contact Section */
+[data-theme="dark"] .arch-inner {
+  background-color: var(--mint-dark);
+}
