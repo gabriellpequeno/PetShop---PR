@@ -46,7 +46,7 @@ Uma arquitetura de monolito modular, servindo o front atravez do back:
 |--|--|--|
 | Gabriel Pequeno | [Github](https://github.com/gabriellpequeno) | [Linkedin](https://www.linkedin.com/in/gabriel-pequeno-saraiva-tavares-b99267144/) |
 | Helen Tesch | [Github](https://github.com/HelenTesch) | [Linkedin](https://www.linkedin.com/in/helen-tesch-79b61b177/) |
-| Bianca Gonzaga | [Github](https://github.com/biagonzag-hue) | [Linkedin](https://www.linkedin.com/in/bianca-gonzaga-de-ara%C3%BAjo-192109280/) |
+| Bianca Gonzaga | [Github](https://github.com/biagonzag-hue) | [Linkedin](https://www.linkedin.com/in/bianca-gonzaga-192109280/) |
 | Felipe Mello | [Github](https://github.com/Felipemello29) | [Linkedin](https://www.linkedin.com/in/felipe-mello-53541421a/) |
 | Thiago Martins | [Github](https://github.com/0thigs) | Linkedin |
 | Edinaldo Junio | [Github](https://github.com/EdinaldoJunio) | [Linkedin](https://www.linkedin.com/in/edinaldo-junio/) |
