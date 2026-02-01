@@ -583,8 +583,29 @@ body {
   width: 100%;
   max-width: 500px;
   box-shadow: 0 25px 50px rgba(12, 78, 90, 0.25);
-  overflow: hidden;
+  /* Allow tall content to scroll on small screens */
+  max-height: calc(100vh - 2rem);
+  overflow: hidden; /* container hides overflowing; inner body will scroll */
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
   animation: modalSlideIn 0.3s ease;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1 1 auto;
+}
+
+/* Reduce radius and padding on small screens for better fit */
+@media (max-width: 480px) {
+  .modal-content {
+    border-radius: 0.75rem;
+    margin: 0 0.5rem;
+    max-height: calc(100vh - 1.25rem);
+  }
 }
 
 @keyframes modalSlideIn {
