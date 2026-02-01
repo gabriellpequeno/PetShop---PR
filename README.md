@@ -1,4 +1,4 @@
-# 🐱Little Pets🐶
+# 🐱Little's Pets🐶
 ## Descrição do Desafio
 
 O projeto **PetShop** é uma aplicação web full-stack desenvolvida com foco em simplicidade, performance e modularidade. A arquitetura segue uma abordagem de **Monólito Modular**, onde o backend e o frontend coexistem no mesmo repositório e compartilham a infraestrutura de execução, mas mantêm uma separação clara de responsabilidades por domínios de negócio.
