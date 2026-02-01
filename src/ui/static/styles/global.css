@@ -1,46 +1,25 @@
 :root {
-  /* --- Cores da Marca --- */
   --primary: #ffa500;
   --on-primary: #121212;
-  
   --secondary: #0c4e5a;
-  /* Ajuste: Um Teal mais vibrante para detalhes no escuro, contrastando com o fundo neutro */
   --secondary-accent: #26a69a; 
-
-  /* --- Tons de Menta --- */
   --mint-light: #D2FFE6;
-  /* Ajuste: Um pouco mais saturado para não parecer marrom/sujo sobre o fundo Teal */
   --mint-dark: #0C4459; 
-
-  /* --- Fundos (Backgrounds) --- */
   --background-light: #ffffff;
-  
-  /* CORREÇÃO PRINCIPAL: Fundo Neutro (#121212) */
-  /* Remove o tom azulado que brigava com a sua seção de contatos */
   --background-dark: #121212; 
-
-  /* --- Superfícies --- */
   --surface-light: #f9fafb;
-  /* Superfície neutra para cards, garantindo que o destaque fique para o Laranja e o Teal */
   --surface-dark: #1e1e1e;
-
-  /* --- Tipografia --- */
   --text-main-light: #0c4e5a;
   --text-main-dark: #e0e0e0;
   --text-muted-dark: #a0a0a0;
-
-  /* --- Configurações Globais --- */
   --font-display: "Baloo 2", cursive;
   --font-body: "Inter", sans-serif;
-
   --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
   --shadow-glow: 0 0 20px rgba(255, 165, 0, 0.1);
-
   --container-padding: 1rem;
   --max-width: 80rem;
 }
 
-/* Reset & Base Styles */
 * {
   margin: 0;
   padding: 0;
@@ -61,8 +40,6 @@ body {
     background-color 0.3s,
     color 0.3s;
 }
-
-/* Paw trail styles removed as requested. */
 
 [data-theme="dark"] body {
   background-color: var(--background-dark);
@@ -94,7 +71,6 @@ button {
   border: none;
 }
 
-/* Utility Components */
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -140,7 +116,6 @@ button {
   text-align: center;
 }
 
-/* Navbar */
 .navbar {
   position: fixed;
   width: 100%;
@@ -156,17 +131,13 @@ button {
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
-
 [data-theme="light"] .navbar.scrolled {
   background-color: rgba(255,255,255,0.95);
   border-bottom: 1px solid rgba(12, 78, 90, 0.06);
 }
-
 [data-theme="dark"] .navbar.scrolled {
   background-color: var(--mint-dark);
 }
-
-/* Ensure readable text on scrolled navbar */
 [data-theme="light"] .navbar.scrolled .logo-text,
 [data-theme="light"] .navbar.scrolled .nav-link,
 [data-theme="light"] .navbar.scrolled .mobile-menu-btn,
