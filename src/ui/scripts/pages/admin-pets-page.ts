@@ -256,7 +256,7 @@ class AdminPetsPage {
 
     return `
       <tr data-pet-id="${pet.id}">
-        <td>
+        <td data-label="Pet">
           <div class="pet-info">
             <div class="pet-avatar">
               <i data-lucide="${speciesIcon}"></i>
@@ -264,22 +264,22 @@ class AdminPetsPage {
             <span class="pet-name">${this.escapeHtml(pet.name)}</span>
           </div>
         </td>
-        <td>
+        <td data-label="Espécie">
           <span class="species-badge ${speciesClass}">
             ${this.escapeHtml(pet.species)}
           </span>
         </td>
-        <td>${pet.breed ? this.escapeHtml(pet.breed) : '<span style="color: #94a3b8">—</span>'}</td>
-        <td>${pet.age !== null ? `${pet.age} ano${pet.age !== 1 ? "s" : ""}` : '<span style="color: #94a3b8">—</span>'}</td>
-        <td>${pet.weight !== null ? `${pet.weight} kg` : '<span style="color: #94a3b8">—</span>'}</td>
-        <td><span class="size-badge size-${pet.size}">${sizeMap[pet.size] || pet.size}</span></td>
-        <td>
+        <td data-label="Raça">${pet.breed ? this.escapeHtml(pet.breed) : '<span style="color: #94a3b8">—</span>'}</td>
+        <td data-label="Idade">${pet.age !== null ? `${pet.age} ano${pet.age !== 1 ? "s" : ""}` : '<span style="color: #94a3b8">—</span>'}</td>
+        <td data-label="Peso">${pet.weight !== null ? `${pet.weight} kg` : '<span style="color: #94a3b8">—</span>'}</td>
+        <td data-label="Porte"><span class="size-badge size-${pet.size}">${sizeMap[pet.size] || pet.size}</span></td>
+        <td data-label="Tutor">
           <div class="owner-info-cell">
             <span class="owner-name-text">${this.escapeHtml(pet.ownerName)}</span>
             <span class="owner-email">${this.escapeHtml(pet.ownerEmail)}</span>
           </div>
         </td>
-        <td>
+        <td data-label="Ações">
           <div class="actions-cell">
             <button type="button" class="action-btn edit" data-action="edit" data-pet-id="${pet.id}" title="Editar">
               <i data-lucide="pencil"></i>

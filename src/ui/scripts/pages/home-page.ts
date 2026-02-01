@@ -1,5 +1,5 @@
 import { AuthApiConsumer } from '../consumers/auth-api-consumer'
-import { FeedbackModal } from '../components/feedback-modal.js'
+import { UsersClient } from '../consumers/users-client'
 
 function initTheme(): void {
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -91,40 +91,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', handleScroll);
 
-    // Paw trail feature removed as per user request. Previously implemented decorative paw trail has been disabled.
 
     const userString = localStorage.getItem('user');
     const authConsumer = new AuthApiConsumer();
+    const usersClient = new UsersClient();
+
+    async function renderGreetingFor(user: any) {
+        const loginBtns = document.querySelectorAll('[data-auth-modal]');
+        loginBtns.forEach(btn => {
+            const button = btn as HTMLButtonElement;
+            const firstName = (user.name || '').split(' ')[0] || 'Usuário';
+            button.textContent = `Olá, ${firstName}`;
+            button.removeAttribute('data-auth-modal');
+
+            button.onclick = (e) => {
+                e.preventDefault();
+                if (mobileMenu && mobileMenu.classList.contains('open')) {
+                    toggleMenu();
+                }
+                window.location.href = '/dashboard';
+            };
+        });
+    }
 
     if (userString) {
         try {
             const user = JSON.parse(userString);
-            const loginBtns = document.querySelectorAll('[data-auth-modal]');
-            
-            loginBtns.forEach(btn => {
-                const button = btn as HTMLButtonElement;
-                const firstName = user.name.split(' ')[0];
-                button.textContent = `Olá, ${firstName}`;
-                button.removeAttribute('data-auth-modal');
-                
-                button.addEventListener('click', async (e) => {
-                   e.preventDefault();
-                   if(await FeedbackModal.confirm('Sair', 'Deseja sair da sua conta?')) {
-                       try {
-                           await authConsumer.logoutUser();
-                       } catch (error) {
-                           console.error('Logout failed on server', error);
-                       } finally {
-                           localStorage.removeItem('token');
-                           localStorage.removeItem('user');
-
-                           window.location.reload();
-                       }
-                   }
-                });
-            });
+            renderGreetingFor(user);
         } catch (e) {
             console.error('Error parsing user data', e);
         }
+    } else {
+        (async () => {
+            try {
+                const user = await usersClient.getProfile();
+                if (user) {
+                    localStorage.setItem('user', JSON.stringify(user));
+                    renderGreetingFor(user);
+                }
+            } catch (err) {
+            }
+        })();
     }
 });
