@@ -91,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', handleScroll);
 
-    // Paw trail feature removed as per user request. Previously implemented decorative paw trail has been disabled.
 
     const userString = localStorage.getItem('user');
     const authConsumer = new AuthApiConsumer();
