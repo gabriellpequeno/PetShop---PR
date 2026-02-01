@@ -130,7 +130,7 @@ describe("CancelBookingService", () => {
         ).rejects.toBeInstanceOf(BadRequestError);
     });
 
-    it("deve lançar erro se o agendamento já foi concluído", async () => {
+    it("deve lançar erro se o agendamento já foi concluído (cliente)", async () => {
         vi.spyOn(repositoryMock, "findById").mockResolvedValueOnce({
             id: "booking-123",
             userId: "user-123",
@@ -154,7 +154,31 @@ describe("CancelBookingService", () => {
         ).rejects.toBeInstanceOf(BadRequestError);
     });
 
-    it("deve lançar erro se tentar cancelar agendamento passado", async () => {
+    it("deve permitir que admin cancele agendamento concluído", async () => {
+        vi.spyOn(repositoryMock, "findById").mockResolvedValueOnce({
+            id: "booking-456",
+            userId: "user-456",
+            petId: "pet-456",
+            jobId: "job-456",
+            bookingDate: "2026-11-11",
+            bookingTime: "11:00",
+            status: "concluido",
+            price: 150,
+            realStartTime: null,
+            realEndTime: null,
+            createdAt: "2026-01-01T00:00:00Z",
+        });
+
+        const result = await cancelBookingService.execute({
+            bookingId: "booking-456",
+            userId: "admin-1",
+            userRole: "admin",
+        });
+
+        expect(result.status).toBe("cancelado");
+    });
+
+    it("deve lançar erro se tentar cancelar agendamento passado (cliente)", async () => {
         vi.spyOn(repositoryMock, "findById").mockResolvedValueOnce({
             id: "booking-123",
             userId: "user-123",
@@ -176,5 +200,29 @@ describe("CancelBookingService", () => {
                 userRole: "client",
             })
         ).rejects.toBeInstanceOf(BadRequestError);
+    });
+
+    it("deve permitir que admin cancele agendamento passado", async () => {
+        vi.spyOn(repositoryMock, "findById").mockResolvedValueOnce({
+            id: "booking-789",
+            userId: "user-789",
+            petId: "pet-789",
+            jobId: "job-789",
+            bookingDate: "2020-01-01",
+            bookingTime: "10:00",
+            status: "agendado",
+            price: 80,
+            realStartTime: null,
+            realEndTime: null,
+            createdAt: "2019-01-01T00:00:00Z",
+        });
+
+        const result = await cancelBookingService.execute({
+            bookingId: "booking-789",
+            userId: "admin-1",
+            userRole: "admin",
+        });
+
+        expect(result.status).toBe("cancelado");
     });
 });

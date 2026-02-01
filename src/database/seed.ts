@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { db } from "./db"
 import { UsersFaker } from "../modules/users/fakers/users-faker";
 import { PetsFaker } from "../modules/pets/fakers/pets-faker";
@@ -11,42 +12,51 @@ async function seed() {
   await db.exec("DELETE FROM users")
 
   const cryptoProvider = new CryptoProvider()
-  const defaultPassword = "123456"
+  const seedPassword = process.env.SEED_PASSWORD;
+  if (!seedPassword) {
+    console.error("SEED_PASSWORD is required to run the seeder. Please set SEED_PASSWORD in your .env and retry.");
+    process.exit(1);
+  }
+  if (seedPassword.length < 8) {
+    console.error("SEED_PASSWORD must be at least 8 characters.");
+    process.exit(1);
+  }
+  console.log("Using SEED_PASSWORD from environment for seeded users (hidden)")
 
   const fixedUsers = [
     UsersFaker.fake({
       id: "admin-user-id-001",
       name: "Administrador",
       email: "admin@gmail.com",
-      password: defaultPassword,
+      password: seedPassword,
       role: "admin"
     }),
     UsersFaker.fake({
       id: "user-001",
       name: "Thigszin",
       email: "user@gmail.com",
-      password: defaultPassword,
+      password: seedPassword,
       role: "customer"
     }),
     UsersFaker.fake({
       id: "user-002",
       name: "João Santos",
       email: "joao@gmail.com",
-      password: defaultPassword,
+      password: seedPassword,
       role: "customer"
     }),
     UsersFaker.fake({
       id: "user-003",
       name: "Ana Oliveira",
       email: "ana@gmail.com",
-      password: defaultPassword,
+      password: seedPassword,
       role: "customer"
     }),
     UsersFaker.fake({
       id: "user-004",
       name: "Pedro Costa",
       email: "pedro@gmail.com",
-      password: defaultPassword,
+      password: seedPassword,
       role: "customer"
     })
   ]
