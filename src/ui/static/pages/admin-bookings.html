@@ -48,10 +48,13 @@
           </div>
           <div class="header-actions">
             <div class="filter-dropdown">
-              <button class="btn-filter" id="filterBtn">
-                <i data-lucide="filter"></i>
-                Filtrar
-              </button>
+                <select class="form-select" id="serviceFilter" style="width: 200px;">
+                  <option value="">Todos os Serviços</option>
+                </select>
+                <button class="btn-filter" id="filterBtn">
+                  <i data-lucide="filter"></i>
+                  Filtrar
+                </button>
               <div class="filter-menu" id="filterMenu" style="display: none">
                 <label class="filter-option">
                   <input type="checkbox" value="agendado" checked />
