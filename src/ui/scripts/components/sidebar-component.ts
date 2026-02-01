@@ -357,11 +357,16 @@ template.innerHTML = `
     @media (max-width: 768px) {
       .sidebar {
         transform: translateX(-100%);
-        width: var(--_sidebar-width) !important;
+        width: 280px !important;
+        max-width: 85vw;
       }
 
       .sidebar.mobile-open {
         transform: translateX(0);
+      }
+      
+      .sidebar.mobile-open .brand-icon {
+        opacity: 0;
       }
 
       .mobile-toggle {

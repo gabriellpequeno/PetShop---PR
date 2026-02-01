@@ -24,7 +24,6 @@ interface FilterOptions {
   userId?: string | undefined;
 }
 
-// Translation map for bilingual search (English <-> Portuguese)
 const translationGroups: string[][] = [
   ["dog", "cão", "cao", "cachorro", "canino"],
   ["cat", "gato", "felino"],
@@ -43,7 +42,6 @@ function expandSearchTerms(search: string): string[] {
   const searchLower = search.toLowerCase().trim();
   const terms: Set<string> = new Set([searchLower]);
 
-  // Find matching translation groups and add all equivalents
   for (const group of translationGroups) {
     if (
       group.some(
@@ -78,10 +76,8 @@ export class AdminPetsRepository {
     const params: string[] = [];
 
     if (filters?.search) {
-      // Expand search terms to include translations
       const searchTerms = expandSearchTerms(filters.search);
 
-      // Build OR conditions for each search term
       const conditions: string[] = [];
       for (const term of searchTerms) {
         conditions.push(

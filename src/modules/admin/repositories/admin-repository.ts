@@ -3,7 +3,6 @@ import type { DashboardCounts, UserSummary } from '../types/admin-types'
 
 export class AdminRepository {
     async countUsersByPeriod(startDate: string, endDate: string): Promise<number> {
-        // Note: users table does not have created_at field, returning total count
         const result = await db.get<{ count: number }>(
             `SELECT COUNT(*) as count FROM users WHERE role = 'customer'`
         )
@@ -11,7 +10,6 @@ export class AdminRepository {
     }
 
     async countPetsByPeriod(startDate: string, endDate: string): Promise<number> {
-        // Note: pets table does not have created_at field, returning total count
         const result = await db.get<{ count: number }>(
             `SELECT COUNT(*) as count FROM pets`
         )
@@ -68,8 +66,6 @@ export class AdminRepository {
         return users
     }
 
-    // New methods for interactive dashboard cards
-
     async getUsersListWithNextService(hasService: 'all' | 'with_service' = 'all'): Promise<Array<{
         id: string
         name: string
@@ -83,7 +79,6 @@ export class AdminRepository {
         const today = now.toISOString().split('T')[0]
         const currentTime = now.toTimeString().slice(0, 5)
         
-        // Add HAVING clause if filtering for users with service
         const havingClause = hasService === 'with_service' ? 'HAVING nextService IS NOT NULL' : ''
         
         const users = await db.all<Array<{
@@ -136,7 +131,6 @@ export class AdminRepository {
         const today = now.toISOString().split('T')[0]
         const currentTime = now.toTimeString().slice(0, 5)
         
-        // Add HAVING clause if filtering for pets with service
         const havingClause = hasService === 'with_service' ? 'HAVING nextService IS NOT NULL' : ''
         
         const pets = await db.all<Array<{
@@ -188,12 +182,10 @@ export class AdminRepository {
         const today = now.toISOString().split('T')[0]
         const currentTime = now.toTimeString().slice(0, 5)
         
-        // Determine WHERE clause based on filter
         const timeClause = filter === 'upcoming'
             ? `(b.bookingDate > ? OR (b.bookingDate = ? AND b.bookingTime >= ?))`
             : `(b.bookingDate < ? OR (b.bookingDate = ? AND b.bookingTime < ?))`
         
-        //Add status filter
         const statusClause = status === 'all' 
             ? '' 
             : status === 'active'

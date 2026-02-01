@@ -138,6 +138,28 @@ button {
 [data-theme="dark"] .navbar.scrolled {
   background-color: var(--mint-dark);
 }
+
+.navbar.menu-open {
+  background-color: var(--background-light);
+  transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .navbar.menu-open {
+  background-color: var(--surface-dark);
+}
+
+
+@keyframes menu-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 [data-theme="light"] .navbar.scrolled .logo-text,
 [data-theme="light"] .navbar.scrolled .nav-link,
 [data-theme="light"] .navbar.scrolled .mobile-menu-btn,
@@ -283,6 +305,7 @@ button {
 }
 
 /* Mobile Menu */
+
 .mobile-menu {
   display: none;
   /* JS will toggle this */
@@ -300,12 +323,7 @@ button {
   border-top: 1px solid #f3f4f6;
 }
 
-@media (prefers-color-scheme: dark) {
-  .mobile-menu {
-    background-color: var(--surface-dark);
-    border-top-color: #374151;
-  }
-}
+/* ... existing code ... */
 
 [data-theme="dark"] .mobile-menu {
   background-color: var(--surface-dark);
@@ -314,6 +332,7 @@ button {
 
 .mobile-menu.open {
   display: flex;
+  animation: menu-slide-in 0.3s ease-out forwards;
 }
 
 .mobile-nav-link {

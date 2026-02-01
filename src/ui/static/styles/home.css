@@ -297,6 +297,12 @@
     transform: scale(1.05);
 }
 
+@media (max-width: 768px) {
+    .hero-img:hover, .hero-img:active {
+        transform: translateX(-50%) scale(1.05);
+    }
+}
+
 .wave-separator {
     position: absolute;
     bottom: 0;

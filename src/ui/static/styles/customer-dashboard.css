@@ -420,11 +420,6 @@ body {
 }
 
 @media (max-width: 900px) {
-  .main-content {
-    margin-left: 0;
-    padding: 1.5rem;
-  }
-
   .cards-grid {
     grid-template-columns: 1fr;
   }
@@ -442,9 +437,18 @@ body {
   }
 }
 
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding: 1.5rem;
+    padding-top: 6rem;
+  }
+}
+
 @media (max-width: 480px) {
   .main-content {
     padding: 1rem;
+    padding-top: 6rem;
   }
 
   .card-header {
