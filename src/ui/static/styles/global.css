@@ -1,30 +1,25 @@
-/* CSS Variables */
 :root {
   --primary: #ffa500;
-  /* Vibrant Orange */
+  --on-primary: #121212;
   --secondary: #0c4e5a;
-  /* Deep Teal */
-  --mint-light: #d2ffe6;
-  --mint-dark: #1a4032;
+  --secondary-accent: #26a69a; 
+  --mint-light: #D2FFE6;
+  --mint-dark: #0C4459; 
   --background-light: #ffffff;
-  --background-dark: #121212;
+  --background-dark: #121212; 
   --surface-light: #f9fafb;
   --surface-dark: #1e1e1e;
   --text-main-light: #0c4e5a;
   --text-main-dark: #e0e0e0;
-
+  --text-muted-dark: #a0a0a0;
   --font-display: "Baloo 2", cursive;
   --font-body: "Inter", sans-serif;
-
-  --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
-  --shadow-glow: 0 0 20px rgba(255, 165, 0, 0.3);
-
+  --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(255, 165, 0, 0.1);
   --container-padding: 1rem;
   --max-width: 80rem;
-  /* 1280px */
 }
 
-/* Reset & Base Styles */
 * {
   margin: 0;
   padding: 0;
@@ -45,8 +40,6 @@ body {
     background-color 0.3s,
     color 0.3s;
 }
-
-/* Paw trail styles removed as requested. */
 
 [data-theme="dark"] body {
   background-color: var(--background-dark);
@@ -78,7 +71,6 @@ button {
   border: none;
 }
 
-/* Utility Components */
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -124,7 +116,6 @@ button {
   text-align: center;
 }
 
-/* Navbar */
 .navbar {
   position: fixed;
   width: 100%;
@@ -140,17 +131,35 @@ button {
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
-
 [data-theme="light"] .navbar.scrolled {
   background-color: rgba(255,255,255,0.95);
   border-bottom: 1px solid rgba(12, 78, 90, 0.06);
 }
-
 [data-theme="dark"] .navbar.scrolled {
-  background-color: rgba(26, 64, 50, 0.9);
+  background-color: var(--mint-dark);
 }
 
-/* Ensure readable text on scrolled navbar */
+.navbar.menu-open {
+  background-color: var(--background-light);
+  transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .navbar.menu-open {
+  background-color: var(--surface-dark);
+}
+
+
+@keyframes menu-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 [data-theme="light"] .navbar.scrolled .logo-text,
 [data-theme="light"] .navbar.scrolled .nav-link,
 [data-theme="light"] .navbar.scrolled .mobile-menu-btn,
@@ -235,6 +244,10 @@ button {
   }
 }
 
+[data-theme="dark"] .mobile-menu-btn {
+  color: white;
+}
+
 @media (min-width: 768px) {
   .nav-links.desktop-only {
     display: flex;
@@ -268,6 +281,10 @@ button {
   }
 }
 
+[data-theme="dark"] .nav-link {
+  color: #e5e7eb;
+}
+
 .nav-link:hover {
   color: var(--primary);
 }
@@ -288,6 +305,7 @@ button {
 }
 
 /* Mobile Menu */
+
 .mobile-menu {
   display: none;
   /* JS will toggle this */
@@ -305,15 +323,16 @@ button {
   border-top: 1px solid #f3f4f6;
 }
 
-@media (prefers-color-scheme: dark) {
-  .mobile-menu {
-    background-color: var(--surface-dark);
-    border-top-color: #374151;
-  }
+/* ... existing code ... */
+
+[data-theme="dark"] .mobile-menu {
+  background-color: var(--surface-dark);
+  border-top-color: #374151;
 }
 
 .mobile-menu.open {
   display: flex;
+  animation: menu-slide-in 0.3s ease-out forwards;
 }
 
 .mobile-nav-link {
@@ -330,6 +349,10 @@ button {
   .mobile-nav-link {
     color: white;
   }
+}
+
+[data-theme="dark"] .mobile-nav-link {
+  color: white;
 }
 
 .mobile-nav-link:hover {
@@ -376,7 +399,7 @@ button {
 
 @media (min-width: 768px) {
   .footer-grid {
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr;
     text-align: left;
   }
 }
