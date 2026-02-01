@@ -1,37 +1,37 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gerenciar Agendamentos | Admin - Little's Petshop</title>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerenciar Agendamentos | Admin - Little's Petshop</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <script src="https://unpkg.com/lucide@latest"></script>
 
   <link rel="stylesheet" href="../styles/global.css" />
   <link rel="stylesheet" href="../styles/components/feedback-modal.css" />
   <link rel="stylesheet" href="../styles/calendar-view.css" />
   <link rel="stylesheet" href="../styles/admin-bookings.css" />
-  
+
   <script src="/scripts/components/sidebar-component.js" type="module"></script>
   <script src="/scripts/pages/admin-bookings-page.js" type="module"></script>
 </head>
+
 <body>
 
-    <!-- Scripts -->
-    <script
-      src="/scripts/components/sidebar-component.js"
-      type="module"
-    ></script>
-    <script src="/scripts/pages/admin-bookings-page.js" type="module"></script>
+  <!-- Scripts -->
+  <script src="/scripts/components/sidebar-component.js" type="module"></script>
+  <script src="/scripts/pages/admin-bookings-page.js" type="module"></script>
   </head>
+
   <body>
     <div class="dashboard-container">
       <!-- Sidebar Component -->
@@ -48,13 +48,13 @@
           </div>
           <div class="header-actions">
             <div class="filter-dropdown">
-                <select class="form-select" id="serviceFilter" style="width: 200px;">
-                  <option value="">Todos os Serviços</option>
-                </select>
-                <button class="btn-filter" id="filterBtn">
-                  <i data-lucide="filter"></i>
-                  Filtrar
-                </button>
+              <select class="form-select" id="serviceFilter" style="width: 200px;">
+                <option value="">Todos os Serviços</option>
+              </select>
+              <button class="btn-filter" id="filterBtn">
+                <i data-lucide="filter"></i>
+                Filtrar
+              </button>
               <div class="filter-menu" id="filterMenu" style="display: none">
                 <label class="filter-option">
                   <input type="checkbox" value="agendado" checked />
@@ -123,18 +123,10 @@
             <div class="calendar-nav-section">
               <button class="btn-today" id="todayBtn">Hoje</button>
               <div class="nav-arrows">
-                <button
-                  class="nav-arrow"
-                  id="prevWeek"
-                  aria-label="Semana anterior"
-                >
+                <button class="nav-arrow" id="prevWeek" aria-label="Semana anterior">
                   <i data-lucide="chevron-left"></i>
                 </button>
-                <button
-                  class="nav-arrow"
-                  id="nextWeek"
-                  aria-label="Próxima semana"
-                >
+                <button class="nav-arrow" id="nextWeek" aria-label="Próxima semana">
                   <i data-lucide="chevron-right"></i>
                 </button>
               </div>
@@ -166,11 +158,7 @@
           </div>
 
           <!-- Month View Calendar -->
-          <div
-            class="calendar-container month-view"
-            id="monthView"
-            style="display: none"
-          >
+          <div class="calendar-container month-view" id="monthView" style="display: none">
             <div class="month-header-row">
               <div class="month-day-label">DOM</div>
               <div class="month-day-label">SEG</div>
@@ -202,42 +190,22 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label class="form-label">Cliente</label>
-                    <input
-                      type="text"
-                      id="clientName"
-                      class="form-input"
-                      readonly
-                    />
+                    <input type="text" id="clientName" class="form-input" readonly />
                   </div>
                   <div class="form-group">
                     <label class="form-label">Pet</label>
-                    <input
-                      type="text"
-                      id="petName"
-                      class="form-input"
-                      readonly
-                    />
+                    <input type="text" id="petName" class="form-input" readonly />
                   </div>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
                     <label class="form-label">Serviço</label>
-                    <input
-                      type="text"
-                      id="serviceName"
-                      class="form-input"
-                      readonly
-                    />
+                    <input type="text" id="serviceName" class="form-input" readonly />
                   </div>
                   <div class="form-group">
                     <label class="form-label">Porte do Pet</label>
-                    <input
-                      type="text"
-                      id="petSize"
-                      class="form-input"
-                      readonly
-                    />
+                    <input type="text" id="petSize" class="form-input" readonly />
                   </div>
                 </div>
 
@@ -248,12 +216,7 @@
                   </div>
                   <div class="form-group">
                     <label class="form-label">Preço</label>
-                    <input
-                      type="text"
-                      id="bookingPrice"
-                      class="form-input"
-                      readonly
-                    />
+                    <input type="text" id="bookingPrice" class="form-input" readonly />
                   </div>
                 </div>
 
@@ -264,11 +227,7 @@
                     <option value="concluido">Concluído</option>
                     <option value="cancelado">Cancelado</option>
                   </select>
-                  <p
-                    id="statusMessage"
-                    class="status-message"
-                    style="display: none"
-                  ></p>
+                  <p id="statusMessage" class="status-message" style="display: none"></p>
                 </div>
               </form>
             </div>
@@ -290,4 +249,5 @@
       lucide.createIcons();
     </script>
   </body>
+
 </html>

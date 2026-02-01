@@ -1,808 +1,723 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gerenciar Serviços | Little's Petshop</title>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
-      rel="stylesheet"
-    />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerenciar Serviços | Little's Petshop</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
 
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="../styles/global.css" />
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../styles/global.css" />
   <link rel="stylesheet" href="../styles/components/feedback-modal.css" />
-    <link rel="stylesheet" href="../styles/pets.css" />
-    <link rel="stylesheet" href="../styles/jobs.css" />
+  <link rel="stylesheet" href="../styles/pets.css" />
+  <link rel="stylesheet" href="../styles/jobs.css" />
 
-    <!-- Scripts -->
-    <script
-      src="/scripts/components/sidebar-component.js"
-      type="module"
-    ></script>
-    <script src="/scripts/pages/jobs-page.js" type="module"></script>
-  </head>
-  <body>
-    <div class="dashboard-container">
-      <!-- Admin Sidebar Component -->
-      <petshop-sidebar active="services"></petshop-sidebar>
+  <!-- Scripts -->
+  <script src="/scripts/components/sidebar-component.js" type="module"></script>
+  <script src="/scripts/pages/jobs-page.js" type="module"></script>
+</head>
 
-      <!-- Main Content -->
-      <main class="main-content">
-        <div class="page-header animate-enter" style="animation-delay: 0ms">
-          <div>
-            <h1 class="page-title">Gerenciar Serviços</h1>
-            <p style="color: #64748b; margin-top: 0.5rem; font-size: 1.1rem; max-width: 600px;">
-              Cadastre e gerencie os serviços oferecidos pelo petshop de forma simples e intuitiva.
-            </p>
-          </div>
-          <button class="btn btn-primary btn-lg" id="newServiceBtn">
-            <i data-lucide="plus" style="margin-right: 0.5rem; width: 20px"></i>
-            Novo Serviço
-          </button>
+<body>
+  <div class="dashboard-container">
+    <!-- Admin Sidebar Component -->
+    <petshop-sidebar active="services"></petshop-sidebar>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-header animate-enter" style="animation-delay: 0ms">
+        <div>
+          <h1 class="page-title">Gerenciar Serviços</h1>
+          <p style="color: #64748b; margin-top: 0.5rem; font-size: 1.1rem; max-width: 600px;">
+            Cadastre e gerencie os serviços oferecidos pelo petshop de forma simples e intuitiva.
+          </p>
         </div>
+        <button class="btn btn-primary btn-lg" id="newServiceBtn">
+          <i data-lucide="plus" style="margin-right: 0.5rem; width: 20px"></i>
+          Novo Serviço
+        </button>
+      </div>
 
 
 
-        <!-- Loading State -->
-        <div id="loadingState" class="loading-container">
-          <div class="spinner-large"></div>
-          <p style="color: #666; margin-top: 1rem">Carregando serviços...</p>
-        </div>
+      <!-- Loading State -->
+      <div id="loadingState" class="loading-container">
+        <div class="spinner-large"></div>
+        <p style="color: #666; margin-top: 1rem">Carregando serviços...</p>
+      </div>
 
-        <!-- Empty State -->
-        <div id="emptyState" class="empty-state" style="display: none">
-          <div
-            style="
+      <!-- Empty State -->
+      <div id="emptyState" class="empty-state" style="display: none">
+        <div style="
               background: #f3f4f6;
               padding: 2rem;
               border-radius: 50%;
               margin: 0 auto 1rem;
               width: fit-content;
-            "
-          >
-            <i
-              data-lucide="package-x"
-              style="width: 48px; height: 48px; color: #999"
-            ></i>
-          </div>
-          <p style="font-size: 1.125rem; color: #666; margin-bottom: 1rem">
-            Nenhum serviço cadastrado ainda.
-          </p>
-          <button
-            class="btn btn-primary"
-            onclick="document.getElementById('newServiceBtn').click()"
-          >
-            <i data-lucide="plus" style="margin-right: 0.5rem; width: 18px"></i>
-            Cadastrar primeiro serviço
-          </button>
+            ">
+          <i data-lucide="package-x" style="width: 48px; height: 48px; color: #999"></i>
         </div>
+        <p style="font-size: 1.125rem; color: #666; margin-bottom: 1rem">
+          Nenhum serviço cadastrado ainda.
+        </p>
+        <button class="btn btn-primary" onclick="document.getElementById('newServiceBtn').click()">
+          <i data-lucide="plus" style="margin-right: 0.5rem; width: 18px"></i>
+          Cadastrar primeiro serviço
+        </button>
+      </div>
 
-        <!-- Services Grid -->
-        <section
-          class="services-section"
-          id="servicesGridContainer"
-          style="display: none"
-        >
-          <div class="services-grid" id="servicesGrid">
-            <!-- Service cards will be injected here by JS -->
-          </div>
-        </section>
+      <!-- Services Grid -->
+      <section class="services-section" id="servicesGridContainer" style="display: none">
+        <div class="services-grid" id="servicesGrid">
+          <!-- Service cards will be injected here by JS -->
+        </div>
+      </section>
 
 
-      </main>
-    </div>
+    </main>
+  </div>
 
-    <!-- New/Edit Service Modal -->
-    <div class="modal" id="serviceModal">
-      <div class="modal-content">
-        <button class="close-modal" id="closeModal">&times;</button>
-        <h2
-          id="modalTitle"
-          style="
+  <!-- New/Edit Service Modal -->
+  <div class="modal" id="serviceModal">
+    <div class="modal-content">
+      <button class="close-modal" id="closeModal">&times;</button>
+      <h2 id="modalTitle" style="
             font-family: var(--font-display);
             color: var(--secondary);
             margin-bottom: 1.5rem;
-          "
-        >
-          Adicionar Novo Serviço
-        </h2>
+          ">
+        Adicionar Novo Serviço
+      </h2>
 
-        <form id="serviceForm">
+      <form id="serviceForm">
+        <div class="form-group">
+          <label>Nome do Serviço *</label>
+          <input type="text" name="name" id="serviceName" required placeholder="Ex: Banho Completo" maxlength="100" />
+        </div>
+
+        <div class="form-group">
+          <label>Descrição</label>
+          <textarea name="description" id="serviceDescription" placeholder="Descreva o serviço oferecido..." rows="3"
+            maxlength="500" style="resize: vertical;"></textarea>
+        </div>
+
+        <div class="price-row">
           <div class="form-group">
-            <label>Nome do Serviço *</label>
-            <input
-              type="text"
-              name="name"
-              id="serviceName"
-              required
-              placeholder="Ex: Banho Completo"
-              maxlength="100"
-            />
-          </div>
-
-          <div class="form-group">
-            <label>Descrição</label>
-            <textarea
-              name="description"
-              id="serviceDescription"
-              placeholder="Descreva o serviço oferecido..."
-              rows="3"
-              maxlength="500"
-              style="resize: vertical;"
-            ></textarea>
-          </div>
-
-          <div class="price-row">
-            <div class="form-group">
-              <label>Preço Pequeno (P) *</label>
-              <div class="input-with-icon">
-                <span class="input-icon">R$</span>
-                <input
-                  type="number"
-                  name="priceP"
-                  id="pricePequeno"
-                  required
-                  placeholder="0.00"
-                  step="0.01"
-                  min="0"
-                />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Preço Médio (M) *</label>
-              <div class="input-with-icon">
-                <span class="input-icon">R$</span>
-                <input
-                  type="number"
-                  name="priceM"
-                  id="priceMedio"
-                  required
-                  placeholder="0.00"
-                  step="0.01"
-                  min="0"
-                />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Preço Grande (G) *</label>
-              <div class="input-with-icon">
-                <span class="input-icon">R$</span>
-                <input
-                  type="number"
-                  name="priceG"
-                  id="priceGrande"
-                  required
-                  placeholder="0.00"
-                  step="0.01"
-                  min="0"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Duração Estimada *</label>
+            <label>Preço Pequeno (P) *</label>
             <div class="input-with-icon">
-              <span class="input-icon"
-                ><i data-lucide="clock" style="width: 16px"></i
-              ></span>
-              <select
-                name="duration"
-                id="duration"
-                required
-                style="padding-left: 2.5rem;"
-              >
-                <option value="">Selecione a duração</option>
-                <option value="30">30 minutos</option>
-                <option value="60">1 hora</option>
-                <option value="90">1 hora e 30 minutos</option>
-                <option value="120">2 horas</option>
-                <option value="150">2 horas e 30 minutos</option>
-                <option value="180">3 horas</option>
-                <option value="210">3 horas e 30 minutos</option>
-                <option value="240">4 horas</option>
-              </select>
+              <span class="input-icon">R$</span>
+              <input type="number" name="priceP" id="pricePequeno" required placeholder="0.00" step="0.01" min="0" />
             </div>
           </div>
 
-          <!-- Availability Section -->
           <div class="form-group">
-            <label>Disponibilidade Semanal *</label>
-            <p style="color: #64748b; font-size: 0.875rem; margin-bottom: 1rem;">
-              Selecione os dias e horários em que este serviço estará disponível
-            </p>
-            <div class="availability-grid" id="availabilityGrid">
-              <div class="availability-header">
-                <div class="avail-day-label"></div>
-                <div class="avail-time-label">Início</div>
-                <div class="avail-time-label">Fim</div>
-                <div class="avail-action-label"></div>
-              </div>
-              
-              <div class="availability-row" data-day="1">
-                <label class="avail-day">
-                  <input type="checkbox" name="day_1" value="1">
-                  <span>Segunda</span>
-                </label>
-                <select name="start_1" class="avail-time-input">
-                  <option value="07:00">07:00</option>
-                  <option value="07:30">07:30</option>
-                  <option value="08:00">08:00</option>
-                  <option value="08:30">08:30</option>
-                  <option value="09:00" selected>09:00</option>
-                  <option value="09:30">09:30</option>
-                  <option value="10:00">10:00</option>
-                  <option value="10:30">10:30</option>
-                  <option value="11:00">11:00</option>
-                  <option value="11:30">11:30</option>
-                  <option value="12:00">12:00</option>
-                  <option value="12:30">12:30</option>
-                  <option value="13:00">13:00</option>
-                  <option value="13:30">13:30</option>
-                  <option value="14:00">14:00</option>
-                  <option value="14:30">14:30</option>
-                  <option value="15:00">15:00</option>
-                  <option value="15:30">15:30</option>
-                  <option value="16:00">16:00</option>
-                  <option value="16:30">16:30</option>
-                  <option value="17:00">17:00</option>
-                  <option value="17:30">17:30</option>
-                  <option value="18:00">18:00</option>
-                  <option value="18:30">18:30</option>
-                  <option value="19:00">19:00</option>
-                  <option value="19:30">19:30</option>
-                  <option value="20:00">20:00</option>
-                  <option value="20:30">20:30</option>
-                  <option value="21:00">21:00</option>
-                </select>
-                <select name="end_1" class="avail-time-input">
-                  <option value="07:00">07:00</option>
-                  <option value="07:30">07:30</option>
-                  <option value="08:00">08:00</option>
-                  <option value="08:30">08:30</option>
-                  <option value="09:00">09:00</option>
-                  <option value="09:30">09:30</option>
-                  <option value="10:00">10:00</option>
-                  <option value="10:30">10:30</option>
-                  <option value="11:00">11:00</option>
-                  <option value="11:30">11:30</option>
-                  <option value="12:00">12:00</option>
-                  <option value="12:30">12:30</option>
-                  <option value="13:00">13:00</option>
-                  <option value="13:30">13:30</option>
-                  <option value="14:00">14:00</option>
-                  <option value="14:30">14:30</option>
-                  <option value="15:00">15:00</option>
-                  <option value="15:30">15:30</option>
-                  <option value="16:00">16:00</option>
-                  <option value="16:30">16:30</option>
-                  <option value="17:00">17:00</option>
-                  <option value="17:30">17:30</option>
-                  <option value="18:00" selected>18:00</option>
-                  <option value="18:30">18:30</option>
-                  <option value="19:00">19:00</option>
-                  <option value="19:30">19:30</option>
-                  <option value="20:00">20:00</option>
-                  <option value="20:30">20:30</option>
-                  <option value="21:00">21:00</option>
-                </select>
-                <div class="avail-status"></div>
-              </div>
-              
-              <div class="availability-row" data-day="2">
-                <label class="avail-day">
-                  <input type="checkbox" name="day_2" value="2">
-                  <span>Terça</span>
-                </label>
-                <select name="start_2" class="avail-time-input">
-                  <option value="07:00">07:00</option>
-                  <option value="07:30">07:30</option>
-                  <option value="08:00">08:00</option>
-                  <option value="08:30">08:30</option>
-                  <option value="09:00" selected>09:00</option>
-                  <option value="09:30">09:30</option>
-                  <option value="10:00">10:00</option>
-                  <option value="10:30">10:30</option>
-                  <option value="11:00">11:00</option>
-                  <option value="11:30">11:30</option>
-                  <option value="12:00">12:00</option>
-                  <option value="12:30">12:30</option>
-                  <option value="13:00">13:00</option>
-                  <option value="13:30">13:30</option>
-                  <option value="14:00">14:00</option>
-                  <option value="14:30">14:30</option>
-                  <option value="15:00">15:00</option>
-                  <option value="15:30">15:30</option>
-                  <option value="16:00">16:00</option>
-                  <option value="16:30">16:30</option>
-                  <option value="17:00">17:00</option>
-                  <option value="17:30">17:30</option>
-                  <option value="18:00">18:00</option>
-                  <option value="18:30">18:30</option>
-                  <option value="19:00">19:00</option>
-                  <option value="19:30">19:30</option>
-                  <option value="20:00">20:00</option>
-                  <option value="20:30">20:30</option>
-                  <option value="21:00">21:00</option>
-                </select>
-                <select name="end_2" class="avail-time-input">
-                  <option value="07:00">07:00</option>
-                  <option value="07:30">07:30</option>
-                  <option value="08:00">08:00</option>
-                  <option value="08:30">08:30</option>
-                  <option value="09:00">09:00</option>
-                  <option value="09:30">09:30</option>
-                  <option value="10:00">10:00</option>
-                  <option value="10:30">10:30</option>
-                  <option value="11:00">11:00</option>
-                  <option value="11:30">11:30</option>
-                  <option value="12:00">12:00</option>
-                  <option value="12:30">12:30</option>
-                  <option value="13:00">13:00</option>
-                  <option value="13:30">13:30</option>
-                  <option value="14:00">14:00</option>
-                  <option value="14:30">14:30</option>
-                  <option value="15:00">15:00</option>
-                  <option value="15:30">15:30</option>
-                  <option value="16:00">16:00</option>
-                  <option value="16:30">16:30</option>
-                  <option value="17:00">17:00</option>
-                  <option value="17:30">17:30</option>
-                  <option value="18:00" selected>18:00</option>
-                  <option value="18:30">18:30</option>
-                  <option value="19:00">19:00</option>
-                  <option value="19:30">19:30</option>
-                  <option value="20:00">20:00</option>
-                  <option value="20:30">20:30</option>
-                  <option value="21:00">21:00</option>
-                </select>
-                <div class="avail-status"></div>
-              </div>
-              
-              <div class="availability-row" data-day="3">
-                <label class="avail-day">
-                  <input type="checkbox" name="day_3" value="3">
-                  <span>Quarta</span>
-                </label>
-                <select name="start_3" class="avail-time-input">
-                  <option value="07:00">07:00</option>
-                  <option value="07:30">07:30</option>
-                  <option value="08:00">08:00</option>
-                  <option value="08:30">08:30</option>
-                  <option value="09:00" selected>09:00</option>
-                  <option value="09:30">09:30</option>
-                  <option value="10:00">10:00</option>
-                  <option value="10:30">10:30</option>
-                  <option value="11:00">11:00</option>
-                  <option value="11:30">11:30</option>
-                  <option value="12:00">12:00</option>
-                  <option value="12:30">12:30</option>
-                  <option value="13:00">13:00</option>
-                  <option value="13:30">13:30</option>
-                  <option value="14:00">14:00</option>
-                  <option value="14:30">14:30</option>
-                  <option value="15:00">15:00</option>
-                  <option value="15:30">15:30</option>
-                  <option value="16:00">16:00</option>
-                  <option value="16:30">16:30</option>
-                  <option value="17:00">17:00</option>
-                  <option value="17:30">17:30</option>
-                  <option value="18:00">18:00</option>
-                  <option value="18:30">18:30</option>
-                  <option value="19:00">19:00</option>
-                  <option value="19:30">19:30</option>
-                  <option value="20:00">20:00</option>
-                  <option value="20:30">20:30</option>
-                  <option value="21:00">21:00</option>
-                </select>
-                <select name="end_3" class="avail-time-input">
-                  <option value="07:00">07:00</option>
-                  <option value="07:30">07:30</option>
-                  <option value="08:00">08:00</option>
-                  <option value="08:30">08:30</option>
-                  <option value="09:00">09:00</option>
-                  <option value="09:30">09:30</option>
-                  <option value="10:00">10:00</option>
-                  <option value="10:30">10:30</option>
-                  <option value="11:00">11:00</option>
-                  <option value="11:30">11:30</option>
-                  <option value="12:00">12:00</option>
-                  <option value="12:30">12:30</option>
-                  <option value="13:00">13:00</option>
-                  <option value="13:30">13:30</option>
-                  <option value="14:00">14:00</option>
-                  <option value="14:30">14:30</option>
-                  <option value="15:00">15:00</option>
-                  <option value="15:30">15:30</option>
-                  <option value="16:00">16:00</option>
-                  <option value="16:30">16:30</option>
-                  <option value="17:00">17:00</option>
-                  <option value="17:30">17:30</option>
-                  <option value="18:00" selected>18:00</option>
-                  <option value="18:30">18:30</option>
-                  <option value="19:00">19:00</option>
-                  <option value="19:30">19:30</option>
-                  <option value="20:00">20:00</option>
-                  <option value="20:30">20:30</option>
-                  <option value="21:00">21:00</option>
-                </select>
-                <div class="avail-status"></div>
-              </div>
-              
-              <div class="availability-row" data-day="4">
-                <label class="avail-day">
-                  <input type="checkbox" name="day_4" value="4">
-                  <span>Quinta</span>
-                </label>
-                <select name="start_4" class="avail-time-input">
-                  <option value="07:00">07:00</option>
-                  <option value="07:30">07:30</option>
-                  <option value="08:00">08:00</option>
-                  <option value="08:30">08:30</option>
-                  <option value="09:00" selected>09:00</option>
-                  <option value="09:30">09:30</option>
-                  <option value="10:00">10:00</option>
-                  <option value="10:30">10:30</option>
-                  <option value="11:00">11:00</option>
-                  <option value="11:30">11:30</option>
-                  <option value="12:00">12:00</option>
-                  <option value="12:30">12:30</option>
-                  <option value="13:00">13:00</option>
-                  <option value="13:30">13:30</option>
-                  <option value="14:00">14:00</option>
-                  <option value="14:30">14:30</option>
-                  <option value="15:00">15:00</option>
-                  <option value="15:30">15:30</option>
-                  <option value="16:00">16:00</option>
-                  <option value="16:30">16:30</option>
-                  <option value="17:00">17:00</option>
-                  <option value="17:30">17:30</option>
-                  <option value="18:00">18:00</option>
-                  <option value="18:30">18:30</option>
-                  <option value="19:00">19:00</option>
-                  <option value="19:30">19:30</option>
-                  <option value="20:00">20:00</option>
-                  <option value="20:30">20:30</option>
-                  <option value="21:00">21:00</option>
-                </select>
-                <select name="end_4" class="avail-time-input">
-                  <option value="07:00">07:00</option>
-                  <option value="07:30">07:30</option>
-                  <option value="08:00">08:00</option>
-                  <option value="08:30">08:30</option>
-                  <option value="09:00">09:00</option>
-                  <option value="09:30">09:30</option>
-                  <option value="10:00">10:00</option>
-                  <option value="10:30">10:30</option>
-                  <option value="11:00">11:00</option>
-                  <option value="11:30">11:30</option>
-                  <option value="12:00">12:00</option>
-                  <option value="12:30">12:30</option>
-                  <option value="13:00">13:00</option>
-                  <option value="13:30">13:30</option>
-                  <option value="14:00">14:00</option>
-                  <option value="14:30">14:30</option>
-                  <option value="15:00">15:00</option>
-                  <option value="15:30">15:30</option>
-                  <option value="16:00">16:00</option>
-                  <option value="16:30">16:30</option>
-                  <option value="17:00">17:00</option>
-                  <option value="17:30">17:30</option>
-                  <option value="18:00" selected>18:00</option>
-                  <option value="18:30">18:30</option>
-                  <option value="19:00">19:00</option>
-                  <option value="19:30">19:30</option>
-                  <option value="20:00">20:00</option>
-                  <option value="20:30">20:30</option>
-                  <option value="21:00">21:00</option>
-                </select>
-                <div class="avail-status"></div>
-              </div>
-              
-              <div class="availability-row" data-day="5">
-                <label class="avail-day">
-                  <input type="checkbox" name="day_5" value="5">
-                  <span>Sexta</span>
-                </label>
-                <select name="start_5" class="avail-time-input">
-                  <option value="07:00">07:00</option>
-                  <option value="07:30">07:30</option>
-                  <option value="08:00">08:00</option>
-                  <option value="08:30">08:30</option>
-                  <option value="09:00" selected>09:00</option>
-                  <option value="09:30">09:30</option>
-                  <option value="10:00">10:00</option>
-                  <option value="10:30">10:30</option>
-                  <option value="11:00">11:00</option>
-                  <option value="11:30">11:30</option>
-                  <option value="12:00">12:00</option>
-                  <option value="12:30">12:30</option>
-                  <option value="13:00">13:00</option>
-                  <option value="13:30">13:30</option>
-                  <option value="14:00">14:00</option>
-                  <option value="14:30">14:30</option>
-                  <option value="15:00">15:00</option>
-                  <option value="15:30">15:30</option>
-                  <option value="16:00">16:00</option>
-                  <option value="16:30">16:30</option>
-                  <option value="17:00">17:00</option>
-                  <option value="17:30">17:30</option>
-                  <option value="18:00">18:00</option>
-                  <option value="18:30">18:30</option>
-                  <option value="19:00">19:00</option>
-                  <option value="19:30">19:30</option>
-                  <option value="20:00">20:00</option>
-                  <option value="20:30">20:30</option>
-                  <option value="21:00">21:00</option>
-                </select>
-                <select name="end_5" class="avail-time-input">
-                  <option value="07:00">07:00</option>
-                  <option value="07:30">07:30</option>
-                  <option value="08:00">08:00</option>
-                  <option value="08:30">08:30</option>
-                  <option value="09:00">09:00</option>
-                  <option value="09:30">09:30</option>
-                  <option value="10:00">10:00</option>
-                  <option value="10:30">10:30</option>
-                  <option value="11:00">11:00</option>
-                  <option value="11:30">11:30</option>
-                  <option value="12:00">12:00</option>
-                  <option value="12:30">12:30</option>
-                  <option value="13:00">13:00</option>
-                  <option value="13:30">13:30</option>
-                  <option value="14:00">14:00</option>
-                  <option value="14:30">14:30</option>
-                  <option value="15:00">15:00</option>
-                  <option value="15:30">15:30</option>
-                  <option value="16:00">16:00</option>
-                  <option value="16:30">16:30</option>
-                  <option value="17:00">17:00</option>
-                  <option value="17:30">17:30</option>
-                  <option value="18:00" selected>18:00</option>
-                  <option value="18:30">18:30</option>
-                  <option value="19:00">19:00</option>
-                  <option value="19:30">19:30</option>
-                  <option value="20:00">20:00</option>
-                  <option value="20:30">20:30</option>
-                  <option value="21:00">21:00</option>
-                </select>
-                <div class="avail-status"></div>
-              </div>
-              
-              <div class="availability-row" data-day="6">
-                <label class="avail-day">
-                  <input type="checkbox" name="day_6" value="6">
-                  <span>Sábado</span>
-                </label>
-                <select name="start_6" class="avail-time-input">
-                  <option value="07:00">07:00</option>
-                  <option value="07:30">07:30</option>
-                  <option value="08:00">08:00</option>
-                  <option value="08:30">08:30</option>
-                  <option value="09:00" selected>09:00</option>
-                  <option value="09:30">09:30</option>
-                  <option value="10:00">10:00</option>
-                  <option value="10:30">10:30</option>
-                  <option value="11:00">11:00</option>
-                  <option value="11:30">11:30</option>
-                  <option value="12:00">12:00</option>
-                  <option value="12:30">12:30</option>
-                  <option value="13:00">13:00</option>
-                  <option value="13:30">13:30</option>
-                  <option value="14:00">14:00</option>
-                  <option value="14:30">14:30</option>
-                  <option value="15:00">15:00</option>
-                  <option value="15:30">15:30</option>
-                  <option value="16:00">16:00</option>
-                  <option value="16:30">16:30</option>
-                  <option value="17:00">17:00</option>
-                  <option value="17:30">17:30</option>
-                  <option value="18:00">18:00</option>
-                  <option value="18:30">18:30</option>
-                  <option value="19:00">19:00</option>
-                  <option value="19:30">19:30</option>
-                  <option value="20:00">20:00</option>
-                  <option value="20:30">20:30</option>
-                  <option value="21:00">21:00</option>
-                </select>
-                <select name="end_6" class="avail-time-input">
-                  <option value="07:00">07:00</option>
-                  <option value="07:30">07:30</option>
-                  <option value="08:00">08:00</option>
-                  <option value="08:30">08:30</option>
-                  <option value="09:00">09:00</option>
-                  <option value="09:30">09:30</option>
-                  <option value="10:00">10:00</option>
-                  <option value="10:30">10:30</option>
-                  <option value="11:00">11:00</option>
-                  <option value="11:30">11:30</option>
-                  <option value="12:00">12:00</option>
-                  <option value="12:30">12:30</option>
-                  <option value="13:00" selected>13:00</option>
-                  <option value="13:30">13:30</option>
-                  <option value="14:00">14:00</option>
-                  <option value="14:30">14:30</option>
-                  <option value="15:00">15:00</option>
-                  <option value="15:30">15:30</option>
-                  <option value="16:00">16:00</option>
-                  <option value="16:30">16:30</option>
-                  <option value="17:00">17:00</option>
-                  <option value="17:30">17:30</option>
-                  <option value="18:00">18:00</option>
-                  <option value="18:30">18:30</option>
-                  <option value="19:00">19:00</option>
-                  <option value="19:30">19:30</option>
-                  <option value="20:00">20:00</option>
-                  <option value="20:30">20:30</option>
-                  <option value="21:00">21:00</option>
-                </select>
-                <div class="avail-status"></div>
-              </div>
-              
-              <div class="availability-row" data-day="0">
-                <label class="avail-day">
-                  <input type="checkbox" name="day_0" value="0">
-                  <span>Domingo</span>
-                </label>
-                <select name="start_0" class="avail-time-input">
-                  <option value="07:00">07:00</option>
-                  <option value="07:30">07:30</option>
-                  <option value="08:00">08:00</option>
-                  <option value="08:30">08:30</option>
-                  <option value="09:00" selected>09:00</option>
-                  <option value="09:30">09:30</option>
-                  <option value="10:00">10:00</option>
-                  <option value="10:30">10:30</option>
-                  <option value="11:00">11:00</option>
-                  <option value="11:30">11:30</option>
-                  <option value="12:00">12:00</option>
-                  <option value="12:30">12:30</option>
-                  <option value="13:00">13:00</option>
-                  <option value="13:30">13:30</option>
-                  <option value="14:00">14:00</option>
-                  <option value="14:30">14:30</option>
-                  <option value="15:00">15:00</option>
-                  <option value="15:30">15:30</option>
-                  <option value="16:00">16:00</option>
-                  <option value="16:30">16:30</option>
-                  <option value="17:00">17:00</option>
-                  <option value="17:30">17:30</option>
-                  <option value="18:00">18:00</option>
-                  <option value="18:30">18:30</option>
-                  <option value="19:00">19:00</option>
-                  <option value="19:30">19:30</option>
-                  <option value="20:00">20:00</option>
-                  <option value="20:30">20:30</option>
-                  <option value="21:00">21:00</option>
-                </select>
-                <select name="end_0" class="avail-time-input">
-                  <option value="07:00">07:00</option>
-                  <option value="07:30">07:30</option>
-                  <option value="08:00">08:00</option>
-                  <option value="08:30">08:30</option>
-                  <option value="09:00">09:00</option>
-                  <option value="09:30">09:30</option>
-                  <option value="10:00">10:00</option>
-                  <option value="10:30">10:30</option>
-                  <option value="11:00">11:00</option>
-                  <option value="11:30">11:30</option>
-                  <option value="12:00">12:00</option>
-                  <option value="12:30">12:30</option>
-                  <option value="13:00" selected>13:00</option>
-                  <option value="13:30">13:30</option>
-                  <option value="14:00">14:00</option>
-                  <option value="14:30">14:30</option>
-                  <option value="15:00">15:00</option>
-                  <option value="15:30">15:30</option>
-                  <option value="16:00">16:00</option>
-                  <option value="16:30">16:30</option>
-                  <option value="17:00">17:00</option>
-                  <option value="17:30">17:30</option>
-                  <option value="18:00">18:00</option>
-                  <option value="18:30">18:30</option>
-                  <option value="19:00">19:00</option>
-                  <option value="19:30">19:30</option>
-                  <option value="20:00">20:00</option>
-                  <option value="20:30">20:30</option>
-                  <option value="21:00">21:00</option>
-                </select>
-                <div class="avail-status"></div>
-              </div>
+            <label>Preço Médio (M) *</label>
+            <div class="input-with-icon">
+              <span class="input-icon">R$</span>
+              <input type="number" name="priceM" id="priceMedio" required placeholder="0.00" step="0.01" min="0" />
             </div>
           </div>
 
-          <button
-            type="submit"
-            class="btn btn-primary btn-block"
-            id="submitBtn"
-            style="margin-top: 1rem"
-          >
-            <i data-lucide="save" style="margin-right: 0.5rem; width: 18px"></i>
-            Salvar Serviço
-          </button>
-        </form>
-      </div>
-    </div>
+          <div class="form-group">
+            <label>Preço Grande (G) *</label>
+            <div class="input-with-icon">
+              <span class="input-icon">R$</span>
+              <input type="number" name="priceG" id="priceGrande" required placeholder="0.00" step="0.01" min="0" />
+            </div>
+          </div>
+        </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal" id="deleteModal">
-      <div class="modal-content modal-small">
-        <button class="close-modal" id="closeDeleteModal">&times;</button>
-        <div style="text-align: center">
-          <div
-            style="
+        <div class="form-group">
+          <label>Duração Estimada *</label>
+          <div class="input-with-icon">
+            <span class="input-icon"><i data-lucide="clock" style="width: 16px"></i></span>
+            <select name="duration" id="duration" required style="padding-left: 2.5rem;">
+              <option value="">Selecione a duração</option>
+              <option value="30">30 minutos</option>
+              <option value="60">1 hora</option>
+              <option value="90">1 hora e 30 minutos</option>
+              <option value="120">2 horas</option>
+              <option value="150">2 horas e 30 minutos</option>
+              <option value="180">3 horas</option>
+              <option value="210">3 horas e 30 minutos</option>
+              <option value="240">4 horas</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Availability Section -->
+        <div class="form-group">
+          <label>Disponibilidade Semanal *</label>
+          <p style="color: #64748b; font-size: 0.875rem; margin-bottom: 1rem;">
+            Selecione os dias e horários em que este serviço estará disponível
+          </p>
+          <div class="availability-grid" id="availabilityGrid">
+            <div class="availability-header">
+              <div class="avail-day-label"></div>
+              <div class="avail-time-label">Início</div>
+              <div class="avail-time-label">Fim</div>
+              <div class="avail-action-label"></div>
+            </div>
+
+            <div class="availability-row" data-day="1">
+              <label class="avail-day">
+                <input type="checkbox" name="day_1" value="1">
+                <span>Segunda</span>
+              </label>
+              <select name="start_1" class="avail-time-input">
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00" selected>09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+              <select name="end_1" class="avail-time-input">
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00">09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00" selected>18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+              <div class="avail-status"></div>
+            </div>
+
+            <div class="availability-row" data-day="2">
+              <label class="avail-day">
+                <input type="checkbox" name="day_2" value="2">
+                <span>Terça</span>
+              </label>
+              <select name="start_2" class="avail-time-input">
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00" selected>09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+              <select name="end_2" class="avail-time-input">
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00">09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00" selected>18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+              <div class="avail-status"></div>
+            </div>
+
+            <div class="availability-row" data-day="3">
+              <label class="avail-day">
+                <input type="checkbox" name="day_3" value="3">
+                <span>Quarta</span>
+              </label>
+              <select name="start_3" class="avail-time-input">
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00" selected>09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+              <select name="end_3" class="avail-time-input">
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00">09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00" selected>18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+              <div class="avail-status"></div>
+            </div>
+
+            <div class="availability-row" data-day="4">
+              <label class="avail-day">
+                <input type="checkbox" name="day_4" value="4">
+                <span>Quinta</span>
+              </label>
+              <select name="start_4" class="avail-time-input">
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00" selected>09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+              <select name="end_4" class="avail-time-input">
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00">09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00" selected>18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+              <div class="avail-status"></div>
+            </div>
+
+            <div class="availability-row" data-day="5">
+              <label class="avail-day">
+                <input type="checkbox" name="day_5" value="5">
+                <span>Sexta</span>
+              </label>
+              <select name="start_5" class="avail-time-input">
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00" selected>09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+              <select name="end_5" class="avail-time-input">
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00">09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00" selected>18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+              <div class="avail-status"></div>
+            </div>
+
+            <div class="availability-row" data-day="6">
+              <label class="avail-day">
+                <input type="checkbox" name="day_6" value="6">
+                <span>Sábado</span>
+              </label>
+              <select name="start_6" class="avail-time-input">
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00" selected>09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+              <select name="end_6" class="avail-time-input">
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00">09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00" selected>13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+              <div class="avail-status"></div>
+            </div>
+
+            <div class="availability-row" data-day="0">
+              <label class="avail-day">
+                <input type="checkbox" name="day_0" value="0">
+                <span>Domingo</span>
+              </label>
+              <select name="start_0" class="avail-time-input">
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00" selected>09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+              <select name="end_0" class="avail-time-input">
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00">09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00" selected>13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+              </select>
+              <div class="avail-status"></div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="submitBtn" style="margin-top: 1rem">
+          <i data-lucide="save" style="margin-right: 0.5rem; width: 18px"></i>
+          Salvar Serviço
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" id="deleteModal">
+    <div class="modal-content modal-small">
+      <button class="close-modal" id="closeDeleteModal">&times;</button>
+      <div style="text-align: center">
+        <div style="
               background: #fee2e2;
               padding: 1.5rem;
               border-radius: 50%;
               margin: 0 auto 1rem;
               width: fit-content;
-            "
-          >
-            <i
-              data-lucide="alert-triangle"
-              style="width: 48px; height: 48px; color: #dc2626"
-            ></i>
-          </div>
-          <h2
-            style="
+            ">
+          <i data-lucide="alert-triangle" style="width: 48px; height: 48px; color: #dc2626"></i>
+        </div>
+        <h2 style="
               font-family: var(--font-display);
               color: var(--secondary);
               margin-bottom: 0.5rem;
-            "
-          >
-            Confirmar Exclusão
-          </h2>
-          <p style="color: #666; margin-bottom: 0.5rem">
-            Tem certeza que deseja excluir o serviço:
-          </p>
-          <p
-            style="
+            ">
+          Confirmar Exclusão
+        </h2>
+        <p style="color: #666; margin-bottom: 0.5rem">
+          Tem certeza que deseja excluir o serviço:
+        </p>
+        <p style="
               font-weight: 700;
               color: var(--secondary);
               margin-bottom: 1rem;
-            "
-            id="deleteJobName"
-          ></p>
-          <p style="color: #dc2626; font-size: 0.875rem; margin-bottom: 1.5rem">
-            Esta ação não pode ser desfeita.
-          </p>
+            " id="deleteJobName"></p>
+        <p style="color: #dc2626; font-size: 0.875rem; margin-bottom: 1.5rem">
+          Esta ação não pode ser desfeita.
+        </p>
 
-          <div style="display: flex; gap: 1rem">
-            <button
-              class="btn btn-block"
-              id="cancelDeleteBtn"
-              style="background: #f3f4f6; color: #666"
-            >
-              Cancelar
-            </button>
-            <button
-              class="btn btn-block"
-              id="confirmDeleteBtn"
-              style="background: #dc2626; color: white"
-            >
-              <i
-                data-lucide="trash-2"
-                style="margin-right: 0.5rem; width: 18px"
-              ></i>
-              Excluir
-            </button>
-          </div>
+        <div style="display: flex; gap: 1rem">
+          <button class="btn btn-block" id="cancelDeleteBtn" style="background: #f3f4f6; color: #666">
+            Cancelar
+          </button>
+          <button class="btn btn-block" id="confirmDeleteBtn" style="background: #dc2626; color: white">
+            <i data-lucide="trash-2" style="margin-right: 0.5rem; width: 18px"></i>
+            Excluir
+          </button>
         </div>
       </div>
     </div>
+  </div>
 
-    <script>
-      lucide.createIcons();
-    </script>
-  </body>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+
 </html>
