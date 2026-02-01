@@ -513,23 +513,43 @@ class AdminBookingsPage {
     today.setHours(0, 0, 0, 0);
     const isFutureBooking = bookingDate > today;
 
-    // Show/hide Concluído option based on booking date
-    const statusSelect = document.getElementById(
-      "bookingStatus",
-    ) as HTMLSelectElement;
-    const concluidoOption = statusSelect?.querySelector(
-      'option[value="concluido"]',
-    ) as HTMLOptionElement;
-    if (concluidoOption) {
-      concluidoOption.style.display = isFutureBooking ? "none" : "";
-      concluidoOption.disabled = isFutureBooking;
-    }
-
-    // If current status is concluido but booking is future (shouldn't happen), reset to agendado
-    if (isFutureBooking && booking.status === "concluido") {
-      statusSelect.value = "agendado";
-    } else {
+    // Populate status select (ensure 'Concluído' and 'Cancelado' options are visible and enabled)
+    const statusSelect = document.getElementById("bookingStatus") as HTMLSelectElement;
+    if (statusSelect) {
+      const concluidoOption = statusSelect.querySelector('option[value="concluido"]') as HTMLOptionElement;
+      const canceladoOption = statusSelect.querySelector('option[value="cancelado"]') as HTMLOptionElement;
+      if (concluidoOption) {
+        concluidoOption.style.display = "";
+        concluidoOption.disabled = false;
+      }
+      if (canceladoOption) {
+        canceladoOption.style.display = "";
+        canceladoOption.disabled = false;
+      }
       statusSelect.value = booking.status;
+
+      // Show a note for future/past bookings
+      const statusMessage = document.getElementById("statusMessage") as HTMLDivElement;
+      if (statusMessage) {
+        const bookingDateStrFull = booking.bookingDate?.split("T")[0] || "";
+        const bookingDateObj = bookingDateStrFull ? new Date(bookingDateStrFull + "T00:00:00") : null;
+        const today = new Date(); today.setHours(0,0,0,0);
+        if (bookingDateObj) {
+          if (bookingDateObj > today) {
+            statusMessage.style.display = "block";
+            statusMessage.textContent = "Observação: este agendamento está no futuro.";
+          } else if (bookingDateObj < today) {
+            statusMessage.style.display = "block";
+            statusMessage.textContent = "Observação: este agendamento já passou.";
+          } else {
+            statusMessage.style.display = "none";
+            statusMessage.textContent = "";
+          }
+        } else {
+          statusMessage.style.display = "none";
+          statusMessage.textContent = "";
+        }
+      }
     }
 
     const modal = document.getElementById("eventModal");
@@ -570,16 +590,54 @@ class AdminBookingsPage {
     const currentStatus = this.selectedBooking.status;
     const newStatus = (document.getElementById("bookingStatus") as HTMLSelectElement).value;
 
-    // Check if trying to cancel a completed booking
+    // If trying to cancel a completed booking, ask for confirmation (admins can proceed)
     if (currentStatus === "concluido" && newStatus === "cancelado") {
-      await FeedbackModal.error("Serviços concluídos não podem ser cancelados.");
-      return;
+      const confirmed = await FeedbackModal.confirm(
+        "Cancelar agendamento concluído?",
+        "Este agendamento já está marcado como concluído. Deseja realmente cancelá-lo?",
+      );
+      if (!confirmed) return;
     }
 
     try {
+      // If admin is marking a booking as 'concluido', ask for confirmation when date is different from today
       if (newStatus === "concluido" && currentStatus !== "concluido") {
+        const bookingDateStr = this.selectedBooking?.bookingDate?.split("T")[0] || "";
+        if (bookingDateStr) {
+          const bookingDateCheck = new Date(bookingDateStr + "T00:00:00");
+          const todayCheck = new Date();
+          todayCheck.setHours(0, 0, 0, 0);
+
+          if (bookingDateCheck > todayCheck) {
+            const confirmed = await FeedbackModal.confirm(
+              "Marcar como concluído?",
+              "Este agendamento está no futuro. Deseja marcá-lo como concluído agora?",
+            );
+            if (!confirmed) return; // cancel save
+          } else if (bookingDateCheck < todayCheck) {
+            const confirmed = await FeedbackModal.confirm(
+              "Marcar como concluído?",
+              "Este agendamento já passou. Deseja registrá-lo como concluído retroativamente?",
+            );
+            if (!confirmed) return;
+          }
+        }
         await this.bookingsClient.completeBooking(bookingId);
       } else if (newStatus === "cancelado") {
+        // Confirm cancellation for both past and future bookings
+        const bookingDateStr = this.selectedBooking?.bookingDate?.split("T")[0] || "";
+        const bookingDateCheck = bookingDateStr ? new Date(bookingDateStr + "T00:00:00") : null;
+        const todayCheck = new Date();
+        todayCheck.setHours(0, 0, 0, 0);
+
+        let message = "Deseja cancelar este agendamento?";
+        if (bookingDateCheck && bookingDateCheck < todayCheck) {
+          message = "Este agendamento já passou. Confirmar cancelamento?";
+        }
+
+        const confirmedCancel = await FeedbackModal.confirm("Cancelar agendamento?", message);
+        if (!confirmedCancel) return;
+
         await this.bookingsClient.cancelBooking(bookingId);
       } else if (newStatus === "agendado" && currentStatus !== "agendado") {
         await this.bookingsClient.reopenBooking(bookingId);

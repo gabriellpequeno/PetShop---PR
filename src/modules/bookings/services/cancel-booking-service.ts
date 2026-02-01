@@ -29,7 +29,8 @@ export class CancelBookingService {
         if (booking.status === "cancelado") {
             throw new BadRequestError("Este agendamento já foi cancelado.");
         }
-        if (booking.status === "concluido") {
+        // Allow admins to cancel concluded bookings; only block clients
+        if (booking.status === "concluido" && userRole !== "admin") {
             throw new BadRequestError("Não é possível cancelar um agendamento já concluído.");
         }
 
@@ -37,7 +38,8 @@ export class CancelBookingService {
         const bookingDateTimeStr = `${booking.bookingDate}T${booking.bookingTime || '00:00'}`;
         const bookingDateTime = new Date(bookingDateTimeStr);
         const now = new Date();
-        if (bookingDateTime <= now) {
+        // Allow admins to cancel past or in-progress bookings; clients cannot
+        if (bookingDateTime <= now && userRole !== "admin") {
             throw new BadRequestError("Não é possível cancelar agendamentos passados ou em andamento.");
         }
 

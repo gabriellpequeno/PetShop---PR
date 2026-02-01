@@ -47,7 +47,8 @@ export class CompleteBookingService {
             throw new NotFoundError("Agendamento não encontrado.");
         }
 
-        if (booking.status === "cancelado") {
+        // Allow admin to complete a canceled booking (convert cancelado -> concluido)
+        if (booking.status === "cancelado" && userRole !== "admin") {
             throw new BadRequestError("Não é possível completar um agendamento cancelado.");
         }
         if (booking.status === "concluido") {
